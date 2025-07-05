@@ -1,0 +1,58 @@
+
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden text-center py-12 px-6">
+    <div class="mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+    </div>
+    
+    <h2 class="text-2xl font-bold text-primary mb-4">Registration Successful!</h2>
+    <p class="text-gray-700 mb-6">Thank you for registering with the Catholic Diocese of Enugu Census System.</p>
+    
+    <div class="bg-gray-100 p-4 rounded-lg mb-6">
+        <p class="text-sm text-gray-600 mb-1">Your unique identification number is:</p>
+        <p class="text-2xl font-mono font-bold text-primary">{{ unique_id }}</p>
+    </div>
+    
+    <p class="text-gray-700 mb-6">Please keep this number safe as you'll need it to access your records.</p>
+    
+     <!-- Email notification status -->
+    {% if parishioner.email %}
+        {% if email_sent %}
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                <p class="font-semibold">✓ Confirmation email sent!</p>
+                <p class="text-sm">A confirmation email with your unique ID has been sent to <strong>{{ parishioner.email }}</strong></p>
+            </div>
+        {% else %}
+            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-6">
+                <p class="font-semibold">⚠ Email notification failed</p>
+                <p class="text-sm">We couldn't send the confirmation email, but your registration is complete. Please save your unique ID above.</p>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-6">
+            <p class="font-semibold">ℹ No email provided</p>
+            <p class="text-sm">Please save your unique ID above as no email was provided for confirmation.</p>
+        </div>
+    {% endif %} 
+    
+    <div class="space-y-4">
+        <p class="text-gray-700">Would you like to create an account to manage your information?</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{% url 'registry:signup' %}?email={{ parishioner.email }}" 
+               class="inline-block bg-primary text-white px-6 py-2 rounded-md hover:bg-opacity-90 transition">
+                Create Account
+            </a>
+            <a href="{% url 'registry:home' %}" 
+               class="inline-block bg-secondary text-white px-6 py-2 rounded-md hover:bg-opacity-90 transition">
+                Return Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

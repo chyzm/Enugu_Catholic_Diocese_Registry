@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .form-input {
+        border: 1px solid #d1d5db; /* gray-300 */
+        border-radius: 0.375rem; /* rounded-md */
+        padding: 0.5rem 1rem; /* px-4 py-2 */
+        width: 100%;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #3b82f6; /* blue-500 */
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25); /* focus:ring-2 */
+    }
+    
+    /* Apply to all relevant input types */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select,
+    textarea {
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        width: 100%;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    }
+</style>
+
+
+
+
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Add New Parishioner Record</h2>
+            <p class="text-gray-600">Fill in the details below to create a new record</p>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            {% include 'includes/parishioner_form.html' %}
+            
+            <div class="mt-6 flex justify-end space-x-4">
+                <a href="{% url 'registry:admin_dashboard' %}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </a>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90">
+                    Save Record
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+<script>
+    // Toggle death details based on deceased checkbox
+    document.getElementById("{{ form.deceased.id_for_label }}").addEventListener('change', function() {
+        const deathDetails = document.getElementById('deathDetails');
+        if (this.checked) {
+            deathDetails.classList.remove('hidden');
+        } else {
+            deathDetails.classList.add('hidden');
+        }
+    });
+
+    // Initialize death details visibility on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const deceasedCheckbox = document.getElementById("{{ form.deceased.id_for_label }}");
+        const deathDetails = document.getElementById('deathDetails');
+        if (deceasedCheckbox.checked) {
+            deathDetails.classList.remove('hidden');
+        }
+    });
+</script>
+

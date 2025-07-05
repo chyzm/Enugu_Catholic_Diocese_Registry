@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<style>
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.4; }
+}
+.animate-pulse-slow {
+    animation: pulse-slow 3s infinite;
+}
+</style>
+
+
+<!-- Hero Section with Diocesan Image -->
+<section class="bg-primary text-white py-24 md:py-32 relative overflow-hidden rounded-t-3xl rounded-b-3xl mx-4 shadow-2xl transform transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+    <div class="absolute inset-0 z-0 rounded-t-3xl rounded-b-3xl overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-40 rounded-t-3xl rounded-b-3xl"></div>
+        <img src="/static/images/cathedral.jpeg" alt="Holy Ghost Cathedral Enugu" class="w-full h-full object-cover object-center animate-pulse-slow rounded-t-3xl rounded-b-3xl">
+    </div>
+    <div class="container mx-auto px-4 text-center relative z-10">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate__animated animate__fadeInDown [text-shadow:_2px_2px_3px_rgba(0,_34,_68,_0.7)]">Diocesan Census 2025</h1>
+        <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-8 animate__animated animate__fadeIn animate__delay-1s [text-shadow:_1px_1px_2px_rgba(0,_34,_68,_0.5)]">Join our faith community in building a vibrant Catholic family across Enugu Diocese</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
+            <a href="{% url 'registry:register' %}" class="relative bg-white text-green-700 px-8 py-4 rounded-xl font-semibold hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg overflow-hidden group">
+                <span class="relative z-10">Register Now <i class="fas fa-arrow-right ml-2"></i></span>
+                <span class="absolute inset-0 bg-gradient-to-r from-blue-900 to-blue-800 opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-xl"></span>
+                <span class="absolute -inset-1 bg-blue-900 rounded-xl blur opacity-0 group-hover:opacity-20 animate-pulse-slow transition-opacity duration-700"></span>
+            </a>
+            <a href="#about" class="relative bg-green-700 text-white px-8 py-4 rounded-xl font-semibold hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg overflow-hidden group">
+                <span class="relative z-10">Learn More <i class="fas fa-info-circle ml-2"></i></span>
+                <span class="absolute inset-0 bg-gradient-to-r from-blue-900 to-blue-800 opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-xl"></span>
+                <span class="absolute -inset-1 bg-blue-900 rounded-xl blur opacity-0 group-hover:opacity-20 animate-pulse-slow transition-opacity duration-700"></span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- About the Diocese Section -->
+<section id="about" class="py-16 bg-white relative overflow-hidden mt-2">
+    <!-- Floating background elements -->
+    <div class="absolute -left-20 -top-20 w-64 h-64 rounded-full bg-blue-50 opacity-30 animate-float-slow"></div>
+    <div class="absolute -right-10 top-1/3 w-48 h-48 rounded-full bg-secondary-50 opacity-20 animate-float-medium"></div>
+    <div class="absolute left-1/4 bottom-20 w-32 h-32 rounded-full bg-primary-50 opacity-25 animate-float-slow"></div>
+    <div class="absolute right-1/4 -bottom-10 w-40 h-40 rounded-full bg-green-50 opacity-15 animate-float-medium"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4 animate__animated animate__fadeIn [text-shadow:_1px_1px_2px_rgba(0,_34,_68,_0.2)]">About Our Diocese</h2>
+            <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto animate__animated animate__fadeIn">The Catholic Diocese of Enugu, established in 1962, serves the faithful in Enugu State with 52 parishes and 6 Deaneries.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Our Diocese -->
+            <div id="our-diocese" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
+                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
+                    <i class="fas fa-church"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-primary">Our Diocese</h3>
+                <p class="text-gray-600 mb-4">The Catholic Diocese of Enugu covers the entire Enugu State in Nigeria. With its seat at the Holy Ghost Cathedral, the diocese has grown to include 52 parishes, 10 religious orders, and numerous educational and healthcare institutions.</p>
+                <p class="text-gray-600">Our mission is to proclaim the Gospel, celebrate the sacraments, and serve the people of God in Enugu State.</p>
+            </div>
+            
+            <!-- The Bishop -->
+            <div id="the-bishop" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp animate__delay-1s backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
+                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
+                    <i class="fas fa-user-alt"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-primary">The Bishop</h3>
+                <p class="text-gray-600 mb-4">Most Rev. Callistus Valentine Chukwuma Onaga was ordained Bishop of Enugu on September 29, 2009. Born on September 29, 1958, he was ordained a priest on August 8, 1987.</p>
+                <p class="text-gray-600">Bishop Onaga has been instrumental in promoting evangelization, education, and social services throughout the diocese.</p>
+            </div>
+            
+            <!-- History -->
+            <div id="history" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp animate__delay-2s backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
+                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-primary">History</h3>
+                <p class="text-gray-600 mb-4">The Diocese of Enugu was created on November 12, 1962, from parts of the Archdiocese of Onitsha. The first Bishop was Most Rev. Dr. John Cross Anyogu (1962-1967).</p>
+                <p class="text-gray-600">The diocese has grown from its initial 12 parishes to 52 parishes today, serving a Catholic population of over 1.5 million faithful.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Add these animations to your stylesheet */
+    @keyframes float-slow {
+        0%, 100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(-20px) translateX(10px); }
+    }
+    @keyframes float-medium {
+        0%, 100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(-15px) translateX(-10px); }
+    }
+    .animate-float-slow {
+        animation: float-slow 8s ease-in-out infinite;
+    }
+    .animate-float-medium {
+        animation: float-medium 6s ease-in-out infinite;
+    }
+</style>
+
+<!-- Features Section -->
+<section id="services" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">Why Participate in the Census?</h2>
+            <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Your participation helps us serve you better and strengthen our Catholic community.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="sacrament-card bg-white p-8 rounded-xl shadow-md">
+                <div class="text-secondary mb-4 text-center text-5xl">
+                    <i class="fas fa-cross"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-primary text-center">Sacramental Records</h3>
+                <p class="text-gray-600 text-center">Maintain accurate records of your sacraments (Baptism, Confirmation, Marriage) in one secure place accessible anytime, anywhere.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="sacrament-card bg-white p-8 rounded-xl shadow-md">
+                <div class="text-secondary mb-4 text-center text-5xl">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-primary text-center">Community Planning</h3>
+                <p class="text-gray-600 text-center">Help the diocese understand our community's needs to better plan pastoral programs, build churches, and allocate priests.</p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="sacrament-card bg-white p-8 rounded-xl shadow-md">
+                <div class="text-secondary mb-4 text-center text-5xl">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-primary text-center">Secure Access</h3>
+                <p class="text-gray-600 text-center">Your personal information is protected with advanced security measures and only accessible to authorized diocesan personnel.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Video Message Section -->
+<section class="py-16 bg-gradient-to-b from-primary to-primary-dark text-white">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col lg:flex-row items-center gap-8">
+            <div class="lg:w-1/2 animate__animated animate__fadeInLeft">
+                <div class="relative pb-[56.25%] overflow-hidden rounded-xl shadow-2xl">
+                    <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/example" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="lg:w-1/2 animate__animated animate__fadeInRight">
+                <h2 class="text-3xl font-bold mb-6">Message From Our Bishop</h2>
+                <p class="text-xl mb-6">Most Rev. Callistus Onaga emphasizes the spiritual importance of the diocesan census.</p>
+                <div class="bg-white bg-opacity-10 p-6 rounded-lg border-l-4 border-secondary">
+                    <p class="italic mb-4 text-lg">"This census is not just about numbers—it's about souls. By participating, you help us better serve your spiritual needs and strengthen our Catholic community throughout Enugu Diocese."</p>
+                    <p class="font-semibold text-secondary">- Most Rev. Callistus V.C. Onaga</p>
+                    <p class="text-gray-300">Bishop of Enugu</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">Census Timeline</h2>
+            <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Important dates for the 2025 Diocesan Census</p>
+        </div>
+        
+        <div class="relative">
+            <!-- Timeline line -->
+            <div class="absolute left-1/2 w-1 h-full bg-secondary transform -translate-x-1/2"></div>
+            
+            <!-- Timeline items -->
+            <div class="space-y-12">
+                <!-- Item 1 -->
+                <div class="relative flex flex-col md:flex-row items-center justify-between">
+                    <div class="md:w-5/12 md:pr-8 md:text-right mb-4 md:mb-0 animate__animated animate__fadeInLeft">
+                        <h3 class="text-xl font-semibold text-primary">Registration Phase</h3>
+                        <p class="text-gray-600 font-medium">June 1 - August 31, 2025</p>
+                        <p class="text-gray-600 mt-2">All parishioners are encouraged to register online or at their parishes. Parish registration teams will be available after Masses.</p>
+                    </div>
+                    <div class="md:w-1/12 flex justify-center mb-4 md:mb-0">
+                        <div class="w-6 h-6 rounded-full bg-secondary border-4 border-white shadow-lg"></div>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+                
+                <!-- Item 2 -->
+                <div class="relative flex flex-col md:flex-row items-center justify-between">
+                    <div class="md:w-5/12"></div>
+                    <div class="md:w-1/12 flex justify-center mb-4 md:mb-0">
+                        <div class="w-6 h-6 rounded-full bg-secondary border-4 border-white shadow-lg"></div>
+                    </div>
+                    <div class="md:w-5/12 md:pl-8 animate__animated animate__fadeInRight">
+                        <h3 class="text-xl font-semibold text-primary">Data Verification</h3>
+                        <p class="text-gray-600 font-medium">September 1 - October 15, 2025</p>
+                        <p class="text-gray-600 mt-2">Parish teams will verify submitted information with baptismal records and other sacramental registers.</p>
+                    </div>
+                </div>
+                
+                <!-- Item 3 -->
+                <div class="relative flex flex-col md:flex-row items-center justify-between">
+                    <div class="md:w-5/12 md:pr-8 md:text-right mb-4 md:mb-0 animate__animated animate__fadeInLeft">
+                        <h3 class="text-xl font-semibold text-primary">System Launch</h3>
+                        <p class="text-gray-600 font-medium">November 1, 2025 (All Saints Day)</p>
+                        <p class="text-gray-600 mt-2">Full access to sacramental records and diocesan services begins on our patronal feast day.</p>
+                    </div>
+                    <div class="md:w-1/12 flex justify-center mb-4 md:mb-0">
+                        <div class="w-6 h-6 rounded-full bg-secondary border-4 border-white shadow-lg"></div>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section id="faqs" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-primary mb-4">Frequently Asked Questions</h2>
+            <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Find answers to common questions about the diocesan census.</p>
+        </div>
+        
+        <div class="max-w-3xl mx-auto">
+            <!-- FAQ Item 1 -->
+            <div class="mb-6 bg-white p-6 rounded-lg shadow-md transition">
+                <button class="flex justify-between items-center w-full text-left group" onclick="toggleFAQ(1)">
+                    <h3 class="text-lg font-semibold text-primary group-hover:text-secondary">Who should participate in the census?</h3>
+                    <svg id="faq-icon-1" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary transition transform group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div id="faq-content-1" class="mt-4 text-gray-600 hidden">
+                    <p>All baptized Catholics residing within the Diocese of Enugu are encouraged to participate in the census. This includes:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Children (registered by parents/guardians)</li>
+                        <li>Adults and elderly members</li>
+                        <li>College students living in Enugu</li>
+                        <li>Military personnel stationed in the diocese</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- FAQ Item 2 -->
+            <div class="mb-6 bg-white p-6 rounded-lg shadow-md transition">
+                <button class="flex justify-between items-center w-full text-left group" onclick="toggleFAQ(2)">
+                    <h3 class="text-lg font-semibold text-primary group-hover:text-secondary">How is my personal information protected?</h3>
+                    <svg id="faq-icon-2" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary transition transform group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div id="faq-content-2" class="mt-4 text-gray-600 hidden">
+                    <p>We take your privacy seriously:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Data is encrypted both in transit and at rest</li>
+                        <li>Access is restricted to authorized diocesan personnel</li>
+                        <li>We comply with Nigeria Data Protection Regulation (NDPR)</li>
+                        <li>Information is used solely for pastoral purposes</li>
+                        <li>You control what information is shared with your parish</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- FAQ Item 3 -->
+            <div class="mb-6 bg-white p-6 rounded-lg shadow-md transition">
+                <button class="flex justify-between items-center w-full text-left group" onclick="toggleFAQ(3)">
+                    <h3 class="text-lg font-semibold text-primary group-hover:text-secondary">What if I need to update my information later?</h3>
+                    <svg id="faq-icon-3" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary transition transform group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div id="faq-content-3" class="mt-4 text-gray-600 hidden">
+                    <p>You can update most information directly through your account:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Log in with your unique ID and password</li>
+                        <li>Update contact information, address, or family status</li>
+                        <li>For sacramental records (baptism, marriage, etc.), contact your parish office</li>
+                        <li>Name changes require supporting documentation</li>
+                    </ul>
+                    <p class="mt-2">Annual updates are encouraged to keep our records current.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ Item 4 -->
+            <div class="mb-6 bg-white p-6 rounded-lg shadow-md transition">
+                <button class="flex justify-between items-center w-full text-left group" onclick="toggleFAQ(4)">
+                    <h3 class="text-lg font-semibold text-primary group-hover:text-secondary">How do I access my sacramental records?</h3>
+                    <svg id="faq-icon-4" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary transition transform group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div id="faq-content-4" class="mt-4 text-gray-600 hidden">
+                    <p>After verification, you can access your records through:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Your online account dashboard</li>
+                        <li>The diocesan mobile app (coming soon)</li>
+                        <li>Your parish office for official certificates</li>
+                    </ul>
+                    <p class="mt-2">For sacraments received before 2000, some records may need to be manually retrieved from parish archives.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="py-16 bg-gradient-to-r from-primary to-primary-dark text-white">
+    <div class="container mx-auto px-4 text-center">
+        <div class="max-w-4xl mx-auto bg-white bg-opacity-10 p-8 md:p-12 rounded-xl backdrop-blur-sm border border-white border-opacity-20">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 animate__animated animate__pulse animate__infinite">Join Our Catholic Family</h2>
+            <p class="text-xl max-w-3xl mx-auto mb-8">Over 50,000 families in Enugu Diocese have already registered. Be part of this important initiative to strengthen our Church.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="{% url 'registry:register' %}" class="bg-white text-primary px-8 py-4 rounded-md font-semibold hover:bg-opacity-90 transition transform hover:scale-105 shadow-lg animate__animated animate__tada animate__delay-1s">
+                    Register Now <i class="fas fa-user-plus ml-2"></i>
+                </a>
+                <a href="{% url 'registry:login' %}" class="bg-secondary text-white px-8 py-4 rounded-md font-semibold hover:bg-opacity-90 transition transform hover:scale-105 shadow-lg">
+                    Returning User? Login <i class="fas fa-sign-in-alt ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function toggleFAQ(num) {
+        const content = document.getElementById(`faq-content-${num}`);
+        const icon = document.getElementById(`faq-icon-${num}`);
+        
+        if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            icon.innerHTML = '<path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />';
+        } else {
+            content.classList.add('hidden');
+            icon.innerHTML = '<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />';
+        }
+    }
+    
+    // Animate elements when they come into view
+    const animateOnScroll = () => {
+        const elements = document.querySelectorAll('.animate__animated');
+        elements.forEach(el => {
+            const elementTop = el.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < window.innerHeight - elementVisible) {
+                el.classList.add(el.dataset.animation || 'animate__fadeIn');
+            }
+        });
+    };
+    
+    window.addEventListener('scroll', animateOnScroll);
+    document.addEventListener('DOMContentLoaded', animateOnScroll);
+</script>
+{% endblock %}

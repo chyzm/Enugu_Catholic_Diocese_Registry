@@ -90,9 +90,9 @@
                 <i class="fas fa-praying-hands text-2xl"></i>
             </button>
             <div id="prayer-modal" class="hidden absolute bottom-20 right-0 w-72 bg-white rounded-lg shadow-xl p-4 border border-secondary">
-                <h3 class="text-primary font-bold mb-2">Today's Prayer Intention</h3>
-                <p id="prayer-text" class="text-gray-700 mb-3">For the success of our diocesan census and the spiritual growth of all parishioners.</p>
-                <button class="text-sm bg-primary text-white px-3 py-1 rounded hover:bg-opacity-90">Pray Now</button>
+                <h3 class="text-green-900 font-bold mb-2">Today's Prayer Intention</h3>
+                <p id="prayer-text" class="text-primary mb-3">For the success of our diocesan census and the spiritual growth of all parishioners.</p>
+                <button class="text-sm bg-green-900 text-white px-3 py-1 rounded hover:bg-opacity-90">Pray Now</button>
             </div>
         </div>
     </div>
@@ -195,7 +195,11 @@
                     <p class="mb-4 text-gray-300">"Seeking God's Will in all things" - The Catholic Diocese of Enugu, established in 1962, serves the faithful in Enugu State, Nigeria.</p>
                     <div class="flex space-x-4">
                         <a href="https://facebook.com/catholicdioceseenugu" class="text-white hover:text-secondary transition"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com/catholicenugu" class="text-white hover:text-secondary transition"><i class="fab fa-twitter"></i></a>
+                        <a href="https://twitter.com/catholicenugu" class="text-white hover:text-secondary transition mt-1">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5 fill-current">
+                              <path d="M13.3174 10.7749L19.1457 4H17.7646L12.7039 9.88256L8.66193 4H4L10.1122 12.8955L4 20H5.38119L10.7254 13.7878L14.994 20H19.656L13.3174 10.7749ZM11.4257 12.9738L10.8064 12.0881L5.87886 5.03974H8.00029L11.9769 10.728L12.5962 11.6137L17.7652 19.0075H15.6438L11.4257 12.9738Z"></path>
+                            </svg>
+                          </a>
                         <a href="https://instagram.com/catholicdioceseenugu" class="text-white hover:text-secondary transition"><i class="fab fa-instagram"></i></a>
                         <a href="https://youtube.com/c/catholicdioceseenugu" class="text-white hover:text-secondary transition"><i class="fab fa-youtube"></i></a>
                     </div>
@@ -205,8 +209,9 @@
                     <ul class="space-y-2">
                         <li><a href="{% url 'home' %}" class="hover:text-secondary transition">Home</a></li>
                         <li><a href="#about" class="hover:text-secondary transition">About the Census</a></li>
-                        <li><a href="#parishes" class="hover:text-secondary transition">Parish Finder</a></li>
-                        <li><a href="#contact" class="hover:text-secondary transition">Contact Us</a></li>
+                        <li><a href="#services" class="hover:text-secondary transition">Services</a></li>
+                        <li><a href="#faqs" class="hover:text-secondary transition">FAQs</a></li>
+
                     </ul>
                 </div>
                 <div>
@@ -223,9 +228,9 @@
                 <div>
                     <h3 class="text-xl font-semibold mb-4 text-secondary">Contact</h3>
                     <address class="not-italic text-gray-300">
-                        <p class="mb-2"><i class="fas fa-map-marker-alt mr-2 text-secondary"></i> Bishop's House, P.O. Box 592, Enugu, Nigeria</p>
-                        <p class="mb-2"><i class="fas fa-phone-alt mr-2 text-secondary"></i> +234 803 123 4567</p>
-                        <p class="mb-2"><i class="fas fa-envelope mr-2 text-secondary"></i> census@catholicdioceseenugu.org.ng</p>
+                        <p class="mb-2"><i class="fas fa-map-marker-alt mr-2 text-secondary"></i> Holy Ghost Cathedral, Enugu, Nigeria</p>
+                        <p class="mb-2"><i class="fas fa-phone-alt mr-2 text-secondary"></i> +234 800 123 4567</p>
+                        <p class="mb-2"><i class="fas fa-envelope mr-2 text-secondary"></i> ECDRegistry.org.ng</p>
                         <p class="mb-2"><i class="fas fa-clock mr-2 text-secondary"></i> Mon-Fri: 8:00 AM - 4:00 PM</p>
                     </address>
                 </div>

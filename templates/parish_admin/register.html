@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10">
+    <h2 class="text-2xl font-bold mb-6">Priest Registration</h2>
+    <p class="mb-4">Enter your details to register as a priest administrator.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 mb-1">First Name</label>
+            <input type="text" name="first_name" required class="w-full px-4 py-2 border rounded">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Last Name</label>
+            <input type="text" name="last_name" required class="w-full px-4 py-2 border rounded">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Email</label>
+            <input type="email" name="email" required class="w-full px-4 py-2 border rounded">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Phone Number</label>
+            <input type="tel" name="phone_number" required class="w-full px-4 py-2 border rounded">
+            <p class="text-xs text-gray-500 mt-1">Must be an approved number for your parish</p>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Deanery</label>
+            <select name="deanery" id="id_deanery" class="w-full px-4 py-2 border rounded" required>
+                <option value="">Select Deanery</option>
+                <option value="Agbani Deanery">Agbani Deanery</option>
+                <option value="Aguobu Owa Deanery">Aguobu Owa Deanery</option>
+                <option value="Emene Deanery">Emene Deanery</option>
+                <option value="Enugu Deanery">Enugu Deanery</option>
+                <option value="Nkwo Nike Deanery">Nkwo Nike Deanery</option>
+                <option value="Udi Deanery">Udi Deanery</option>
+                <option value="Chaplaincy">Chaplaincy</option>
+            </select>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Parish</label>
+            <select name="parish" id="id_parish" required class="w-full px-4 py-2 border rounded" disabled>
+                <option value="">Select Parish</option>
+            </select>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Password</label>
+            <input type="password" name="password1" required class="w-full px-4 py-2 border rounded">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 mb-1">Confirm Password</label>
+            <input type="password" name="password2" required class="w-full px-4 py-2 border rounded">
+        </div>
+        
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 w-full">
+            Register
+        </button>
+    </form>
+</div>
+
+<script>
+    const parishData = {
+        "Agbani Deanery": [
+            "Agbani (St. John)",
+            "Akpawfu (St. Philip)",
+            "Akpugo (Holy Angels)",
+            "Akpugo (Holy Trinity)",
+            "Akpugo (Sacred Heart)",
+            "Akpugo (St. Brendan)",
+            "Akpugo-Ugwuafor (St. Bridget)",
+            "Amagu (St Patrick)",
+            "Amagunze (Holy Innocents)",
+            "Amankanu-Amurri (St. Anne)",
+            "Amigbo-Ozalla (St. Vincent)",
+            "Amodu (St. Peter)",
+            "Amurri (St. Mary)",
+            "Aniyi, Amagunze (St. James)",
+            "Attakwu (St. John)",
+            "Eziokwe-Amurri (St. Michael)",
+            "Ihuokpara (St. Mary)",
+            "Imeoha (St. Paul)",
+            "Ishienu Nkerefi (St. Augustine)",
+            "Mburubu (St. John)",
+            "Nara (St. Kevin)",
+            "Nara (St. Pius)",
+            "Nkerefi (St. Patrick)",
+            "Nomeh (St. Patrick)",
+            "Obe (St. Anthony)",
+            "Obeagu-Attakwu (St. Joseph)",
+            "Ogonogo-Eji Akpugo (St. Jude)",
+            "Onicha-Agu, Amagunze(St. Martin)",
+            "Ozalla (St. Paul)",
+            "Ugbawka (Holy Trinity)",
+            "Ugbawka (St. James)",
+            "Umuatugbuoma, Akagbe (St. Francis)",
+            "Chime John"
+        ],
+        "Aguobu Owa Deanery": [
+            "Agba-Umana (St. Anthony)",
+            "Aguoba (St. Patrick)",
+            "Aguobu Iwollo (St. Martin)",
+            "Aguobu Owa (Christ the King)",
+            "Aguobu Umumba (St. Mary)",
+            "Awha Imezi (St. Michael)",
+            "Awha Agbagbo (St. Paul)",
+            "Awha Ndiagu (St. John Cross)",
+            "Imama Iwollo (Holy Rosary)",
+            "Ihuonyia Amansiodo (St. Patrick)",
+            "Imezi-Owa (Our Lady of Lourdes)",
+            "Iwollo (Sacred Heart)",
+            "Mgbagbu-Owa (St. Paul)",
+            "Mgbagbu-Owa (St. Pius)",
+            "Obeleagu Umana (St. Augustine)",
+            "Obeleagu Umana (St. Peter)",
+            "Obinofia (St. Dominic)",
+            "Obinofia Ndiuno (St. Mark)",
+            "Oghe (St. Theresa)",
+            "Oghe, Akama (St. Mary)",
+            "Oghe, Amansiodo (St. John)",
+            "Ogulogu Olo (St. Theresa)",
+            "Ogwofia Imezi-Owa (St. Patrick)",
+            "Okpudo Obeleagu Umana (St. Michael)",
+            "Okpueze Umumba (Christ the King)",
+            "Olo (Christ the King)",
+            "Olo (St. Joseph)",
+            "Olo Ibite (St. Andrew)",
+            "Olo, Imezi (St. Paul)",
+            "Omughu (St. Joseph)",
+            "Ugwuetiti-Amansiodo Oghe (St. Joseph)",
+            "Umuaji-Mgbagbuowa (Holy Rosary)",
+            "Umana Ndiagu (St. Mark)",
+            "Umudim – Imezi Owa (St. Charles)",
+            "Umudim – Aguobu Owa (Immaculate Conception)",
+            "Umumba Ndiagu (St. Peter)",
+            "Umumba Ndiuno (St. Mary)",
+            "Upata Ezema (St. Theresa)"
+        ],
+        "Emene Deanery": [
+            "Akpuoga (St. Mary)",
+            "Emene (Emmanuel Parish)",
+            "Emene (Our Lady of the Rosary)",
+            "Emene (St. Joseph)",
+            "Emene (Holy Trinity)",
+            "Emene, Destiny/ Standard Layout, (Queen of Divine Love)",
+            "Ezza Akpuoga (Corpus Christi)",
+            "Ezza Nkomoro Onuogba Nike (Holy Child)",
+            "Ezza Nkwubo (Corpus Christi)",
+            "Idodo (St. Charles)",
+            "Nchatancha, Queen of the Apostles",
+            "Nwanne Di Na Mba-New Haven Extension (St. Dominic)",
+            "Obinagu (St. Hyacinth)",
+            "Onu Ogba-Nike (St. Paul)",
+            "Oruku, (St. Mary)",
+            "Owo (St. Mary)",
+            "Premier Estate (St. Michael)",
+            "Mbulu Owo (St. Anthony)",
+            "Nkpologwu/ PRODA (St. Peter)",
+            "Ubahu (St. John)",
+            "Ugwuomu Nike (St. Mary)",
+            "Umuode (St. Rita)"
+        ],
+        "Enugu Deanery": [
+            "Akwuke (St Evaristus)",
+            "Akwuke (St. Mary)",
+            "Amachala Ngwo (St. Michael)",
+            "Amechi (St. Jude)",
+            "Amechi, Amagugwu (Holy Trinity)",
+            "Amechi, Ihuorie (St. Michael)",
+            "Asata (St. Aloysius)",
+            "Asata (St. Brigid)",
+            "Asata (St. Michael)",
+            "Awkunanaw (Maria Assumpta)",
+            "Awkunanaw (St. Paul)",
+            "Awkunanaw (Virgo Potens)",
+            "Awkunanaw, Obeagu (St. Anthony)",
+            "Awkunanaw (St. Patrick)",
+            "Ekulu, G.R.A. (Christ the King)",
+            "Garriki (St. Peter)",
+            "Garriki (St. Raphael)",
+            "Golf Estate (Holy Spirit)",
+            "Hilltop Enugu (Holy Trinity)",
+            "Idaw-River (St. Gabriel)",
+            "Idaw-River (St. Gregory the Great)",
+            "Idaw-River (St. Theresa)",
+            "Ind. Layout (Blessed Sacrament)",
+            "Ind. Layout (Holy Trinity)",
+            "Ind. Layout (Rosa Mystica)",
+            "Iva Valley (Our Lady of Mercy)",
+            "Iva Valley, Pottery (St. Patrick)",
+            "Jamboree (St. Joseph the Worker)",
+            "Maryland (Our Lady of Lourdes)",
+            "Maryland (St. Anne)",
+            "Mount Awkunanaw (St. Andrew)",
+            "New Haven (St. Mulumba)",
+            "New Haven (Our Lady of Perpetual Help)",
+            "New Haven (St. Callistus)",
+            "Ngene Evu, Camp (St. Ambrose)",
+            "Ngwo (Christ the King)",
+            "Ngwo (St. Mary)",
+            "Ngwo, Akama (St. Peter)",
+            "Ngwo (St. Theresa)",
+            "Ngwo, Uborji (St. Joseph)",
+            "Nineth Mile (St. Jude)",
+            "Ogbete (St. Patrick)",
+            "Ogui (Holy Ghost)",
+            "Ogui New Layout (St. Anthony)",
+            "Ologo (Holy Family)",
+            "Ugwu Aaron (St. Peter)",
+            "Ugwuaji, (St. Michael)",
+            "Umuase-Ngwo (St. Anthony)",
+            "Uno Okpete (Immaculate Heart)",
+            "UNTH (St. Martin de Poress)",
+            "Uwani (Sacred Heart)",
+            "Uwani (St. Mary)"
+        ],
+        "Nkwo Nike Deanery": [
+            "Abakpa (St. Theresa)",
+            "Abakpa, Anioma Layout (St. Jude)",
+            "Abakpa, Edward Nnaji Estate (St. Joseph)",
+            "Ako Nike (St. Patrick)",
+            "Alulu & Nokpa Nike (Two Hearts of Jesus and Mary)",
+            "Federal Housing (St. Leo the Great)",
+            "Housing Estate (Seat of Wisdom)",
+            "Ibagwa-Nike (All Saints)",
+            "Ifo Layout, Abakpa Nike (St. Benedict)",
+            "Iji Nike (Holy Cross)",
+            "Ndorommiri (Queen of Peace)",
+            "Mbano Nike (St. Michael)",
+            "Mbulu-Owehe, Nike (St. Paul)",
+            "New G.R.A. (St. Anthony)",
+            "Nkwo Nike (Assumption)",
+            "Trans-Ekulu, Community Estate (Mater Dei – Mother of God)",
+            "Trans-Ekulu (St. Mary)",
+            "Trans-Ekulu Phase 6 (Blessed Tansi)",
+            "Trans-Ekulu, RCC Quarters (St. John the Beloved Apostle)",
+            "Ugbene (SS. Peter& Paul)",
+            "Ugbene II (St. Francis)",
+            "Ugbo-Odogwu (St. Theresa)",
+            "Ugbo Owa (Stella Maris)",
+            "Ugwogo Nike (St. Joseph)",
+            "Ugwuagor (Queen of the H/Rosary)",
+            "Ugwuegede (Immaculate Conception)",
+            "Umuchigbo, Iji Nike (St. Mary)"
+        ],
+        "Udi Deanery": [
+            "Agu-Abor (SS Simon & Jude)",
+            "Abia (St. Mark)",
+            "Abor (St. Peter)",
+            "Abor (St. Theresa)",
+            "Affa (St. John)",
+            "Affa Amofia-Agu (St. Mary)",
+            "Affa Amokwu (St. Michael)",
+            "Agbalaenyi Nachi (St. Maria Goretti)",
+            "Agbudu (St. Alfred)",
+            "Akpakwume/Nze (St. Augustine)",
+            "Amokwe (St. Anthony)",
+            "Amokwe (St. Patrick)",
+            "Amokwe (St. Paul)",
+            "Amokwe (St. Theresa)",
+            "Awhum (St. Luke)",
+            "Ebe (St. John)",
+            "Egede (St. Cyril)",
+            "Eke (St. Paul)",
+            "Nachi (St. Mary)",
+            "Nsude (St. Mark)",
+            "Obinagu (St. Dominic)",
+            "Obinagu (St. Paul)",
+            "Obioma (St. Theresa)",
+            "Ogui-Eke (St. Michael)",
+            "Okpatu (Holy Family)",
+            "Okpatu (St. Joseph)",
+            "Oma-Eke (St. Anthony)",
+            "Udi (St. Mary)",
+            "Ukana (St. Joseph)",
+            "Umabi (Holy Family)",
+            "Umuoka (St. Andrew)",
+            "Umuaga (St. Peter)",
+            "Umuaga (St. Anthony)",
+            "Umulumgbe (St. Anthony)",
+            "Umulumgbe (St. Michael)"
+        ],
+        "Chaplaincy": [
+            "ESUT Agbani Campus, St. Albert the Great",
+            "Mea Matter Elizabeth High School, Agbani",
+            "Nigerian Law School, Augustine Nnamani Campus, Agbani, St. Augustine",
+            "Omnium Sanctorum, Godfrey Okoye University Chaplaincy",
+            "Federal Training Centre (St. Lucy)",
+            "Coal City University Chaplaincy",
+            "Annunciation Hospital",
+            "Mater Carmeli College, Akpuoga Nike",
+            "UNEC (St. Mulumba)",
+            "HRC",
+            "IMT, St. Augustine",
+            "ESUT, Enugu Campus, St. Albert",
+            "ESUT College of Medicine, Parklane, St. Rita",
+            "University of Nigeria Teaching Hospital, Enugu",
+            "Enugu Prison, Pope John Paul II",
+            "Enugu Prison, St. Paul Catholic Chaplaincy",
+            "Dental School of Technology, Trans Ekulu",
+            "Orthopaedic Hospital, Mary Health of the Sick",
+            "Ntasiobi ndi N'Ahuhu Hospital",
+            "Seat of Wisdom Secondary School, Trans Ekulu",
+            "Blessed Iwene Tansi Catholic Chaplaincy National Grammar School Nike Enugu",
+            "DDL Community, Phase Six Trans Ekulu"
+        ]
+    };
+
+    document.getElementById('id_deanery').addEventListener('change', function() {
+        const deaneryName = this.value;
+        const parishSelect = document.getElementById('id_parish');
+        
+        if (deaneryName) {
+            parishSelect.innerHTML = '<option value="">Select Parish</option>';
+            parishData[deaneryName].forEach(parish => {
+                const option = document.createElement('option');
+                option.value = parish;
+                option.textContent = parish;
+                parishSelect.appendChild(option);
+            });
+            parishSelect.disabled = false;
+        } else {
+            parishSelect.innerHTML = '<option value="">Select Parish</option>';
+            parishSelect.disabled = true;
+        }
+    });
+</script>
+{% endblock %}

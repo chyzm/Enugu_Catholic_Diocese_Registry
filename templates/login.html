@@ -42,7 +42,8 @@
     {% endif %}
 
     {# Verification Section - Shows only when needed #}
-    {% if user.is_authenticated and request.session.show_verification %}
+    {% comment %} {% if user.is_authenticated and request.session.show_verification %} {% endcomment %}
+    {% if user.is_authenticated and request.session.show_verification and not request.user.parishadministrator %}
     <div class="mt-8 p-4 border border-primary rounded-lg">
         <h3 class="text-lg font-semibold mb-2 text-primary">Verify Your Identity</h3>
         <p class="text-gray-600 mb-4">To access your dashboard, please verify your parishioner ID.</p>

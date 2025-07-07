@@ -140,4 +140,22 @@ urlpatterns = [
     path('baptism/<int:baptism_id>/', views.view_baptism, name='view_baptism'),
     path('baptism/<int:baptism_id>/edit/', views.edit_baptism, name='edit_baptism'),
     path('baptism/<int:baptism_id>/delete/', views.delete_baptism, name='delete_baptism'),
+    
+    # Priest
+    path('priest/register/', views.priest_register, name='priest_register'),
+    path('priest/verify/', views.priest_verify, name='priest_verify'),
+    
+    # Parish Admin
+    path('parish-admin/register/', views.parish_admin_register, name='parish_admin_register'),
+    path('parish-admin/verify/', views.parish_admin_verify, name='parish_admin_verify'),
+    path('parish-admin/complete/', views.parish_admin_complete, name='parish_admin_complete'),
+    
+    
+    
+    # Initial Setup
+    path('admin/initial-setup/', views.initial_parish_setup, name='initial_parish_setup'),
+    
+    
+    path('api/get-parishes/', views.get_parishes_by_deanery, name='get_parishes'),
 ]
+

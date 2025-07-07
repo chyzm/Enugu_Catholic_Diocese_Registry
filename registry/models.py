@@ -1,7 +1,9 @@
+from datetime import timezone
 from django.db import models
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
+from django.utils import timezone
 
 # Create your models here.
 
@@ -130,3 +132,80 @@ class Baptism(models.Model):
     
     def __str__(self):
         return f"{self.child_name} - {self.date_of_birth}"
+    
+    
+    
+
+
+class Deanery(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    
+    def __str__(self):
+        return self.name
+
+class Parish(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    deanery = models.ForeignKey(Deanery, on_delete=models.PROTECT)
+   # This field will store comma-separated approved phone numbers for the parish
+    phone_numbers = models.CharField(max_length=255, blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.name} ({self.deanery})"
+    
+    def get_approved_numbers_list(self):
+        """Returns list of approved phone numbers"""
+        return [num.strip() for num in self.phone_numbers.split(',') if num.strip()]
+    
+    def is_approved_number(self, phone_number):
+        """Check if a phone number is approved for this parish"""
+        return phone_number in self.get_approved_numbers_list()
+    
+    
+    
+
+# class Priest(models.Model):
+#     first_name = models.CharField(max_length=100)
+#     last_name = models.CharField(max_length=100)
+#     email = models.EmailField(unique=True)
+#     phone_number = models.CharField(max_length=20)
+#     parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
+#     is_active = models.BooleanField(default=True)
+    
+#     @property
+#     def full_name(self):
+#         return f"{self.first_name} {self.last_name}"
+    
+#     def __str__(self):
+#         return f"{self.full_name} ({self.parish.name})"
+
+
+class Priest(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=20)
+    parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(default=timezone.now)  # Only use default
+    
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+    
+    def __str__(self):
+        return f"{self.full_name} ({self.parish.name})"
+    
+    
+
+
+
+class ParishAdministrator(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
+    priest = models.ForeignKey(Priest, on_delete=models.PROTECT)  # Changed from OneToOne
+    phone_verified = models.BooleanField(default=False)
+    verification_code = models.CharField(max_length=6, blank=True, null=True)
+    verification_code_expiry = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)  # Only use default
+    def __str__(self):
+        return f"{self.user.username} - {self.parish.name}"

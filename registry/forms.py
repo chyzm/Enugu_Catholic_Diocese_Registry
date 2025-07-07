@@ -1,8 +1,9 @@
 # registry/forms.py
 from django import forms
-from .models import Baptism, Parishioner
+from .models import Baptism, Parish, Parishioner, Priest
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import ParishAdministrator
 
 class ParishionerForm(forms.ModelForm):
     class Meta:
@@ -84,6 +85,114 @@ class BaptismForm(forms.ModelForm):
             'time_of_birth': forms.TimeInput(attrs={'type': 'time'}),
             'home_address': forms.Textarea(attrs={'rows': 3}),
         }
+        
+
+
+class ParishAdminSelfRegistrationForm(forms.Form):
+    phone_number = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        phone_number = cleaned_data.get('phone_number')
+        email = cleaned_data.get('email').lower()
+        
+        try:
+            # Check if priest exists with this phone and email
+            priest = Priest.objects.get(
+                phone_number=phone_number,
+                email__iexact=email,
+                is_active=True
+            )
+            
+            # Verify phone is approved for parish
+            if not priest.parish.is_approved_number(phone_number):
+                raise forms.ValidationError("This phone number is not approved for your parish")
+            
+            cleaned_data['priest'] = priest
+            return cleaned_data
+            
+        except Priest.DoesNotExist:
+            raise forms.ValidationError("No active priest found with this phone number and email")
+        
+        
+        
+        
+class ParishAdminCompleteRegistrationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username", "password1", "password2")
+    
+    def __init__(self, *args, **kwargs):
+        from .models import Priest  # Ensure this is imported locally if needed
+        self.priest = kwargs.pop('priest', None)
+        super().__init__(*args, **kwargs)
+        if self.priest:
+            self.fields['username'].initial = self.priest.email.split('@')[0]
+            
+            
+            
+
+# class ParishSetupForm(forms.ModelForm):
+#     class Meta:
+#         model = Parish
+#         fields = ['name', 'deanery', 'approved_phone_numbers']
+#         widgets = {
+#             'approved_phone_numbers': forms.TextInput(attrs={
+#                 'placeholder': '+2348012345678,+2348098765432'
+#             })
+#         }
+
+
+class PriestRegistrationForm(forms.ModelForm):
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    
+    class Meta:
+        model = Priest
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'parish']
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords don't match")
+            
+        # Verify phone number is approved for parish
+        parish = cleaned_data.get('parish')
+        phone_number = cleaned_data.get('phone_number')
+        if parish and phone_number and not parish.is_approved_number(phone_number):
+            raise forms.ValidationError("This phone number is not approved for the selected parish")
+        
+        return cleaned_data
+
+
+        
+class ParishSetupForm(forms.ModelForm):
+    class Meta:
+        model = Parish
+        fields = ['name', 'deanery', 'phone_numbers']  # Changed from approved_phone_numbers
+        widgets = {
+            'phone_numbers': forms.TextInput(attrs={
+                'placeholder': '+2348012345678,+2348098765432'
+            })
+        }
+
+class PriestSetupForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    
+    class Meta:
+        model = Priest
+        fields = ['first_name', 'last_name', 'email', 'phone_number']
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('password') != cleaned_data.get('password_confirm'):
+            raise forms.ValidationError("Passwords don't match")
+        return cleaned_data
         
         
 

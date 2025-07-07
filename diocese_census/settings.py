@@ -29,7 +29,7 @@ SECRET_KEY = 'SECRET_KEY'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG'
 
-ALLOWED_HOSTS = ["0.0.0.0"]
+ALLOWED_HOSTS = ["*"]  # Allow all hosts for development; restrict in production
 
 
 # Application definition

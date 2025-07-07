@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="text-2xl font-bold text-primary">Baptism Record Details</h2>
+            <p class="text-gray-600">View complete details for {{ baptism.child_name }}</p>
+        </div>
+        <div class="space-x-4">
+            <button onclick="window.location.href='{% url 'registry:baptism_records' %}'" 
+                    class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition">
+                Back to Records
+            </button>
+            {% if request.user.is_superuser %}
+            <button onclick="window.location.href='{% url 'registry:edit_baptism' baptism.id %}'" 
+                    class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                Edit Record
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Child Information</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Full Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.child_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Gender</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.get_gender_display }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Date of Birth</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.date_of_birth|date:"Y-m-d" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Time of Birth</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.time_of_birth|time:"H:i" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Place of Birth</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.place_of_birth }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Hospital Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.hospital_name|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Baptism Details</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Baptism Date</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.baptism_date|date:"Y-m-d" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Birth Parish</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.birth_parish }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Baptism Certificate</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.baptism_certificate|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Home Address</p>
+                            <p class="mt-1 text-sm text-gray-900 whitespace-pre-line">{{ baptism.home_address }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Father's Information</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.father_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Religion</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.father_religion }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Phone</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.father_phone }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Parish</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.father_parish|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Mother's Information</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.mother_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Maiden Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.mother_maiden|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Religion</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.mother_religion }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Phone</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.mother_phone }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Parish</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ baptism.mother_parish|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

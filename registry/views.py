@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Parishioner
-from .forms import CustomUserCreationForm, ParishionerForm
-from django.http import HttpResponse
+from .models import Baptism, Parishioner
+from .forms import BaptismForm, CustomUserCreationForm, ParishionerForm
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.core.mail import send_mail
@@ -398,21 +398,38 @@ def user_login(request):
         if user is not None:
             auth_login(request, user)
             
+            # Clear any previous error messages
+            if 'error' in request.session:
+                del request.session['error']
+            
             # Check if already verified
             if 'verified_parishioner_id' in request.session:
                 return redirect('registry:user_dashboard')
                 
-            # Render login template with verification form
+            # Set flag to show verification form
+            request.session['show_verification'] = True
+            request.session.modified = True
+            
             return render(request, 'login.html', {
-                'user': request.user,
+                'user': user,
                 'show_verification': True
             })
         else:
-            return render(request, 'login.html', {
-                'error': 'Invalid username or password'
-            })
+            # Store error in session for persistence across redirects
+            request.session['error'] = 'Invalid username or password'
+            request.session.modified = True
+            return redirect('registry:login')
     
-    return render(request, 'login.html')
+    # Clear any existing error messages
+    error = None
+    if 'error' in request.session:
+        error = request.session.pop('error')
+        request.session.modified = True
+    
+    return render(request, 'login.html', {
+        'error': error,
+        'show_verification': request.session.get('show_verification', False)
+    })
 
 
 from django.contrib.auth import logout as auth_logout
@@ -438,8 +455,6 @@ def verify_id(request):
         unique_id = request.POST.get('unique_id', '').strip().upper()
         user_email = request.user.email.lower()
         
-        print(f"Verification attempt - ID: {unique_id}, Email: {user_email}")  # Debug
-        
         try:
             parishioner = Parishioner.objects.get(
                 unique_id__iexact=unique_id,
@@ -449,15 +464,11 @@ def verify_id(request):
             # Store verification in session
             request.session['verified_parishioner_id'] = parishioner.id
             request.session['verified_parishioner_name'] = parishioner.full_name
-            
-            # Force session save
             request.session.modified = True
-            print(f"Session after verification: {request.session.items()}")  # Debug
             
-            # Verify session saved properly
-            from django.contrib.sessions.backends.db import SessionStore
-            session_key = request.session.session_key
-            print(f"Session key: {session_key}")
+            # Clear any verification errors
+            if 'verification_error' in request.session:
+                del request.session['verification_error']
             
             return redirect('registry:user_dashboard')
             
@@ -465,22 +476,19 @@ def verify_id(request):
             error_msg = 'No matching parishioner record found'
             if Parishioner.objects.filter(unique_id__iexact=unique_id).exists():
                 error_msg = 'Email does not match our records for this ID'
-            return render(request, 'login.html', {
-                'user': request.user,
-                'show_verification': True,
-                'verification_error': error_msg
-            })
+            
+            request.session['verification_error'] = error_msg
+            request.session['show_verification'] = True
+            request.session.modified = True
+            return redirect('registry:login')
             
         except Exception as e:
-            print(f"Verification error: {str(e)}")  # Debug
-            return render(request, 'login.html', {
-                'user': request.user,
-                'show_verification': True,
-                'verification_error': 'An error occurred during verification'
-            })
+            request.session['verification_error'] = 'An error occurred during verification'
+            request.session['show_verification'] = True
+            request.session.modified = True
+            return redirect('registry:login')
     
     return redirect('registry:login')
-
 
 
 @login_required
@@ -558,5 +566,209 @@ def registration_success(request, unique_id):
     })
     
     
+def submit_baptism(request):
+    if request.method == 'POST':
+        try:
+            # Parse date strings into date objects
+            date_of_birth = parse_date(request.POST.get('date_of_birth'))
+            baptism_date = parse_date(request.POST.get('baptism_date')) if request.POST.get('baptism_date') else None
+            
+            # Create Baptism record with proper date objects
+            baptism = Baptism.objects.create(
+                child_name=request.POST.get('child_name'),
+                gender=request.POST.get('gender'),
+                date_of_birth=date_of_birth,
+                time_of_birth=request.POST.get('time_of_birth'),
+                place_of_birth=request.POST.get('place_of_birth'),
+                hospital_name=request.POST.get('hospital_name'),
+                birth_parish=request.POST.get('parish'),  # Using parish from form
+                baptism_date=baptism_date,
+                baptism_certificate=request.POST.get('baptism_certificate'),
+                father_name=request.POST.get('father_name'),
+                father_religion=request.POST.get('father_religion'),
+                father_phone=request.POST.get('father_phone'),
+                father_parish=request.POST.get('father_parish'),
+                mother_name=request.POST.get('mother_name'),
+                mother_maiden=request.POST.get('mother_maiden'),
+                mother_religion=request.POST.get('mother_religion'),
+                mother_phone=request.POST.get('mother_phone'),
+                mother_parish=request.POST.get('mother_parish'),
+                home_address=request.POST.get('home_address'),
+            )
+            
+            # Prepare data for email
+            baptism_data = {
+                'child_name': baptism.child_name,
+                'gender': baptism.get_gender_display(),
+                'date_of_birth': baptism.date_of_birth.strftime('%Y-%m-%d') if baptism.date_of_birth else '',
+                'time_of_birth': str(baptism.time_of_birth) if baptism.time_of_birth else '',
+                'place_of_birth': baptism.place_of_birth,
+                'hospital_name': baptism.hospital_name,
+                'birth_parish': baptism.birth_parish,
+                'baptism_date': baptism.baptism_date.strftime('%Y-%m-%d') if baptism.baptism_date else '',
+                'baptism_certificate': baptism.baptism_certificate,
+                'father_name': baptism.father_name,
+                'father_religion': baptism.father_religion,
+                'father_phone': baptism.father_phone,
+                'father_parish': baptism.father_parish,
+                'mother_name': baptism.mother_name,
+                'mother_maiden': baptism.mother_maiden,
+                'mother_religion': baptism.mother_religion,
+                'mother_phone': baptism.mother_phone,
+                'mother_parish': baptism.mother_parish,
+                'home_address': baptism.home_address,
+            }
+            
+            # Send email to EDC
+            subject = 'New Baptism Registration'
+            message = render_to_string('email/baptism_registration.txt', baptism_data)
+            html_message = render_to_string('email/baptism_registration.html', baptism_data)
+            
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.ADMIN_EMAIL],
+                html_message=html_message,
+                fail_silently=False,
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Baptism registration submitted successfully!',
+                'child_name': baptism.child_name,
+                'baptism_date': baptism.baptism_date.strftime('%Y-%m-%d') if baptism.baptism_date else ''
+            })
+            
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            })
     
+    return JsonResponse({
+        'success': False,
+        'error': 'Invalid request method'
+    })
+
+
+@user_passes_test(admin_check, login_url='registry:login')
+def baptism_records(request):
+    # Get filter parameters
+    search_query = request.GET.get('q', '')
+    parish_filter = request.GET.get('parish', '')
+    
+    # Build query
+    baptisms = Baptism.objects.all().order_by('-baptism_date')
+    
+    if search_query:
+        baptisms = baptisms.filter(
+            Q(child_name__icontains=search_query) |
+            Q(father_name__icontains=search_query) |
+            Q(mother_name__icontains=search_query) |
+            Q(baptism_certificate__icontains=search_query)
+        )
+    
+    if parish_filter:
+        baptisms = baptisms.filter(birth_parish=parish_filter)
+    
+    # Pagination
+    paginator = Paginator(baptisms, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Preserve query parameters for pagination
+    query_params = request.GET.copy()
+    if 'page' in query_params:
+        del query_params['page']
+    query_params = query_params.urlencode()
+    
+    return render(request, 'admin/baptism_records.html', {
+        'baptisms': page_obj,
+        'page_obj': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'query_params': query_params,
+        'deanery_choices': Parishioner.DEANERY_CHOICES,
+    })
+    
+    
+@user_passes_test(admin_check, login_url='registry:login')
+def add_baptism(request):
+    if request.method == 'POST':
+        form = BaptismForm(request.POST)
+        if form.is_valid():
+            baptism = form.save(commit=False)
+            baptism.created_by = request.user
+            baptism.save()
+            messages.success(request, 'Baptism record added successfully!')
+            return redirect('registry:view_baptism', baptism_id=baptism.id)
+    else:
+        form = BaptismForm()
+    
+    return render(request, 'admin/add_baptism.html', {'form': form})
+
+@user_passes_test(admin_check, login_url='registry:login')
+def view_baptism(request, baptism_id):
+    baptism = get_object_or_404(Baptism, id=baptism_id)
+    return render(request, 'admin/view_baptism.html', {'baptism': baptism})
+
+@user_passes_test(admin_check, login_url='registry:login')
+def edit_baptism(request, baptism_id):
+    baptism = get_object_or_404(Baptism, id=baptism_id)
+    
+    if request.method == 'POST':
+        form = BaptismForm(request.POST, instance=baptism)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Baptism record updated successfully!')
+            return redirect('registry:view_baptism', baptism_id=baptism.id)
+    else:
+        form = BaptismForm(instance=baptism)
+    
+    return render(request, 'admin/edit_baptism.html', {
+        'form': form,
+        'baptism': baptism
+    })
+
+@user_passes_test(lambda u: u.is_superuser, login_url='registry:login')
+def delete_baptism(request, baptism_id):
+    baptism = get_object_or_404(Baptism, id=baptism_id)
+    
+    if request.method == 'POST':
+        baptism.delete()
+        messages.success(request, 'Baptism record deleted successfully!')
+        return redirect('registry:baptism_records')
+    
+    return render(request, 'admin/confirm_delete_baptism.html', {'baptism': baptism})
+
+
+@user_passes_test(admin_check, login_url='registry:login')
+def add_baptism(request):
+    if request.method == 'POST':
+        form = BaptismForm(request.POST)
+        if form.is_valid():
+            baptism = form.save(commit=False)
+            baptism.created_by = request.user
+            
+            # Try to link to parishioner if child name matches
+            try:
+                parishioner = Parishioner.objects.filter(
+                    Q(full_name__icontains=baptism.child_name.split()[0]) |
+                    Q(family_details__icontains=baptism.child_name)
+                ).first()
+                if parishioner:
+                    baptism.parishioner = parishioner
+                    parishioner.baptized = True
+                    parishioner.baptism_date = baptism.baptism_date
+                    parishioner.save()
+            except Exception as e:
+                print(f"Error linking baptism to parishioner: {e}")
+            
+            baptism.save()
+            messages.success(request, 'Baptism record added successfully!')
+            return redirect('registry:view_baptism', baptism_id=baptism.id)
+    else:
+        form = BaptismForm()
+    
+    return render(request, 'admin/add_baptism.html', {'form': form})
     

@@ -132,4 +132,12 @@ urlpatterns = [
              template_name='password_reset_complete.html'
          ),
          name='password_reset_complete'),
+    
+    # Baptism
+    path('submit-baptism/', views.submit_baptism, name='submit_baptism'),
+    path('baptism-records/', views.baptism_records, name='baptism_records'),
+    path('baptism/add/', views.add_baptism, name='add_baptism'),
+    path('baptism/<int:baptism_id>/', views.view_baptism, name='view_baptism'),
+    path('baptism/<int:baptism_id>/edit/', views.edit_baptism, name='edit_baptism'),
+    path('baptism/<int:baptism_id>/delete/', views.delete_baptism, name='delete_baptism'),
 ]

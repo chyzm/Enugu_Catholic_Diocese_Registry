@@ -1,6 +1,6 @@
 # registry/forms.py
 from django import forms
-from .models import Parishioner
+from .models import Baptism, Parishioner
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -72,6 +72,18 @@ class CustomUserCreationForm(UserCreationForm):
                     "No parishioner record found with this ID and email combination"
                 )
         return cleaned_data
+    
+    
+class BaptismForm(forms.ModelForm):
+    class Meta:
+        model = Baptism
+        fields = '__all__'
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'baptism_date': forms.DateInput(attrs={'type': 'date'}),
+            'time_of_birth': forms.TimeInput(attrs={'type': 'time'}),
+            'home_address': forms.Textarea(attrs={'rows': 3}),
+        }
         
         
 

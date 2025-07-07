@@ -5,7 +5,7 @@ from django.utils.crypto import get_random_string
 
 # Create your models here.
 
-
+GENDER_CHOICES = [('M', 'Male'), ('F', 'Female')] # this was done so baptism can use name attribute.
 class Parishioner(models.Model):
     GENDER_CHOICES = [('M', 'Male'), ('F', 'Female')]
     MARITAL_STATUS = [
@@ -67,6 +67,8 @@ class Parishioner(models.Model):
     
     # Family Details
     family_details = models.TextField(blank=True)
+    
+  
 
     
     # Marital verification
@@ -100,3 +102,31 @@ class Parishioner(models.Model):
     
     def __str__(self):
         return f"{self.full_name} ({self.unique_id})"
+    
+    
+
+class Baptism(models.Model):
+    parishioner = models.ForeignKey(Parishioner, on_delete=models.SET_NULL, null=True, blank=True, related_name='baptisms')
+    child_name = models.CharField(max_length=255)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    date_of_birth = models.DateField()
+    time_of_birth = models.TimeField()
+    place_of_birth = models.CharField(max_length=255)
+    hospital_name = models.CharField(max_length=255, blank=True, null=True)
+    birth_parish = models.CharField(max_length=100)
+    baptism_date = models.DateField(blank=True, null=True)
+    baptism_certificate = models.CharField(max_length=50, blank=True, null=True)
+    father_name = models.CharField(max_length=255)
+    father_religion = models.CharField(max_length=50)
+    father_phone = models.CharField(max_length=20)
+    father_parish = models.CharField(max_length=100, blank=True, null=True)
+    mother_name = models.CharField(max_length=255)
+    mother_maiden = models.CharField(max_length=255, blank=True, null=True)
+    mother_religion = models.CharField(max_length=50)
+    mother_phone = models.CharField(max_length=20)
+    mother_parish = models.CharField(max_length=100, blank=True, null=True)
+    home_address = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.child_name} - {self.date_of_birth}"

@@ -25,11 +25,11 @@
         <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-8 animate__animated animate__fadeIn animate__delay-1s [text-shadow:_1px_1px_2px_rgba(0,_34,_68,_0.5)]">Join our faith community in building a vibrant Catholic family across Enugu Diocese</p>
         <div class="flex flex-col sm:flex-row justify-center gap-4 animate__animated animate__fadeInUp animate__delay-1s">
             <a href="{% url 'registry:register' %}" class="relative bg-white text-green-700 px-8 py-4 rounded-xl font-semibold hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg overflow-hidden group">
-                <span class="relative z-10">Register Now <i class="fas fa-arrow-right ml-2"></i></span>
+                <span class="relative z-10">Participate in Census <i class="fas fa-arrow-right ml-2"></i></span>
                 <span class="absolute inset-0 bg-gradient-to-r from-blue-900 to-blue-800 opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-xl"></span>
                 <span class="absolute -inset-1 bg-blue-900 rounded-xl blur opacity-0 group-hover:opacity-20 animate-pulse-slow transition-opacity duration-700"></span>
             </a>
-            <a href="#about" class="relative bg-green-700 text-white px-8 py-4 rounded-xl font-semibold hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg overflow-hidden group">
+            <a href="#sacrament" class="relative bg-green-700 text-white px-8 py-4 rounded-xl font-semibold hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg overflow-hidden group">
                 <span class="relative z-10">Learn More <i class="fas fa-info-circle ml-2"></i></span>
                 <span class="absolute inset-0 bg-gradient-to-r from-blue-900 to-blue-800 opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-xl"></span>
                 <span class="absolute -inset-1 bg-blue-900 rounded-xl blur opacity-0 group-hover:opacity-20 animate-pulse-slow transition-opacity duration-700"></span>
@@ -38,72 +38,6 @@
     </div>
 </section>
 
-<!-- About the Diocese Section -->
-<section id="about" class="py-16 bg-white relative overflow-hidden mt-2">
-    <!-- Floating background elements -->
-    <div class="absolute -left-20 -top-20 w-64 h-64 rounded-full bg-blue-50 opacity-30 animate-float-slow"></div>
-    <div class="absolute -right-10 top-1/3 w-48 h-48 rounded-full bg-secondary-50 opacity-20 animate-float-medium"></div>
-    <div class="absolute left-1/4 bottom-20 w-32 h-32 rounded-full bg-primary-50 opacity-25 animate-float-slow"></div>
-    <div class="absolute right-1/4 -bottom-10 w-40 h-40 rounded-full bg-green-50 opacity-15 animate-float-medium"></div>
-    
-    <div class="container mx-auto px-4 relative z-10">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-green-900 mb-4 animate__animated animate__fadeIn [text-shadow:_1px_1px_2px_rgba(0,_34,_68,_0.2)]">About Our Diocese</h2>
-            <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto animate__animated animate__fadeIn">The Catholic Diocese of Enugu, established in 1962, serves the faithful in Enugu State with 52 parishes and 6 Deaneries.</p>
-        </div>
-        
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- Our Diocese -->
-            <div id="our-diocese" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
-                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
-                    <i class="fas fa-church"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-900">Our Diocese</h3>
-                <p class="text-gray-600 mb-4">The Catholic Diocese of Enugu covers the entire Enugu State in Nigeria. With its seat at the Holy Ghost Cathedral, the diocese has grown to include 52 parishes, 10 religious orders, and numerous educational and healthcare institutions.</p>
-                <p class="text-gray-600">Our mission is to proclaim the Gospel, celebrate the sacraments, and serve the people of God in Enugu State.</p>
-            </div>
-            
-            <!-- The Bishop -->
-            <div id="the-bishop" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp animate__delay-1s backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
-                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
-                    <i class="fas fa-user-alt"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-900">The Bishop</h3>
-                <p class="text-gray-600 mb-4">Most Rev. Callistus Valentine Chukwuma Onaga was ordained Bishop of Enugu on September 29, 2009. Born on September 29, 1958, he was ordained a priest on August 8, 1987.</p>
-                <p class="text-gray-600">Bishop Onaga has been instrumental in promoting evangelization, education, and social services throughout the diocese.</p>
-            </div>
-            
-            <!-- History -->
-            <div id="history" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp animate__delay-2s backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
-                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
-                    <i class="fas fa-landmark"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-3 text-green-900">History</h3>
-                <p class="text-gray-600 mb-4">The Diocese of Enugu was created on November 12, 1962, from parts of the Archdiocese of Onitsha. The first Bishop was Most Rev. Dr. John Cross Anyogu (1962-1967).</p>
-                <p class="text-gray-600">The diocese has grown from its initial 12 parishes to 52 parishes today, serving a Catholic population of over 1.5 million faithful.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<style>
-    /* Add these animations to your stylesheet */
-    @keyframes float-slow {
-        0%, 100% { transform: translateY(0) translateX(0); }
-        50% { transform: translateY(-20px) translateX(10px); }
-    }
-    @keyframes float-medium {
-        0%, 100% { transform: translateY(0) translateX(0); }
-        50% { transform: translateY(-15px) translateX(-10px); }
-    }
-    .animate-float-slow {
-        animation: float-slow 8s ease-in-out infinite;
-    }
-    .animate-float-medium {
-        animation: float-medium 6s ease-in-out infinite;
-    }
-</style>
 
 <!-- Features Section -->
 <section id="services" class="py-16 bg-gray-50">
@@ -145,48 +79,685 @@
     </div>
 </section>
 
-<!-- Sacramental Journey Section -->
-<section class="py-16 bg-gradient-to-b from-primary to-primary-dark text-white">
+
+<!-- Sacraments Section -->
+<section id="sacrament" class="py-16 bg-white">
     <div class="container mx-auto px-4">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-green-900 mb-4 animate__animated animate__fadeInDown">Your Sacramental Journey</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-green-900 mb-4">Sacramental Services</h2>
             <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
-            <p class="text-xl max-w-3xl mx-auto text-primary animate__animated animate__fadeIn">Track and celebrate your spiritual milestones with our diocese</p>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Access and manage sacramental records for our diocese</p>
         </div>
-
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- Baptism Card -->
-            <div class="bg-white bg-opacity-10 p-8 rounded-xl border border-white border-opacity-20 hover:border-opacity-40 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl backdrop-blur-sm">
-                <div class="text-5xl text-secondary mb-4 text-center">
+        
+        <!-- Grid layout with 8 items (4+4) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- First Row - 4 items -->
+            <!-- Census -->
+            <div class="sacrament-card bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                <div class="text-secondary mb-4 text-4xl">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-900">Diocesan Census</h3>
+                <p class="text-gray-600 mb-4">Participate in our diocesan census to help us better serve our community.</p>
+                <a href="{% url 'registry:register' %}" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    Open Form
+                </a>
+            </div>
+            
+            <!-- Birth Records -->
+            <div class="sacrament-card bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                <div class="text-secondary mb-4 text-4xl">
+                    <i class="fas fa-baby"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-900">Birth Records</h3>
+                <p class="text-gray-600 mb-4">Register and access birth records for children in our diocese.</p>
+                <button onclick="openModal('birth')" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    More Info
+                </button>
+            </div>
+            
+            <!-- Baptism Registry -->
+            <div class="sacrament-card bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                <div class="text-secondary mb-4 text-4xl">
                     <i class="fas fa-water"></i>
                 </div>
-                <h3 class="text-2xl font-semibold text-green-900 mb-4 text-center">Baptism</h3>
-                <p class="mb-4 text-gray-600 text-center">"I baptize you in the name of the Father, and of the Son, and of the Holy Spirit"</p>
-                
+                <h3 class="text-xl font-semibold mb-3 text-green-900">Baptism Registry</h3>
+                <p class="text-gray-600 mb-4">Register a baptism or access baptismal records.</p>
+                <button onclick="openBaptismModal()" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    Open Form
+                </button>
             </div>
-
-            <!-- Confirmation Card -->
-            <div class="bg-white bg-opacity-10 p-8 rounded-xl border border-white border-opacity-20 hover:border-opacity-40 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl backdrop-blur-sm">
-                <div class="text-5xl text-secondary mb-4 text-center">
+            
+            <!-- Confirmation Registry -->
+            <div class="sacrament-card bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                <div class="text-secondary mb-4 text-4xl">
                     <i class="fas fa-dove"></i>
                 </div>
-                <h3 class="text-2xl font-semibold text-green-900 mb-4 text-center">Confirmation</h3>
-                <p class="mb-4 text-gray-600 text-center">"Be sealed with the Gift of the Holy Spirit"</p>
-                
+                <h3 class="text-xl font-semibold mb-3 text-green-900">Confirmation Registry</h3>
+                <p class="text-gray-600 mb-4">Register or access confirmation records.</p>
+                <button onclick="openModal('confirmation')" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    More Info
+                </button>
             </div>
-
-            <!-- Marriage Card -->
-            <div class="bg-white bg-opacity-10 p-8 rounded-xl border border-white border-opacity-20 hover:border-opacity-40 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl backdrop-blur-sm">
-                <div class="text-5xl text-secondary mb-4 text-center">
+            
+            <!-- Second Row - 4 items (centered) -->
+            <!-- First Communion -->
+            <div class="sacrament-card bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition lg:col-start-1">
+                <div class="text-secondary mb-4 text-4xl">
+                    <i class="fas fa-bread-slice"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-900">First Communion</h3>
+                <p class="text-gray-600 mb-4">Register or access first communion records.</p>
+                <button onclick="openModal('communion')" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    More Info
+                </button>
+            </div>
+            
+            <!-- Marriage Registry -->
+            <div class="sacrament-card bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                <div class="text-secondary mb-4 text-4xl">
                     <i class="fas fa-heart"></i>
                 </div>
-                <h3 class="text-2xl font-semibold text-green-900 mb-4 text-center">Marriage</h3>
-                <p class="mb-4 text-gray-600 text-center">"What God has joined together, let no one separate"</p>
-                
+                <h3 class="text-xl font-semibold mb-3 text-green-900">Marriage Registry</h3>
+                <p class="text-gray-600 mb-4">Register or access marriage records.</p>
+                <button onclick="openModal('marriage')" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    More Info
+                </button>
+            </div>
+            
+            <!-- Death Registry -->
+            <div class="sacrament-card bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                <div class="text-secondary mb-4 text-4xl">
+                    <i class="fas fa-cross"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-900">Death Registry</h3>
+                <p class="text-gray-600 mb-4">Register or access death records.</p>
+                <button onclick="openModal('death')" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    More Info
+                </button>
+            </div>
+            
+            <!-- NEW: Ordination Registry -->
+            <div class="sacrament-card bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                <div class="text-secondary mb-4 text-4xl">
+                    <i class="fas fa-hands-praying"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-900">Ordination Registry</h3>
+                <p class="text-gray-600 mb-4">Record and access priestly/deacon ordination records.</p>
+                <button onclick="openModal('ordination')" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    More Info
+                </button>
             </div>
         </div>
     </div>
 </section>
+
+
+<!-- General Modal for Coming Soon -->
+<div id="comingSoonModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-green-900" id="modalTitle">Service Information</h3>
+            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <p class="text-gray-600 mb-6" id="modalContent">This service is coming soon. Please check back later.</p>
+        <div class="flex justify-end">
+            <button onclick="closeModal()" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Baptism Registry Modal -->
+<div id="baptismModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-8">
+    <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 my-8">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-green-900">Baptism Registry</h3>
+            <button onclick="closeBaptismModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form id="baptismForm" method="post" action="{% url 'registry:submit_baptism' %}">
+            {% csrf_token %}
+            
+            <!-- Step 1: Child Information -->
+            <div id="step1">
+                <h4 class="text-lg font-semibold mb-4 text-primary">Child Information</h4>
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name of Child</label>
+                        <input type="text" name="child_name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="gender" value="M" required class="form-radio text-primary">
+                                <span class="ml-2">Male</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="gender" value="F" class="form-radio text-primary">
+                                <span class="ml-2">Female</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                        <input type="date" name="date_of_birth" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Time of Birth</label>
+                        <input type="time" name="time_of_birth" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Place of Birth</label>
+                        <input type="text" name="place_of_birth" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Hospital/Maternity Name</label>
+                        <input type="text" name="hospital_name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                  <!-- Replace the existing birth_parish select with these fields -->
+<div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Deanery</label>
+    <select name="deanery" required 
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            onchange="updateParishes(this)">
+        <option value="">Select Deanery</option>
+        <option value="Agbani Deanery">Agbani Deanery</option>
+        <option value="Aguobu Owa Deanery">Aguobu Owa Deanery</option>
+        <option value="Emene Deanery">Emene Deanery</option>
+        <option value="Enugu Deanery">Enugu Deanery</option>
+        <option value="Nkwo Nike Deanery">Nkwo Nike Deanery</option>
+        <option value="Udi Deanery">Udi Deanery</option>
+    </select>
+</div>
+<div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">Parish</label>
+    <select name="parish" required 
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+            id="parishSelect" disabled>
+        <option value="">Select Parish</option>
+        <!-- Parishes will be populated via JavaScript -->
+    </select>
+</div>
+
+<script>
+    // Parish data organized by deanery
+    const parishesByDeanery = {
+        "Agbani Deanery": [
+            "Agbani (St. John)",
+            "Akpawfu (St. Philip)",
+            "Akpugo (Holy Angels)",
+            "Akpugo (Holy Trinity)",
+            "Akpugo (Sacred Heart)",
+            "Akpugo (St. Brendan)",
+            "Akpugo-Ugwuafor (St. Bridget)",
+            "Amagu (St Patrick)",
+            "Amagunze (Holy Innocents)",
+            "Amankanu-Amurri (St. Anne)",
+            "Amigbo-Ozalla (St. Vincent)",
+            "Amodu (St. Peter)",
+            "Amurri (St. Mary)",
+            "Aniyi, Amagunze (St. James)",
+            "Attakwu (St. John)",
+            "Eziokwe-Amurri (St. Michael)",
+            "Ihuokpara (St. Mary)",
+            "Imeoha (St. Paul)",
+            "Ishienu Nkerefi (St. Augustine)",
+            "Mburubu (St. John)",
+            "Nara (St. Kevin)",
+            "Nara (St. Pius)",
+            "Nkerefi (St. Patrick)",
+            "Nomeh (St. Patrick)",
+            "Obe (St. Anthony)",
+            "Obeagu-Attakwu (St. Joseph)",
+            "Ogonogo-Eji Akpugo (St. Jude)",
+            "Onicha-Agu, Amagunze(St. Martin)",
+            "Ozalla (St. Paul)",
+            "Ugbawka (Holy Trinity)",
+            "Ugbawka (St. James)",
+            "Umuatugbuoma, Akagbe (St. Francis)",
+            "Chime John"
+        ],
+        "Aguobu Owa Deanery": [
+            "Agba-Umana (St. Anthony)",
+            "Aguoba (St. Patrick)",
+            "Aguobu Iwollo (St. Martin)",
+            "Aguobu Owa (Christ the King)",
+            "Aguobu Umumba (St. Mary)",
+            "Awha Imezi (St. Michael)",
+            "Awha Agbagbo (St. Paul)",
+            "Awha Ndiagu (St. John Cross)",
+            "Imama Iwollo (Holy Rosary)",
+            "Ihuonyia Amansiodo (St. Patrick)",
+            "Imezi-Owa (Our Lady of Lourdes)",
+            "Iwollo (Sacred Heart)",
+            "Mgbagbu-Owa (St. Paul)",
+            "Mgbagbu-Owa (St. Pius)",
+            "Obeleagu Umana (St. Augustine)",
+            "Obeleagu Umana (St. Peter)",
+            "Obinofia (St. Dominic)",
+            "Obinofia Ndiuno (St. Mark)",
+            "Oghe (St. Theresa)",
+            "Oghe, Akama (St. Mary)",
+            "Oghe, Amansiodo (St. John)",
+            "Ogulogu Olo (St. Theresa)",
+            "Ogwofia Imezi-Owa (St. Patrick)",
+            "Okpudo Obeleagu Umana (St. Michael)",
+            "Okpueze Umumba (Christ the King)",
+            "Olo (Christ the King)",
+            "Olo (St. Joseph)",
+            "Olo Ibite (St. Andrew)",
+            "Olo, Imezi (St. Paul)",
+            "Omughu (St. Joseph)",
+            "Ugwuetiti-Amansiodo Oghe (St. Joseph)",
+            "Umuaji-Mgbagbuowa (Holy Rosary)",
+            "Umana Ndiagu (St. Mark)",
+            "Umudim – Imezi Owa (St. Charles)",
+            "Umudim – Aguobu Owa (Immaculate Conception)",
+            "Umumba Ndiagu (St. Peter)",
+            "Umumba Ndiuno (St. Mary)",
+            "Upata Ezema (St. Theresa)"
+        ],
+        "Emene Deanery": [
+            "Akpuoga (St. Mary)",
+            "Emene (Emmanuel Parish)",
+            "Emene (Our Lady of the Rosary)",
+            "Emene (St. Joseph)",
+            "Emene (Holy Trinity)",
+            "Emene, Destiny/ Standard Layout, (Queen of Divine Love)",
+            "Ezza Akpuoga (Corpus Christi)",
+            "Ezza Nkomoro Onuogba Nike (Holy Child)",
+            "Ezza Nkwubo (Corpus Christi)",
+            "Idodo (St. Charles)",
+            "Nchatancha, Queen of the Apostles",
+            "Nwanne Di Na Mba-New Haven Extension (St. Dominic)",
+            "Obinagu (St. Hyacinth)",
+            "Onu Ogba-Nike (St. Paul)",
+            "Oruku, (St. Mary)",
+            "Owo (St. Mary)",
+            "Premier Estate (St. Michael)",
+            "Mbulu Owo (St. Anthony)",
+            "Nkpologwu/ PRODA (St. Peter)",
+            "Ubahu (St. John)",
+            "Ugwuomu Nike (St. Mary)",
+            "Umuode (St. Rita)"
+        ],
+        "Enugu Deanery": [
+            "Akwuke (St Evaristus)",
+            "Akwuke (St. Mary)",
+            "Amachala Ngwo (St. Michael)",
+            "Amechi (St. Jude)",
+            "Amechi, Amagugwu (Holy Trinity)",
+            "Amechi, Ihuorie (St. Michael)",
+            "Asata (St. Aloysius)",
+            "Asata (St. Brigid)",
+            "Asata (St. Michael)",
+            "Awkunanaw (Maria Assumpta)",
+            "Awkunanaw (St. Paul)",
+            "Awkunanaw (Virgo Potens)",
+            "Awkunanaw, Obeagu (St. Anthony)",
+            "Awkunanaw (St. Patrick)",
+            "Ekulu, G.R.A. (Christ the King)",
+            "Garriki (St. Peter)",
+            "Garriki (St. Raphael)",
+            "Golf Estate (Holy Spirit)",
+            "Hilltop Enugu (Holy Trinity)",
+            "Idaw-River (St. Gabriel)",
+            "Idaw-River (St. Gregory the Great)",
+            "Idaw-River (St. Theresa)",
+            "Ind. Layout (Blessed Sacrament)",
+            "Ind. Layout (Holy Trinity)",
+            "Ind. Layout (Rosa Mystica)",
+            "Iva Valley (Our Lady of Mercy)",
+            "Iva Valley, Pottery (St. Patrick)",
+            "Jamboree (St. Joseph the Worker)",
+            "Maryland (Our Lady of Lourdes)",
+            "Maryland (St. Anne)",
+            "Mount Awkunanaw (St. Andrew)",
+            "New Haven (St. Mulumba)",
+            "New Haven (Our Lady of Perpetual Help)",
+            "New Haven (St. Callistus)",
+            "Ngene Evu, Camp (St. Ambrose)",
+            "Ngwo (Christ the King)",
+            "Ngwo (St. Mary)",
+            "Ngwo, Akama (St. Peter)",
+            "Ngwo (St. Theresa)",
+            "Ngwo, Uborji (St. Joseph)",
+            "Nineth Mile (St. Jude)",
+            "Ogbete (St. Patrick)",
+            "Ogui (Holy Ghost)",
+            "Ogui New Layout (St. Anthony)",
+            "Ologo (Holy Family)",
+            "Ugwu Aaron (St. Peter)",
+            "Ugwuaji, (St. Michael)",
+            "Umuase-Ngwo (St. Anthony)",
+            "Uno Okpete (Immaculate Heart)",
+            "UNTH (St. Martin de Poress)",
+            "Uwani (Sacred Heart)",
+            "Uwani (St. Mary)"
+        ],
+        "Nkwo Nike Deanery": [
+            "Abakpa (St. Theresa)",
+            "Abakpa, Anioma Layout (St. Jude)",
+            "Abakpa, Edward Nnaji Estate (St. Joseph)",
+            "Ako Nike (St. Patrick)",
+            "Alulu & Nokpa Nike (Two Hearts of Jesus and Mary)",
+            "Federal Housing (St. Leo the Great)",
+            "Housing Estate (Seat of Wisdom)",
+            "Ibagwa-Nike (All Saints)",
+            "Ifo Layout, Abakpa Nike (St. Benedict)",
+            "Iji Nike (Holy Cross)",
+            "Ndorommiri (Queen of Peace)",
+            "Mbano Nike (St. Michael)",
+            "Mbulu-Owehe, Nike (St. Paul)",
+            "New G.R.A. (St. Anthony)",
+            "Nkwo Nike (Assumption)",
+            "Trans-Ekulu, Community Estate (Mater Dei – Mother of God)",
+            "Trans-Ekulu (St. Mary)",
+            "Trans-Ekulu Phase 6 (Blessed Tansi)",
+            "Trans-Ekulu, RCC Quarters (St. John the Beloved Apostle)",
+            "Ugbene (SS. Peter& Paul)",
+            "Ugbene II (St. Francis)",
+            "Ugbo-Odogwu (St. Theresa)",
+            "Ugbo Owa (Stella Maris)",
+            "Ugwogo Nike (St. Joseph)",
+            "Ugwuagor (Queen of the H/Rosary)",
+            "Ugwuegede (Immaculate Conception)",
+            "Umuchigbo, Iji Nike (St. Mary)"
+        ],
+        "Udi Deanery": [
+            "Agu-Abor (SS Simon & Jude)",
+            "Abia (St. Mark)",
+            "Abor (St. Peter)",
+            "Abor (St. Theresa)",
+            "Affa (St. John)",
+            "Affa Amofia-Agu (St. Mary)",
+            "Affa Amokwu (St. Michael)",
+            "Agbalaenyi Nachi (St. Maria Goretti)",
+            "Agbudu (St. Alfred)",
+            "Akpakwume/Nze (St. Augustine)",
+            "Amokwe (St. Anthony)",
+            "Amokwe (St. Patrick)",
+            "Amokwe (St. Paul)",
+            "Amokwe (St. Theresa)",
+            "Awhum (St. Luke)",
+            "Ebe (St. John)",
+            "Egede (St. Cyril)",
+            "Eke (St. Paul)",
+            "Nachi (St. Mary)",
+            "Nsude (St. Mark)",
+            "Obinagu (St. Dominic)",
+            "Obinagu (St. Paul)",
+            "Obioma (St. Theresa)",
+            "Ogui-Eke (St. Michael)",
+            "Okpatu (Holy Family)",
+            "Okpatu (St. Joseph)",
+            "Oma-Eke (St. Anthony)",
+            "Udi (St. Mary)",
+            "Ukana (St. Joseph)",
+            "Umabi (Holy Family)",
+            "Umuoka (St. Andrew)",
+            "Umuaga (St. Peter)",
+            "Umuaga (St. Anthony)",
+            "Umulumgbe (St. Anthony)",
+            "Umulumgbe (St. Michael)"
+        ]
+    };
+
+    function updateParishes(select) {
+        const deanery = select.value;
+        const parishSelect = document.getElementById('parishSelect');
+        
+        // Clear existing options
+        parishSelect.innerHTML = '<option value="">Select Parish</option>';
+        
+        if (deanery) {
+            // Enable and populate parish select
+            parishSelect.disabled = false;
+            const parishes = parishesByDeanery[deanery] || [];
+            
+            parishes.forEach(parish => {
+                const option = document.createElement('option');
+                option.value = parish;
+                option.textContent = parish;
+                parishSelect.appendChild(option);
+            });
+        } else {
+            // Disable if no deanery selected
+            parishSelect.disabled = true;
+        }
+    }
+
+    // Update form validation to include both fields
+    function showStep2() {
+        // Validate step 1 before proceeding
+        const form = document.getElementById('baptismForm');
+        const inputs = form.querySelectorAll('#step1 [required]');
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!input.value) {
+                isValid = false;
+                input.classList.add('border-red-500');
+            } else {
+                input.classList.remove('border-red-500');
+            }
+        });
+        
+        // Additional check for parish if deanery is selected
+        const deanery = form.querySelector('[name="deanery"]').value;
+        const parish = form.querySelector('[name="parish"]').value;
+        
+        if (deanery && !parish) {
+            isValid = false;
+            document.getElementById('parishSelect').classList.add('border-red-500');
+        } else {
+            document.getElementById('parishSelect').classList.remove('border-red-500');
+        }
+        
+        if (isValid) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        } else {
+            alert('Please fill in all required fields before proceeding.');
+        }
+    }
+</script>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Baptism Date (if already baptized)</label>
+                        <input type="date" name="baptism_date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Baptism Certificate No. (if available)</label>
+                        <input type="text" name="baptism_certificate" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" onclick="showStep2()" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                        Next
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Parent Information -->
+            <div id="step2" class="hidden">
+                <h4 class="text-lg font-semibold mb-4 text-primary">Parent Information</h4>
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Full Name</label>
+                        <input type="text" name="father_name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Religion</label>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="father_religion" value="Catholic" class="form-checkbox text-primary">
+                                <span class="ml-2">Catholic</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="father_religion" value="Other" class="form-checkbox text-primary">
+                                <span class="ml-2">Other</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Phone Number</label>
+                        <input type="tel" name="father_phone" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Parish</label>
+                        <input type="text" name="father_parish" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Full Name</label>
+                        <input type="text" name="mother_name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Maiden Name</label>
+                        <input type="text" name="mother_maiden" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Religion</label>
+                        <div class="flex space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="mother_religion" value="Catholic" class="form-checkbox text-primary">
+                                <span class="ml-2">Catholic</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="mother_religion" value="Other" class="form-checkbox text-primary">
+                                <span class="ml-2">Other</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Phone Number</label>
+                        <input type="tel" name="mother_phone" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Parish</label>
+                        <input type="text" name="mother_parish" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Home Address</label>
+                        <textarea name="home_address" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-between">
+                    <button type="button" onclick="showStep1()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition">
+                        Back
+                    </button>
+                    <button type="submit" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // General modal functions
+    function openModal(service) {
+        const modal = document.getElementById('comingSoonModal');
+        const title = document.getElementById('modalTitle');
+        const content = document.getElementById('modalContent');
+        
+        // Set modal content based on service
+        switch(service) {
+            case 'census':
+                title.textContent = 'Diocesan Census';
+                content.textContent = 'Participate in our diocesan census to help us better serve our community. This service is coming soon.';
+                break;
+            case 'birth':
+                title.textContent = 'Birth Records';
+                content.textContent = 'Register and access birth records for children in our diocese. This service is coming soon.';
+                break;
+            case 'confirmation':
+                title.textContent = 'Confirmation Registry';
+                content.textContent = 'Register or access confirmation records. This service is coming soon.';
+                break;
+            case 'communion':
+                title.textContent = 'First Communion';
+                content.textContent = 'Register or access first communion records. This service is coming soon.';
+                break;
+            case 'marriage':
+                title.textContent = 'Marriage Registry';
+                content.textContent = 'Register or access marriage records. This service is coming soon.';
+                break;
+            case 'death':
+                title.textContent = 'Death Registry';
+                content.textContent = 'Register or access death records. This service is coming soon.';
+                break;
+            default:
+                title.textContent = 'Service Information';
+                content.textContent = 'This service is coming soon. Please check back later.';
+        }
+        
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('comingSoonModal').classList.add('hidden');
+    }
+
+    // Baptism modal functions
+    function openBaptismModal() {
+        document.getElementById('baptismModal').classList.remove('hidden');
+    }
+
+    function closeBaptismModal() {
+        document.getElementById('baptismModal').classList.add('hidden');
+    }
+
+    // Baptism form step navigation
+    function showStep1() {
+        document.getElementById('step1').classList.remove('hidden');
+        document.getElementById('step2').classList.add('hidden');
+    }
+
+    function showStep2() {
+        // Validate step 1 before proceeding
+        const form = document.getElementById('baptismForm');
+        const inputs = form.querySelectorAll('#step1 [required]');
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!input.value) {
+                isValid = false;
+                input.classList.add('border-red-500');
+            } else {
+                input.classList.remove('border-red-500');
+            }
+        });
+        
+        if (isValid) {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        } else {
+            alert('Please fill in all required fields before proceeding.');
+        }
+    }
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+        const comingSoonModal = document.getElementById('comingSoonModal');
+        const baptismModal = document.getElementById('baptismModal');
+        
+        if (event.target === comingSoonModal) {
+            closeModal();
+        }
+        
+        if (event.target === baptismModal) {
+            closeBaptismModal();
+        }
+    }
+</script>
 
 
 <!-- Diocesan Leadership Section -->
@@ -249,6 +820,78 @@
         </div>
     </div>
 </section>
+
+
+<!-- About the Diocese Section -->
+<section id="about" class="py-16 bg-white relative overflow-hidden mt-2">
+    <!-- Floating background elements -->
+    <div class="absolute -left-20 -top-20 w-64 h-64 rounded-full bg-blue-50 opacity-30 animate-float-slow"></div>
+    <div class="absolute -right-10 top-1/3 w-48 h-48 rounded-full bg-secondary-50 opacity-20 animate-float-medium"></div>
+    <div class="absolute left-1/4 bottom-20 w-32 h-32 rounded-full bg-primary-50 opacity-25 animate-float-slow"></div>
+    <div class="absolute right-1/4 -bottom-10 w-40 h-40 rounded-full bg-green-50 opacity-15 animate-float-medium"></div>
+    
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-green-900 mb-4 animate__animated animate__fadeIn [text-shadow:_1px_1px_2px_rgba(0,_34,_68,_0.2)]">About Our Diocese</h2>
+            <div class="w-24 h-1 bg-secondary mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto animate__animated animate__fadeIn">The Catholic Diocese of Enugu, established in 1962, serves the faithful in Enugu State with 52 parishes and 6 Deaneries.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Our Diocese -->
+            <div id="our-diocese" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
+                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
+                    <i class="fas fa-church"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-900">Our Diocese</h3>
+                <p class="text-gray-600 mb-4">The Diocese of Enugu was erected from ecclesiastical territory gained from the Metropolitan Archdiocese of Onitsha. The Cathedral is Holy Ghost Cathedral in Enugu, the diocese has grown to include 52 parishes, 10 religious orders, and numerous educational and healthcare institutions.</p>
+                <p class="text-gray-600">Our mission is to proclaim the Gospel, celebrate the sacraments, and serve the people of God in Enugu State.</p>
+            </div>
+            
+            <!-- The Bishop -->
+            <div id="the-bishop" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp animate__delay-1s backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
+                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
+                    <i class="fas fa-user-alt"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-900">The Bishop</h3>
+                <p class="text-gray-600 mb-4">Most Rev. Callistus Valentine Chukwuma Onaga was ordained Bishop of Enugu on September 29, 2009. Born on September 29, 1958, he was ordained a priest on August 8, 1987.</p>
+                <p class="text-gray-600">Bishop Onaga has been instrumental in promoting evangelization, education, and social services throughout the diocese.</p>
+            </div>
+            
+            <!-- History -->
+            <div id="history" class="bg-gray-50 p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 animate__animated animate__fadeInUp animate__delay-2s backdrop-blur-sm bg-opacity-70 border border-gray-100 hover:border-secondary-100">
+                <div class="text-secondary mb-4 text-4xl animate__animated animate__pulse animate__infinite animate__slower">
+                    <i class="fas fa-landmark"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3 text-green-900">History</h3>
+                <p class="text-gray-600 mb-4">The Diocese of Enugu was created on November 12, 1962, from parts of the Archdiocese of Onitsha. The first Bishop was Most Rev. Dr. John Cross Anyogu (1962-1967).</p>
+                <p class="text-gray-600">The diocese has grown from its initial 12 parishes to 52 parishes today, serving a Catholic population of over 1.5 million faithful.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Add these animations to your stylesheet */
+    @keyframes float-slow {
+        0%, 100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(-20px) translateX(10px); }
+    }
+    @keyframes float-medium {
+        0%, 100% { transform: translateY(0) translateX(0); }
+        50% { transform: translateY(-15px) translateX(-10px); }
+    }
+    .animate-float-slow {
+        animation: float-slow 8s ease-in-out infinite;
+    }
+    .animate-float-medium {
+        animation: float-medium 6s ease-in-out infinite;
+    }
+</style>
+
+
+
+
 
 <!-- FAQ Section -->
 <section id="faqs" class="py-16 bg-gray-50">
@@ -359,6 +1002,99 @@
         </div>
     </div>
 </section>
+
+{% comment %} // Add this modal HTML to your index.html (before the closing </body> tag) {% endcomment %}
+<div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-green-900">Registration Successful</h3>
+            <button onclick="closeSuccessModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="text-center py-4">
+            <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
+            <p class="text-gray-600 mb-2" id="successMessage"></p>
+            <p class="text-gray-800 font-medium" id="successDetails"></p>
+        </div>
+        <div class="flex justify-end">
+            <button onclick="closeSuccessModal()" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add these functions to your existing JavaScript
+    function showSuccessModal(message, details) {
+        document.getElementById('successMessage').textContent = message;
+        document.getElementById('successDetails').textContent = details;
+        document.getElementById('successModal').classList.remove('hidden');
+    }
+
+    function closeSuccessModal() {
+        document.getElementById('successModal').classList.add('hidden');
+        closeBaptismModal(); // Also close the baptism form
+    }
+
+    // Update the form submission handler
+    document.getElementById('baptismForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success modal with details
+                const details = `Child: ${data.child_name}` + 
+                    (data.baptism_date ? ` | Baptism Date: ${data.baptism_date}` : '');
+                showSuccessModal(data.message, details);
+                
+                // Reset form
+                form.reset();
+                document.getElementById('parishSelect').disabled = true;
+                document.getElementById('parishSelect').innerHTML = '<option value="">Select Parish</option>';
+            } else {
+                alert('Error: ' + (data.error || 'Unknown error occurred'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the form');
+        });
+    });
+
+    // Close success modal when clicking outside
+    window.onclick = function(event) {
+        const successModal = document.getElementById('successModal');
+        if (event.target === successModal) {
+            closeSuccessModal();
+        }
+        
+        // Keep your existing outside click handlers
+        const comingSoonModal = document.getElementById('comingSoonModal');
+        const baptismModal = document.getElementById('baptismModal');
+        
+        if (event.target === comingSoonModal) {
+            closeModal();
+        }
+        
+        if (event.target === baptismModal) {
+            closeBaptismModal();
+        }
+    }
+</script>
 
 <script>
     function toggleFAQ(num) {

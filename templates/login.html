@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-
 {% load static %}
 
 {% block content %}
 <div class="max-w-md mx-auto mt-10">
     <h2 class="text-2xl font-bold mb-6 text-green-900">ECD Registry Login</h2>
     
-    {% if error %}
+    {# Handle login errors from session #}
+    {% if request.session.error %}
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        {{ error }}
+        {{ request.session.error }}
     </div>
     {% endif %}
 
@@ -33,7 +33,6 @@
                 class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 w-full">
             Login
         </button>
-        <!-- Add this near the bottom of your login.html, just before the signup link -->
         <div class="text-center mt-2">
             <p class="text-gray-600">
                 <a href="{% url 'registry:password_reset' %}" class="text-primary hover:text-secondary">Forgot password?</a>
@@ -42,15 +41,15 @@
     </form>
     {% endif %}
 
-    {# Verification Section - Shows only after successful login #}
-    {% if user.is_authenticated and not request.session.verified_parishioner_id %}
+    {# Verification Section - Shows only when needed #}
+    {% if user.is_authenticated and request.session.show_verification %}
     <div class="mt-8 p-4 border border-primary rounded-lg">
         <h3 class="text-lg font-semibold mb-2 text-primary">Verify Your Identity</h3>
         <p class="text-gray-600 mb-4">To access your dashboard, please verify your parishioner ID.</p>
         
-        {% if verification_error %}
+        {% if request.session.verification_error %}
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {{ verification_error }}
+            {{ request.session.verification_error }}
         </div>
         {% endif %}
         

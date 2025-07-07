@@ -13,18 +13,23 @@
                 <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Staff</span>
             {% endif %}
         </div>
-        <div class="space-x-4">
-            <button onclick="window.location.href='{% url 'registry:export_data' %}'" 
-                    class="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
-                Export Data
-            </button>
-            {% if request.user.is_superuser %}
-            <button onclick="window.location.href='{% url 'registry:add_record' %}'" 
-                    class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
-                Add New Record
-            </button>
-            {% endif %}
-        </div>
+        <!-- In the header section where other buttons are -->
+            <div class="space-x-4">
+                <button onclick="window.location.href='{% url 'registry:export_data' %}'" 
+                        class="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    Export Data
+                </button>
+                <button onclick="window.location.href='{% url 'registry:baptism_records' %}'" 
+                        class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    Baptism Records
+                </button>
+                {% if request.user.is_superuser %}
+                <button onclick="window.location.href='{% url 'registry:add_record' %}'" 
+                        class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    Add New Record
+                </button>
+                {% endif %}
+            </div>
     </div>
     
     <!-- Search and Filter Section -->

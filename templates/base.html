@@ -1,0 +1,356 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enugu Catholic Diocese Registry</title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a365d; /* Dark blue from logo */
+            --secondary-color: #d69e2e; /* Gold from logo */
+            --accent-color: #8b5a2b; /* Brown accent */
+        }
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
+        .text-primary {
+            color: var(--primary-color);
+        }
+        .border-primary {
+            border-color: var(--primary-color);
+        }
+        .bg-secondary {
+            background-color: var(--secondary-color);
+        }
+        .text-secondary {
+            color: var(--secondary-color);
+        }
+        .bg-accent {
+            background-color: var(--accent-color);
+        }
+        .text-accent {
+            color: var(--accent-color);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(214, 158, 46, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(214, 158, 46, 0); }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        #parishDropdown {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        #parishDropdown div:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .message-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 400px;
+            transition: all 0.5s ease;
+        }
+        
+        .sacrament-card {
+            transition: all 0.3s ease;
+            perspective: 1000px;
+        }
+        .sacrament-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+
+                /* baptism reg. success modal */
+        #successModal .fa-check-circle {
+            animation: bounceIn 0.6s;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Floating Prayer Button with Prayer Intentions -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <div id="prayer-container" class="relative">
+            <button id="prayer-button" class="bg-secondary text-white w-16 h-16 rounded-full shadow-xl flex items-center justify-center transform hover:scale-110 transition animate-pulse-glow">
+                <i class="fas fa-praying-hands text-2xl"></i>
+            </button>
+            <div id="prayer-modal" class="hidden absolute bottom-20 right-0 w-72 bg-white rounded-lg shadow-xl p-4 border border-secondary">
+                <h3 class="text-green-900 font-bold mb-2">Today's Prayer Intention</h3>
+                <p id="prayer-text" class="text-primary mb-3">For the success of our diocesan census and the spiritual growth of all parishioners.</p>
+                <button class="text-sm bg-green-900 text-white px-3 py-1 rounded hover:bg-opacity-90">Pray Now</button>
+            </div>
+        </div>
+    </div>
+
+    <header class="bg-green-900 text-white shadow-lg sticky top-0 z-40 mb-10">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <a href="{% url 'home' %}">
+                <img src="/static/images/logo.png" alt="Diocese Logo" 
+                class="h-16 w-16 rounded-full object-cover border-3 border-secondary shadow-lg animate__animated animate__fadeInLeft">
+                </a>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold animate__animated animate__fadeInDown">CDE REGISTRY</h1>
+                    <p class="text-xs md:text-sm text-secondary animate__animated animate__fadeIn">Quaerens Dei Voluntatem</p>
+                </div>
+            </div>
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6 items-center">
+                    <li><a href="{% url 'home' %}" class="hover:text-secondary transition duration-300 font-medium">Home</a></li>
+                    <li><a href="#services" class="hover:text-secondary transition duration-300 font-medium">Services</a></li>
+                    <li><a href="#sacrament" class="block py-2 hover:text-secondary border-b border-white border-opacity-20">Sacraments</a></li>
+                    <li class="dropdown relative group">
+                        <a href="#about" class="hover:text-secondary transition duration-300 flex items-center font-medium">
+                            About <!--<i class="fas fa-chevron-down ml-1 text-xs"></i>-->
+                        </a>
+                        <ul class="dropdown-menu absolute hidden group-hover:block bg-white text-primary shadow-lg rounded-md mt-2 py-2 w-48">
+                            <li><a href="#our-diocese" class="block px-4 py-2 hover:bg-gray-100">Our Diocese</a></li>
+                            <li><a href="#the-bishop" class="block px-4 py-2 hover:bg-gray-100">The Bishop</a></li>
+                            <li><a href="#history" class="block px-4 py-2 hover:bg-gray-100">History</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li><a href="#faqs" class="hover:text-secondary transition duration-300 font-medium">FAQs</a></li>
+                    {% if not user.is_authenticated %}
+                        <li><a href="{% url 'registry:register' %}" class="hover:text-secondary transition duration-300 font-medium">Register</a></li>
+                        <li><a href="{% url 'registry:login' %}" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition transform hover:scale-105 font-medium">Login</a></li>
+                    {% else %}
+                        <li><a href="{% url 'registry:user_dashboard' %}" 
+                               class="{% if 'verified_parishioner_id' in request.session %}hover:text-secondary{% else %}text-gray-400 cursor-not-allowed{% endif %} transition duration-300 font-medium">
+                            Dashboard
+                        </a></li>
+                        <li><a href="{% url 'registry:logout' %}" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition transform hover:scale-105 font-medium">Logout</a></li>
+                    {% endif %}
+
+                    {% if request.user.is_staff or request.user.is_superuser %}
+                    <li class="px-2 py-1 hover:bg-gray-100 rounded">
+                        <a href="{% url 'registry:admin_dashboard' %}" class="text-red-600 hover:text-red-800 font-medium">Admin</a>
+                    </li>
+                    {% endif %}
+
+                    <!-- Initial Setup Link for Superusers Only -->
+                    {% if request.user.is_superuser %}
+                    <li class="px-2 py-1 hover:bg-gray-100 rounded">
+                        <a href="{% url 'registry:initial_parish_setup' %}" class="text-purple-600 hover:text-purple-800 font-medium flex items-center">
+                            <i class="fas fa-cog mr-1"></i> Setup
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- Add this new condition for parish admins -->
+                    {% if request.user.parishadministrator %}
+                    <li class="px-2 py-1 hover:bg-gray-100 rounded">
+                        <a href="{% url 'registry:parish_admin_dashboard' %}" class="text-blue-600 hover:text-blue-800 font-medium">Parish Admin</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <button class="md:hidden text-2xl" id="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-primary-dark px-4 py-2" id="mobile-menu">
+            <a href="{% url 'home' %}" class="block py-2 hover:text-secondary border-b border-white border-opacity-20">Home</a>
+            
+            <a href="#services" class="block py-2 hover:text-secondary border-b border-white border-opacity-20">Services</a>
+            <a href="#sacrament" class="block py-2 hover:text-secondary border-b border-white border-opacity-20">Sacraments</a>
+            <a href="#about" class="block py-2 hover:text-secondary border-b border-white border-opacity-20">About</a>
+            <a href="#faqs" class="block py-2 hover:text-secondary border-b border-white border-opacity-20">FAQs</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'registry:register' %}" class="block py-2 hover:text-secondary border-b border-white border-opacity-20">Register</a>
+                <a href="{% url 'registry:login' %}" class="block py-2 hover:text-secondary">Login</a>
+            {% else %}
+                <a href="{% url 'registry:user_dashboard' %}" class="block py-2 hover:text-secondary border-b border-white border-opacity-20">Dashboard</a>
+                <a href="{% url 'registry:logout' %}" class="block py-2 hover:text-secondary">Logout</a>
+            {% endif %}
+
+            {% if request.user.is_staff or request.user.is_superuser %}
+                <a href="{% url 'registry:admin_dashboard' %}" class="block py-2 hover:text-secondary text-red-300">Admin</a>
+            {% endif %}
+
+            <!-- Initial Setup Link for Mobile Menu (Superusers Only) -->
+            {% if request.user.is_superuser %}
+                <a href="{% url 'registry:initial_parish_setup' %}" class="block py-2 hover:text-secondary text-purple-300 border-b border-white border-opacity-20">
+                    <i class="fas fa-cog mr-1"></i> Initial Setup
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!--Display Messages-->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message-alert alert alert-{{ message.tags }} bg-{% if message.tags == 'success' %}green-500{% else %}red-500{% endif %} text-white px-6 py-4 rounded-lg shadow-lg">
+            <div class="flex items-center">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %} mr-2"></i>
+                <span>{{ message }}</span>
+                <button class="ml-auto text-white hover:text-gray-200" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!--<footer class="bg-primary text-white py-12 mt-12">-->
+    <footer class="bg-green-900 text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <img src="/static/images/logo.png" alt="Diocese Logo" 
+                      class="h-16 w-16 rounded-full object-cover border-3 border-secondary shadow-lg animate__animated animate__fadeInLeft">
+                    <p class="mb-4 text-gray-300">"Seeking God's Will in all things" - The Catholic Diocese of Enugu, established in 1962, serves the faithful in Enugu State, Nigeria.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://facebook.com/catholicdioceseenugu" class="text-white hover:text-secondary transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/catholicenugu" class="text-white hover:text-secondary transition mt-1">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5 fill-current">
+                              <path d="M13.3174 10.7749L19.1457 4H17.7646L12.7039 9.88256L8.66193 4H4L10.1122 12.8955L4 20H5.38119L10.7254 13.7878L14.994 20H19.656L13.3174 10.7749ZM11.4257 12.9738L10.8064 12.0881L5.87886 5.03974H8.00029L11.9769 10.728L12.5962 11.6137L17.7652 19.0075H15.6438L11.4257 12.9738Z"></path>
+                            </svg>
+                          </a>
+                        <a href="https://instagram.com/catholicdioceseenugu" class="text-white hover:text-secondary transition"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/c/catholicdioceseenugu" class="text-white hover:text-secondary transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-secondary">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'home' %}" class="hover:text-secondary transition">Home</a></li>
+                        <li><a href="#about" class="hover:text-secondary transition">About the Census</a></li>
+                        <li><a href="#services" class="hover:text-secondary transition">Services</a></li>
+                        <li><a href="#faqs" class="hover:text-secondary transition">FAQs</a></li>
+
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-secondary">Sacraments</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-secondary transition">Baptism</a></li>
+                        <li><a href="#" class="hover:text-secondary transition">Confirmation</a></li>
+                        <li><a href="#" class="hover:text-secondary transition">Holy Eucharist</a></li>
+                        <li><a href="#" class="hover:text-secondary transition">Marriage</a></li>
+                        <li><a href="#" class="hover:text-secondary transition">Holy Orders</a></li>
+                        <li><a href="#" class="hover:text-secondary transition">Anointing of the Sick</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-secondary">Contact</h3>
+                    <address class="not-italic text-gray-300">
+                        <p class="mb-2"><i class="fas fa-map-marker-alt mr-2 text-secondary"></i> Holy Ghost Cathedral, Enugu, Nigeria</p>
+                        <p class="mb-2"><i class="fas fa-phone-alt mr-2 text-secondary"></i> +234 800 123 4567</p>
+                        <p class="mb-2"><i class="fas fa-envelope mr-2 text-secondary"></i> CDERegistry.org.ng</p>
+                        <p class="mb-2"><i class="fas fa-clock mr-2 text-secondary"></i> Mon-Fri: 8:00 AM - 4:00 PM</p>
+                    </address>
+                </div>
+            </div>
+            <div class="border-t border-white border-opacity-20 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2025 CDE REGISTRY. All rights reserved. | <a href="#" class="hover:text-secondary">Privacy Policy</a> | <a href="#" class="hover:text-secondary">Terms of Use</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Prayer button functionality
+        const prayerButton = document.getElementById('prayer-button');
+        const prayerModal = document.getElementById('prayer-modal');
+        
+        prayerButton.addEventListener('click', function() {
+            prayerModal.classList.toggle('hidden');
+        });
+        
+        // Close prayer modal when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('#prayer-container')) {
+                prayerModal.classList.add('hidden');
+            }
+        });
+        
+        // Daily prayer intentions
+        const prayers = [
+            "For the Holy Father and the universal Church",
+            "For the success of our diocesan census",
+            "For vocations to priesthood and religious life",
+            "For peace in Nigeria and around the world",
+            "For the sick and suffering in our diocese",
+            "For the souls in purgatory, especially our departed parishioners",
+            "For the spiritual growth of all parishioners"
+        ];
+        
+        // Set random prayer each day (consistent per day)
+        const today = new Date().getDay();
+        document.getElementById('prayer-text').textContent = prayers[today % prayers.length];
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Auto-hide messages after 5 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.message-alert');
+            alerts.forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

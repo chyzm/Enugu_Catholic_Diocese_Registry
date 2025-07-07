@@ -1,0 +1,229 @@
+# registry/forms.py
+from django import forms
+from .models import Baptism, Parish, Parishioner, Priest
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .models import ParishAdministrator
+
+class ParishionerForm(forms.ModelForm):
+    class Meta:
+        model = Parishioner
+        fields = [
+            'title', 'full_name', 'email', 'date_of_birth', 'gender', 'phone_number',
+            'marital_status', 'parish', 'deanery', 'station', 'baptized', 'confirmed', 
+            'first_communion', 'education_level', 'occupation', 'employment_status',
+            'deceased', 'date_of_death', 'death_details',
+            'marriage_verified', 'marriage_verification_date', 'marriage_verification_notes',
+            'death_verified', 'death_verification_date', 'death_verification_notes'
+        ]
+        
+
+    
+    
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'date_of_death': forms.DateInput(attrs={'type': 'date'}),
+            'gender': forms.Select(choices=Parishioner.GENDER_CHOICES),
+            'marital_status': forms.Select(choices=Parishioner.MARITAL_STATUS),
+            'education_level': forms.RadioSelect(choices=Parishioner.EDUCATION_CHOICES),
+            'employment_status': forms.RadioSelect(choices=Parishioner.EMPLOYMENT_CHOICES),
+            'deanery': forms.Select(choices=Parishioner.DEANERY_CHOICES),
+        }
+
+
+
+        
+        
+        
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:  # Only validate if email is provided
+            if Parishioner.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError("This email is already registered.")
+        return email
+    
+    
+    
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    unique_id = forms.CharField(required=True, max_length=20, label="Unique Parishioner ID")
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email').lower()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("This email is already in use.")
+        return email
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        unique_id = cleaned_data.get('unique_id')
+        
+        # Verify parishioner record exists with matching email and ID
+        if email and unique_id:
+            if not Parishioner.objects.filter(
+                unique_id__iexact=unique_id,
+                email__iexact=email
+            ).exists():
+                raise forms.ValidationError(
+                    "No parishioner record found with this ID and email combination"
+                )
+        return cleaned_data
+    
+    
+class BaptismForm(forms.ModelForm):
+    class Meta:
+        model = Baptism
+        fields = '__all__'
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'baptism_date': forms.DateInput(attrs={'type': 'date'}),
+            'time_of_birth': forms.TimeInput(attrs={'type': 'time'}),
+            'home_address': forms.Textarea(attrs={'rows': 3}),
+        }
+        
+
+
+class ParishAdminSelfRegistrationForm(forms.Form):
+    phone_number = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        phone_number = cleaned_data.get('phone_number')
+        email = cleaned_data.get('email').lower()
+        
+        try:
+            # Check if priest exists with this phone and email
+            priest = Priest.objects.get(
+                phone_number=phone_number,
+                email__iexact=email,
+                is_active=True
+            )
+            
+            # Verify phone is approved for parish
+            if not priest.parish.is_approved_number(phone_number):
+                raise forms.ValidationError("This phone number is not approved for your parish")
+            
+            cleaned_data['priest'] = priest
+            return cleaned_data
+            
+        except Priest.DoesNotExist:
+            raise forms.ValidationError("No active priest found with this phone number and email")
+        
+        
+        
+        
+class ParishAdminCompleteRegistrationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username", "password1", "password2")
+    
+    def __init__(self, *args, **kwargs):
+        from .models import Priest  # Ensure this is imported locally if needed
+        self.priest = kwargs.pop('priest', None)
+        super().__init__(*args, **kwargs)
+        if self.priest:
+            self.fields['username'].initial = self.priest.email.split('@')[0]
+            
+            
+            
+
+# class ParishSetupForm(forms.ModelForm):
+#     class Meta:
+#         model = Parish
+#         fields = ['name', 'deanery', 'approved_phone_numbers']
+#         widgets = {
+#             'approved_phone_numbers': forms.TextInput(attrs={
+#                 'placeholder': '+2348012345678,+2348098765432'
+#             })
+#         }
+
+
+class PriestRegistrationForm(forms.ModelForm):
+    password1 = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    
+    class Meta:
+        model = Priest
+        fields = ['first_name', 'last_name', 'email', 'phone_number', 'parish']
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords don't match")
+            
+        # Verify phone number is approved for parish
+        parish = cleaned_data.get('parish')
+        phone_number = cleaned_data.get('phone_number')
+        if parish and phone_number and not parish.is_approved_number(phone_number):
+            raise forms.ValidationError("This phone number is not approved for the selected parish")
+        
+        return cleaned_data
+
+
+        
+class ParishSetupForm(forms.ModelForm):
+    class Meta:
+        model = Parish
+        fields = ['name', 'deanery', 'phone_numbers']  # Changed from approved_phone_numbers
+        widgets = {
+            'phone_numbers': forms.TextInput(attrs={
+                'placeholder': '+2348012345678,+2348098765432'
+            })
+        }
+
+class PriestSetupForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    
+    class Meta:
+        model = Priest
+        fields = ['first_name', 'last_name', 'email', 'phone_number']
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('password') != cleaned_data.get('password_confirm'):
+            raise forms.ValidationError("Passwords don't match")
+        return cleaned_data
+        
+        
+
+
+# class CustomUserCreationForm(UserCreationForm):
+#     email = forms.EmailField(required=True)
+#     unique_id = forms.CharField(required=True, max_length=20, label="Unique Parishioner ID")
+
+#     class Meta:
+#         model = User
+#         fields = ("username", "email", "password1", "password2")
+
+#     def clean(self):
+#         cleaned_data = super().clean()
+#         email = cleaned_data.get('email')
+#         unique_id = cleaned_data.get('unique_id')
+        
+#         # Verify parishioner record exists with matching email and ID
+#         if email and unique_id:
+#             if not Parishioner.objects.filter(
+#                 unique_id__iexact=unique_id,
+#                 email__iexact=email
+#             ).exists():
+#                 raise forms.ValidationError(
+#                     "No parishioner record found with this ID and email combination"
+#                 )
+#         return cleaned_data
+
+#     def save(self, commit=True):
+#         user = super().save(commit=False)
+#         user.email = self.cleaned_data["email"]
+#         if commit:
+#             user.save()
+#         return user

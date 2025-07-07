@@ -1,0 +1,686 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+
+{% block content %}
+
+<!-- Add this at the top of your form -->
+{% if error %}
+<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+    <span class="block sm:inline">{{ error }}</span>
+</div>
+{% endif %}
+
+
+<div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <!-- Form Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 py-5 px-6">
+        <h2 class="text-2xl font-bold text-white">Parishioner Registration</h2>
+        <p class="text-blue-100 mt-1">Please fill in your details below</p>
+    </div>
+    
+    <form method="post" class="p-6 space-y-8">
+        {% csrf_token %}
+        
+        <!-- Section 1: Personal Information -->
+        <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <span class="bg-blue-100 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </span>
+                Personal Information
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Column 1 -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                        <select name="title" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Title</option>
+                            <option value="MR">Mr.</option>
+                            <option value="MRS">Mrs.</option>
+                            <option value="MISS">Miss</option>
+                            <option value="MS">Ms.</option>
+                            <option value="DR">Dr.</option>
+                            <option value="REV">Rev.</option>
+                            <option value="FR">Fr.</option>
+                            <option value="SR">Sr.</option>
+                            <option value="BR">Br.</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
+                        <input type="text" name="full_name" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth*</label>
+                        <input type="date" name="date_of_birth" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               value="{{ form_data.date_of_birth }}">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Gender*</label>
+                        <select name="gender" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Column 2 -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address*</label>
+                        <input type="email" name="email" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
+                        <input type="tel" name="phone_number" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Marital Status</label>
+                        <select name="marital_status" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Status</option>
+                            <option value="S">Single</option>
+                            <option value="M">Married</option>
+                            <option value="D">Divorced</option>
+                            <option value="W">Widowed</option>
+                            <option value="E">Separated</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Marriage Details (hidden by default) -->
+                    <div id="marriageDetails" class="hidden space-y-4 bg-blue-50 p-4 rounded-md border border-blue-100">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Marriage Date</label>
+                            <input type="date" name="marriage_date" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   value="{{ form_data.marriage_date }}">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Marriage Details</label>
+                            <textarea name="marriage_details" rows="2"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Death Registry -->
+            <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="flex items-center">
+                    <input type="checkbox" name="deceased" id="deceased" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="deceased" class="ml-2 block text-sm font-medium text-gray-700">Mark as deceased</label>
+                </div>
+                
+                <!-- Death Details (hidden by default) -->
+                <div id="deathDetails" class="hidden space-y-4 mt-4 bg-gray-50 p-4 rounded-md border border-gray-200">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Death</label>
+                        <input type="date" name="date_of_death" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               value="{{ form_data.date_of_death }}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Death Details</label>
+                        <textarea name="death_details" rows="2"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2: Church Details -->
+        <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <span class="bg-purple-100 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </span>
+                Parish Details
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+       
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deanery*</label>
+                        <select name="deanery" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Deanery</option>
+                            <option value="Agbani Deanery">Agbani Deanery</option>
+                            <option value="Aguobu Owa Deanery">Aguobu Owa Deanery</option>
+                            <option value="Emene Deanery">Emene Deanery</option>
+                            <option value="Enugu Deanery">Enugu Deanery</option>
+                            <option value="Nkwo Nike Deanery">Nkwo Nike Deanery</option>
+                            <option value="Udi Deanery">Udi Deanery</option>
+                            <option value="Chaplaincy">Chaplaincy</option>
+                        </select>
+                    </div>
+
+                                <!-- Replace the parish input field with this: -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Parish*</label>
+                <input type="text" name="parish" required 
+                    id="parishInput"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Start typing to search parishes..."
+                    autocomplete="off">
+                <div id="parishDropdown" class="hidden absolute z-10 mt-1 w-full max-w-md bg-white shadow-lg rounded-md border border-gray-300 max-h-60 overflow-auto"></div>
+            </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Station*</label>
+                        <input type="text" name="station" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Sacraments Received:</label>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="checkbox" name="baptized" id="baptized" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="baptized" class="ml-2 block text-sm text-gray-700">Baptized</label>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <input type="checkbox" name="confirmed" id="confirmed" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="confirmed" class="ml-2 block text-sm text-gray-700">Confirmed</label>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <input type="checkbox" name="first_communion" id="first_communion" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="first_communion" class="ml-2 block text-sm text-gray-700">First Communion</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 3: Education & Occupation -->
+        <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <span class="bg-indigo-100 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </span>
+                Education & Occupation
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Education -->
+                <div class="space-y-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Highest Level of Education:</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input type="radio" name="education_level" value="PRIMARY" id="primary" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="primary" class="ml-2 block text-sm text-gray-700">Primary</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="radio" name="education_level" value="SECONDARY" id="secondary" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="secondary" class="ml-2 block text-sm text-gray-700">Secondary</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="radio" name="education_level" value="UNDERGRAD" id="undergrad" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="undergrad" class="ml-2 block text-sm text-gray-700">Undergraduate</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="radio" name="education_level" value="MASTERS" id="masters" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="masters" class="ml-2 block text-sm text-gray-700">Masters</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="radio" name="education_level" value="POSTGRAD" id="postgrad" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="postgrad" class="ml-2 block text-sm text-gray-700">Post-Graduate</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Occupation -->
+                <div class="space-y-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Employment Status:</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <input type="radio" name="employment_status" value="EMPLOYED" id="employed" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="employed" class="ml-2 block text-sm text-gray-700">Employed</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="radio" name="employment_status" value="UNEMPLOYED" id="unemployed" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="unemployed" class="ml-2 block text-sm text-gray-700">Unemployed</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="radio" name="employment_status" value="SELF_EMPLOYED" id="self_employed" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="self_employed" class="ml-2 block text-sm text-gray-700">Self-Employed</label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Occupation/Job Title</label>
+                        <input type="text" name="occupation" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                               placeholder="e.g., Teacher, Doctor, Farmer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+            <button type="submit" class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-8 py-3 rounded-md hover:shadow-md transition-all duration-300 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Submit Registration
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Toggle marriage details
+    document.querySelector('select[name="marital_status"]').addEventListener('change', function() {
+        const marriageDetails = document.getElementById('marriageDetails');
+        if (this.value === 'M') {
+            marriageDetails.classList.remove('hidden');
+        } else {
+            marriageDetails.classList.add('hidden');
+        }
+    });
+
+    // Toggle death details
+    document.getElementById('deceased').addEventListener('change', function() {
+        const deathDetails = document.getElementById('deathDetails');
+        if (this.checked) {
+            deathDetails.classList.remove('hidden');
+        } else {
+            deathDetails.classList.add('hidden');
+        }
+    });
+
+    
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const dobInput = document.querySelector('input[name="date_of_birth"]');
+            if (!dobInput.value) {
+                alert('Date of birth is required');
+                e.preventDefault();
+                return;
+            }
+            
+            // Validate date format
+            if (dobInput.value && !dobInput.value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                alert('Please enter date in YYYY-MM-DD format');
+                e.preventDefault();
+                return;
+            }
+            
+            // You can add similar validation for other date fields if needed
+        });
+    
+</script>
+<script>
+    // Complete parish data organized by deanery
+    const parishesByDeanery = {
+        "Agbani Deanery": [
+            "Agbani (St. John)",
+            "Akpawfu (St. Philip)",
+            "Akpugo (Holy Angels)",
+            "Akpugo (Holy Trinity)",
+            "Akpugo (Sacred Heart)",
+            "Akpugo (St. Brendan)",
+            "Akpugo-Ugwuafor (St. Bridget)",
+            "Amagu (St Patrick)",
+            "Amagunze (Holy Innocents)",
+            "Amankanu-Amurri (St. Anne)",
+            "Amigbo-Ozalla (St. Vincent)",
+            "Amodu (St. Peter)",
+            "Amurri (St. Mary)",
+            "Aniyi, Amagunze (St. James)",
+            "Attakwu (St. John)",
+            "Eziokwe-Amurri (St. Michael)",
+            "Ihuokpara (St. Mary)",
+            "Imeoha (St. Paul)",
+            "Ishienu Nkerefi (St. Augustine)",
+            "Mburubu (St. John)",
+            "Nara (St. Kevin)",
+            "Nara (St. Pius)",
+            "Nkerefi (St. Patrick)",
+            "Nomeh (St. Patrick)",
+            "Obe (St. Anthony)",
+            "Obeagu-Attakwu (St. Joseph)",
+            "Ogonogo-Eji Akpugo (St. Jude)",
+            "Onicha-Agu, Amagunze(St. Martin)",
+            "Ozalla (St. Paul)",
+            "Ugbawka (Holy Trinity)",
+            "Ugbawka (St. James)",
+            "Umuatugbuoma, Akagbe (St. Francis)",
+            "Chime John"
+        ],
+        "Aguobu Owa Deanery": [
+            "Agba-Umana (St. Anthony)",
+            "Aguoba (St. Patrick)",
+            "Aguobu Iwollo (St. Martin)",
+            "Aguobu Owa (Christ the King)",
+            "Aguobu Umumba (St. Mary)",
+            "Awha Imezi (St. Michael)",
+            "Awha Agbagbo (St. Paul)",
+            "Awha Ndiagu (St. John Cross)",
+            "Imama Iwollo (Holy Rosary)",
+            "Ihuonyia Amansiodo (St. Patrick)",
+            "Imezi-Owa (Our Lady of Lourdes)",
+            "Iwollo (Sacred Heart)",
+            "Mgbagbu-Owa (St. Paul)",
+            "Mgbagbu-Owa (St. Pius)",
+            "Obeleagu Umana (St. Augustine)",
+            "Obeleagu Umana (St. Peter)",
+            "Obinofia (St. Dominic)",
+            "Obinofia Ndiuno (St. Mark)",
+            "Oghe (St. Theresa)",
+            "Oghe, Akama (St. Mary)",
+            "Oghe, Amansiodo (St. John)",
+            "Ogulogu Olo (St. Theresa)",
+            "Ogwofia Imezi-Owa (St. Patrick)",
+            "Okpudo Obeleagu Umana (St. Michael)",
+            "Okpueze Umumba (Christ the King)",
+            "Olo (Christ the King)",
+            "Olo (St. Joseph)",
+            "Olo Ibite (St. Andrew)",
+            "Olo, Imezi (St. Paul)",
+            "Omughu (St. Joseph)",
+            "Ugwuetiti-Amansiodo Oghe (St. Joseph)",
+            "Umuaji-Mgbagbuowa (Holy Rosary)",
+            "Umana Ndiagu (St. Mark)",
+            "Umudim – Imezi Owa (St. Charles)",
+            "Umudim – Aguobu Owa (Immaculate Conception)",
+            "Umumba Ndiagu (St. Peter)",
+            "Umumba Ndiuno (St. Mary)",
+            "Upata Ezema (St. Theresa)"
+        ],
+        "Emene Deanery": [
+            "Akpuoga (St. Mary)",
+            "Emene (Emmanuel Parish)",
+            "Emene (Our Lady of the Rosary)",
+            "Emene (St. Joseph)",
+            "Emene (Holy Trinity)",
+            "Emene, Destiny/ Standard Layout, (Queen of Divine Love)",
+            "Ezza Akpuoga (Corpus Christi)",
+            "Ezza Nkomoro Onuogba Nike (Holy Child)",
+            "Ezza Nkwubo (Corpus Christi)",
+            "Idodo (St. Charles)",
+            "Nchatancha, Queen of the Apostles",
+            "Nwanne Di Na Mba-New Haven Extension (St. Dominic)",
+            "Obinagu (St. Hyacinth)",
+            "Onu Ogba-Nike (St. Paul)",
+            "Oruku, (St. Mary)",
+            "Owo (St. Mary)",
+            "Premier Estate (St. Michael)",
+            "Mbulu Owo (St. Anthony)",
+            "Nkpologwu/ PRODA (St. Peter)",
+            "Ubahu (St. John)",
+            "Ugwuomu Nike (St. Mary)",
+            "Umuode (St. Rita)"
+        ],
+        "Enugu Deanery": [
+            "Akwuke (St Evaristus)",
+            "Akwuke (St. Mary)",
+            "Amachala Ngwo (St. Michael)",
+            "Amechi (St. Jude)",
+            "Amechi, Amagugwu (Holy Trinity)",
+            "Amechi, Ihuorie (St. Michael)",
+            "Asata (St. Aloysius)",
+            "Asata (St. Brigid)",
+            "Asata (St. Michael)",
+            "Awkunanaw (Maria Assumpta)",
+            "Awkunanaw (St. Paul)",
+            "Awkunanaw (Virgo Potens)",
+            "Awkunanaw, Obeagu (St. Anthony)",
+            "Awkunanaw (St. Patrick)",
+            "Ekulu, G.R.A. (Christ the King)",
+            "Garriki (St. Peter)",
+            "Garriki (St. Raphael)",
+            "Golf Estate (Holy Spirit)",
+            "Hilltop Enugu (Holy Trinity)",
+            "Idaw-River (St. Gabriel)",
+            "Idaw-River (St. Gregory the Great)",
+            "Idaw-River (St. Theresa)",
+            "Ind. Layout (Blessed Sacrament)",
+            "Ind. Layout (Holy Trinity)",
+            "Ind. Layout (Rosa Mystica)",
+            "Iva Valley (Our Lady of Mercy)",
+            "Iva Valley, Pottery (St. Patrick)",
+            "Jamboree (St. Joseph the Worker)",
+            "Maryland (Our Lady of Lourdes)",
+            "Maryland (St. Anne)",
+            "Mount Awkunanaw (St. Andrew)",
+            "New Haven (St. Mulumba)",
+            "New Haven (Our Lady of Perpetual Help)",
+            "New Haven (St. Callistus)",
+            "Ngene Evu, Camp (St. Ambrose)",
+            "Ngwo (Christ the King)",
+            "Ngwo (St. Mary)",
+            "Ngwo, Akama (St. Peter)",
+            "Ngwo (St. Theresa)",
+            "Ngwo, Uborji (St. Joseph)",
+            "Nineth Mile (St. Jude)",
+            "Ogbete (St. Patrick)",
+            "Ogui (Holy Ghost)",
+            "Ogui New Layout (St. Anthony)",
+            "Ologo (Holy Family)",
+            "Ugwu Aaron (St. Peter)",
+            "Ugwuaji, (St. Michael)",
+            "Umuase-Ngwo (St. Anthony)",
+            "Uno Okpete (Immaculate Heart)",
+            "UNTH (St. Martin de Poress)",
+            "Uwani (Sacred Heart)",
+            "Uwani (St. Mary)"
+        ],
+        "Nkwo Nike Deanery": [
+            "Abakpa (St. Theresa)",
+            "Abakpa, Anioma Layout (St. Jude)",
+            "Abakpa, Edward Nnaji Estate (St. Joseph)",
+            "Ako Nike (St. Patrick)",
+            "Alulu & Nokpa Nike (Two Hearts of Jesus and Mary)",
+            "Federal Housing (St. Leo the Great)",
+            "Housing Estate (Seat of Wisdom)",
+            "Ibagwa-Nike (All Saints)",
+            "Ifo Layout, Abakpa Nike (St. Benedict)",
+            "Iji Nike (Holy Cross)",
+            "Ndorommiri (Queen of Peace)",
+            "Mbano Nike (St. Michael)",
+            "Mbulu-Owehe, Nike (St. Paul)",
+            "New G.R.A. (St. Anthony)",
+            "Nkwo Nike (Assumption)",
+            "Trans-Ekulu, Community Estate (Mater Dei – Mother of God)",
+            "Trans-Ekulu (St. Mary)",
+            "Trans-Ekulu Phase 6 (Blessed Tansi)",
+            "Trans-Ekulu, RCC Quarters (St. John the Beloved Apostle)",
+            "Ugbene (SS. Peter& Paul)",
+            "Ugbene II (St. Francis)",
+            "Ugbo-Odogwu (St. Theresa)",
+            "Ugbo Owa (Stella Maris)",
+            "Ugwogo Nike (St. Joseph)",
+            "Ugwuagor (Queen of the H/Rosary)",
+            "Ugwuegede (Immaculate Conception)",
+            "Umuchigbo, Iji Nike (St. Mary)"
+        ],
+        "Udi Deanery": [
+            "Agu-Abor (SS Simon & Jude)",
+            "Abia (St. Mark)",
+            "Abor (St. Peter)",
+            "Abor (St. Theresa)",
+            "Affa (St. John)",
+            "Affa Amofia-Agu (St. Mary)",
+            "Affa Amokwu (St. Michael)",
+            "Agbalaenyi Nachi (St. Maria Goretti)",
+            "Agbudu (St. Alfred)",
+            "Akpakwume/Nze (St. Augustine)",
+            "Amokwe (St. Anthony)",
+            "Amokwe (St. Patrick)",
+            "Amokwe (St. Paul)",
+            "Amokwe (St. Theresa)",
+            "Awhum (St. Luke)",
+            "Ebe (St. John)",
+            "Egede (St. Cyril)",
+            "Eke (St. Paul)",
+            "Nachi (St. Mary)",
+            "Nsude (St. Mark)",
+            "Obinagu (St. Dominic)",
+            "Obinagu (St. Paul)",
+            "Obioma (St. Theresa)",
+            "Ogui-Eke (St. Michael)",
+            "Okpatu (Holy Family)",
+            "Okpatu (St. Joseph)",
+            "Oma-Eke (St. Anthony)",
+            "Udi (St. Mary)",
+            "Ukana (St. Joseph)",
+            "Umabi (Holy Family)",
+            "Umuoka (St. Andrew)",
+            "Umuaga (St. Peter)",
+            "Umuaga (St. Anthony)",
+            "Umulumgbe (St. Anthony)",
+            "Umulumgbe (St. Michael)"
+        ],
+
+        "Chaplaincy": [
+            "ESUT Agbani Campus, St. Albert the Great",
+            "Mea Matter Elizabeth High School, Agbani",
+            "Nigerian Law School, Augustine Nnamani Campus, Agbani, St. Augustine",
+            "Omnium Sanctorum, Godfrey Okoye University Chaplaincy",
+            "Federal Training Centre (St. Lucy)",
+            "Coal City University Chaplaincy",
+            "Annunciation Hospital",
+            "Mater Carmeli College, Akpuoga Nike",
+            "UNEC (St. Mulumba)",
+            "HRC",
+            "IMT, St. Augustine",
+            "ESUT, Enugu Campus, St. Albert",
+            "ESUT College of Medicine, Parklane, St. Rita",
+            "University of Nigeria Teaching Hospital, Enugu",
+            "Enugu Prison, Pope John Paul II",
+            "Enugu Prison, St. Paul Catholic Chaplaincy",
+            "Dental School of Technology, Trans Ekulu",
+            "Orthopaedic Hospital, Mary Health of the Sick",
+            "Ntasiobi ndi N'Ahuhu Hospital",
+            "Seat of Wisdom Secondary School, Trans Ekulu",
+            "Blessed Iwene Tansi Catholic Chaplaincy National Grammar School Nike Enugu",
+            "DDL Community, Phase Six Trans Ekulu"
+    ]
+
+    };
+    
+    // Current selected deanery
+    let currentDeanery = '';
+    
+    // Watch for deanery selection changes
+    document.querySelector('select[name="deanery"]').addEventListener('change', function() {
+        currentDeanery = this.value;
+        document.getElementById('parishInput').value = '';
+        document.getElementById('parishDropdown').classList.add('hidden');
+    });
+    
+    // Parish search functionality
+    document.getElementById('parishInput').addEventListener('input', function(e) {
+        const input = e.target.value.toLowerCase();
+        const dropdown = document.getElementById('parishDropdown');
+        
+        if (!currentDeanery || input.length < 2) {
+            dropdown.classList.add('hidden');
+            return;
+        }
+        
+        const parishes = parishesByDeanery[currentDeanery] || [];
+        const filteredParishes = parishes.filter(parish => 
+            parish.toLowerCase().includes(input)
+        );
+        
+        if (filteredParishes.length > 0) {
+            dropdown.innerHTML = filteredParishes.map(parish => `
+                <div class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0" 
+                     onclick="selectParish('${parish.replace(/'/g, "\\'")}')">
+                    ${parish}
+                </div>
+            `).join('');
+            dropdown.classList.remove('hidden');
+        } else {
+            dropdown.innerHTML = `
+                <div class="px-4 py-2 text-gray-500">
+                    No matching parishes found
+                </div>
+            `;
+            dropdown.classList.remove('hidden');
+        }
+    });
+    
+    // Select parish from dropdown
+    function selectParish(parish) {
+        document.getElementById('parishInput').value = parish;
+        document.getElementById('parishDropdown').classList.add('hidden');
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#parishInput') && !e.target.closest('#parishDropdown')) {
+            document.getElementById('parishDropdown').classList.add('hidden');
+        }
+    });
+    
+    // Add keyboard navigation
+    document.getElementById('parishInput').addEventListener('keydown', function(e) {
+        const dropdown = document.getElementById('parishDropdown');
+        const items = dropdown.querySelectorAll('div');
+        let currentFocus = -1;
+    
+        if (dropdown.classList.contains('hidden')) return;
+    
+        // Down arrow
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentFocus = Math.min(currentFocus + 1, items.length - 1);
+            items.forEach(item => item.classList.remove('bg-blue-100'));
+            if (currentFocus >= 0) {
+                items[currentFocus].classList.add('bg-blue-100');
+                items[currentFocus].scrollIntoView({ block: 'nearest' });
+            }
+        }
+        // Up arrow
+        else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentFocus = Math.max(currentFocus - 1, -1);
+            items.forEach(item => item.classList.remove('bg-blue-100'));
+            if (currentFocus >= 0) {
+                items[currentFocus].classList.add('bg-blue-100');
+                items[currentFocus].scrollIntoView({ block: 'nearest' });
+            }
+        }
+        // Enter
+        else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (currentFocus >= 0) {
+                selectParish(items[currentFocus].textContent);
+            }
+        }
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,28 @@
+New Baptism Registration
+
+Child Information:
+- Name: {{ child_name }}
+- Gender: {{ gender }}
+- Date of Birth: {{ date_of_birth }}
+- Time of Birth: {{ time_of_birth }}
+- Place of Birth: {{ place_of_birth }}
+- Hospital: {{ hospital_name }}
+- Parish of Birth: {{ birth_parish }}
+- Baptism Date: {{ baptism_date }}
+- Certificate No: {{ baptism_certificate }}
+
+Father's Information:
+- Name: {{ father_name }}
+- Religion: {{ father_religion }}
+- Phone: {{ father_phone }}
+- Parish: {{ father_parish }}
+
+Mother's Information:
+- Name: {{ mother_name }}
+- Maiden Name: {{ mother_maiden }}
+- Religion: {{ mother_religion }}
+- Phone: {{ mother_phone }}
+- Parish: {{ mother_parish }}
+
+Home Address:
+{{ home_address }}

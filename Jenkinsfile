@@ -85,50 +85,21 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'cde-aws-credentials']]) {
                     script {
                         sh """
-                            echo "Waiting for deployment to complete..."
-
-                            for i in {1..30}; do
-                                STATUS=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.Status' --output text --region ${CDE_AWS_REGION})
-                                echo "Attempt \$i: Service Status: \$STATUS"
-                                
-                                if [ "\$STATUS" = "RUNNING" ]; then
-                                    echo "✅ Service is running!"
-                                    break
-                                elif [ "\$STATUS" = "CREATE_FAILED" ] || [ "\$STATUS" = "UPDATE_FAILED" ]; then
-                                    echo "❌ Deployment failed with status: \$STATUS"
-                                    exit 1
-                                fi
-                                
-                                echo "Status: \$STATUS, waiting 20 seconds..."
-                                sleep 20
-                            done
-
-                            # Final status check
+                            echo "Waiting 4 minutes for deployment to complete..."
+                            sleep 240
+                            
                             SERVICE_STATUS=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.Status' --output text --region ${CDE_AWS_REGION})
                             IMAGE_URI=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.SourceConfiguration.ImageRepository.ImageIdentifier' --output text --region ${CDE_AWS_REGION})
-
-                            echo "Final Service Status: \$SERVICE_STATUS"
+                            
+                            echo "Service Status: \$SERVICE_STATUS"
                             echo "Current Image: \$IMAGE_URI"
-
+                            
                             if [ "\$SERVICE_STATUS" = "RUNNING" ]; then
                                 echo "✅ Deployment successful!"
                             else
-                                echo "❌ Deployment failed with final status: \$SERVICE_STATUS"
+                                echo "❌ Deployment failed with status: \$SERVICE_STATUS"
                                 exit 1
                             fi
-
-                            // SERVICE_STATUS=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.Status' --output text --region ${CDE_AWS_REGION})
-                            // IMAGE_URI=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.SourceConfiguration.ImageRepository.ImageIdentifier' --output text --region ${CDE_AWS_REGION})
-                            
-                            // echo "Service Status: \$SERVICE_STATUS"
-                            // echo "Current Image: \$IMAGE_URI"
-                            
-                            // if [ "\$SERVICE_STATUS" = "RUNNING" ]; then
-                            //     echo "✅ Deployment successful!"
-                            // else
-                            //     echo "❌ Deployment failed with status: \$SERVICE_STATUS"
-                            //     exit 1
-                            // fi
                         """
                     }
                 }

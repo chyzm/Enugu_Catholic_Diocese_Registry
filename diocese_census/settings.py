@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     'widget_tweaks',  # For better form rendering
 ]
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,6 +77,7 @@ SESSION_SAVE_EVERY_REQUEST = True  # Helps keep session alive
 LOGIN_URL = '/registry/login/'  # Explicit login URL
 LOGIN_REDIRECT_URL = '/registry/user_dashboard/'  # After successful login
 LOGOUT_REDIRECT_URL = '/'  # After logout
+
 
 
 

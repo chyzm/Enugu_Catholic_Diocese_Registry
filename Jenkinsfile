@@ -85,9 +85,6 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'cde-aws-credentials']]) {
                     script {
                         sh """
-                            echo "Waiting for deployment to complete..."
-                            aws apprunner wait service-updated --service-arn ${APPRUNNER_SERVICE_ARN} --region ${CDE_AWS_REGION}
-                            
                             SERVICE_STATUS=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.Status' --output text --region ${CDE_AWS_REGION})
                             IMAGE_URI=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.SourceConfiguration.ImageRepository.ImageIdentifier' --output text --region ${CDE_AWS_REGION})
                             

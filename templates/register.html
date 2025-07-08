@@ -74,23 +74,8 @@
                             <option value="F">Female</option>
                         </select>
                     </div>
-                </div>
-                
-                <!-- Column 2 -->
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address*</label>
-                        <input type="email" name="email" required 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
-                        <input type="tel" name="phone_number" required 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    
-                    <div>
+
+                          <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Marital Status</label>
                         <select name="marital_status" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="">Select Status</option>
@@ -116,31 +101,57 @@
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                         </div>
                     </div>
+
+                </div>
+                
+                <!-- Column 2 -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address*</label>
+                        <input type="email" name="email" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number*</label>
+                        <input type="tel" name="phone_number" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <!-- State of Origin -->
+                     <div>
+                    <label for="state_of_origin" class="block text-sm font-medium text-gray-700 mb-1">State of Origin</label>
+                    <select id="state_of_origin" name="state_of_origin" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">-- Select State --</option>
+                        <!-- Populated via JS -->
+                    </select>
+                    </div>
+
+                    <!-- LGA of Origin -->
+                    <div>
+                    <label for="lga_of_origin" class="block text-sm font-medium text-gray-700 mb-1">LGA of Origin</label>
+                    <select id="lga_of_origin" name="lga_of_origin" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">-- Select LGA --</option>
+                        <!-- Populated via JS -->
+                    </select>
+                      </div>
+
+                <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Hometown</label>
+                <input type="text" name="hometown"
+                        value="{{ form_data.hometown }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+           
+                    
+
+                    
+    
                 </div>
             </div>
             
             <!-- Death Registry -->
-            <div class="mt-6 pt-4 border-t border-gray-200">
-                <div class="flex items-center">
-                    <input type="checkbox" name="deceased" id="deceased" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                    <label for="deceased" class="ml-2 block text-sm font-medium text-gray-700">Mark as deceased</label>
-                </div>
-                
-                <!-- Death Details (hidden by default) -->
-                <div id="deathDetails" class="hidden space-y-4 mt-4 bg-gray-50 p-4 rounded-md border border-gray-200">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Death</label>
-                        <input type="date" name="date_of_death" 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                               value="{{ form_data.date_of_death }}">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Death Details</label>
-                        <textarea name="death_details" rows="2"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                    </div>
-                </div>
-            </div>
+      
         </div>
         
         <!-- Section 2: Church Details -->
@@ -186,7 +197,7 @@
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Station*</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Station/Zone*</label>
                         <input type="text" name="station" required 
                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
@@ -286,6 +297,14 @@
                 </div>
             </div>
         </div>
+
+                <!-- Hidden fields for location -->
+        <input type="hidden" name="latitude" id="latitude" value="">
+        <input type="hidden" name="longitude" id="longitude" value="">
+
+
+   
+
         
         <!-- Submit Button -->
         <div class="flex justify-end">
@@ -299,7 +318,47 @@
     </form>
 </div>
 
+<script src="{% static 'js/nigeria_states_lgas.js' %}"></script>
 <script>
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!navigator.geolocation) {
+      console.warn("Geolocation is not supported by this browser.");
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          console.log("Latitude obtained:", lat);
+          console.log("Longitude obtained:", lng);
+          document.getElementById("latitude").value = lat;
+          document.getElementById("longitude").value = lng;
+        },
+        function (error) {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              console.warn("User denied the request for Geolocation.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              console.warn("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              console.warn("The request to get user location timed out.");
+              break;
+            case error.UNKNOWN_ERROR:
+              console.warn("An unknown error occurred.");
+              break;
+          }
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    }
+  });
     // Toggle marriage details
     document.querySelector('select[name="marital_status"]').addEventListener('change', function() {
         const marriageDetails = document.getElementById('marriageDetails');
@@ -311,14 +370,6 @@
     });
 
     // Toggle death details
-    document.getElementById('deceased').addEventListener('change', function() {
-        const deathDetails = document.getElementById('deathDetails');
-        if (this.checked) {
-            deathDetails.classList.remove('hidden');
-        } else {
-            deathDetails.classList.add('hidden');
-        }
-    });
 
     
         document.querySelector('form').addEventListener('submit', function(e) {
@@ -683,4 +734,51 @@
         }
     });
     </script>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const nigeriaData = window.nigeriaData || [];
+    const stateSelect = document.getElementById("state_of_origin");
+    const lgaSelect = document.getElementById("lga_of_origin");
+
+    // Repopulate from old form data if user submits invalid
+    const oldState = "{{ form_data.state_of_origin|default:'' }}";
+    const oldLGA = "{{ form_data.lga_of_origin|default:'' }}";
+
+    // Populate state dropdown
+    nigeriaData.forEach(state => {
+      const opt = document.createElement("option");
+      opt.value = state.name;
+      opt.text = state.name;
+      if (state.name === oldState) opt.selected = true;
+      stateSelect.appendChild(opt);
+    });
+
+    // Populate LGA dropdown if state is already selected
+    function updateLGAs(selectedState) {
+      const lgas = nigeriaData.find(s => s.name === selectedState)?.cities || [];
+      lgaSelect.innerHTML = '<option value="">-- Select LGA --</option>';
+      lgas.forEach(lga => {
+        const opt = document.createElement("option");
+        opt.value = lga;
+        opt.text = lga;
+        if (lga === oldLGA) opt.selected = true;
+        lgaSelect.appendChild(opt);
+      });
+    }
+
+    // If state was selected before error, populate LGAs
+    if (oldState) updateLGAs(oldState);
+
+    stateSelect.addEventListener("change", function () {
+      updateLGAs(this.value);
+    });
+  });
+</script>
+
+
+
+
 {% endblock %}

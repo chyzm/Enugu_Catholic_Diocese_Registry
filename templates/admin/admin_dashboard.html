@@ -66,6 +66,13 @@
             </div>
         </form>
     </div>
+
+    <!-- Map Display -->
+<div class="bg-white rounded-lg shadow-md p-4 mb-6">
+    <h3 class="text-lg font-semibold mb-2 text-gray-800">Parishioner Locations</h3>
+    <div id="parishionerMap" style="height: 400px;" class="rounded"></div>
+</div>
+
     
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -213,4 +220,64 @@
         {% endif %}
     </div>
 </div>
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Leaflet MarkerCluster CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
+/>
+
+<!-- Leaflet MarkerCluster JS -->
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const geojsonData = {{ geojson_data|safe }};
+
+    if (!geojsonData.features.length) return;
+
+    const map = L.map('parishionerMap').setView([6.5, 7.5], 7);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Create a marker cluster group
+    const markerCluster = L.markerClusterGroup();
+
+    // Convert GeoJSON features to individual markers
+    L.geoJSON(geojsonData, {
+      pointToLayer: function (feature, latlng) {
+        const marker = L.marker(latlng);
+        const props = feature.properties;
+        const popupContent = `
+          <strong>Parish:</strong> ${props.parish}<br>
+          <strong>ID:</strong> ${props.unique_id}
+        `;
+        marker.bindPopup(popupContent);
+        return marker;
+      }
+    }).eachLayer(function (layer) {
+      markerCluster.addLayer(layer);
+    });
+
+    map.addLayer(markerCluster);
+
+    // Fit bounds to the cluster group
+    if (markerCluster.getLayers().length > 0) {
+      map.fitBounds(markerCluster.getBounds());
+    }
+  });
+</script>
+
+
+
 {% endblock %}

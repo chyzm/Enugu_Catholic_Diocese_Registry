@@ -135,6 +135,12 @@ DATABASES = {
 
 
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://cde.com.ng",
+    "https://cderegistry.org.ng",
+]
+
+
 #AUTH_USER_MODEL = 'registry.User'
 
 

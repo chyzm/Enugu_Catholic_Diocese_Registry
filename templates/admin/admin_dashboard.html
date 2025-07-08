@@ -19,9 +19,9 @@
                         class="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
                     Export Data
                 </button>
-                <button onclick="window.location.href='{% url 'registry:baptism_records' %}'" 
+                <button onclick="window.location.href='{% url 'registry:birth_records' %}'" 
                         class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
-                    Baptism Records
+                    Birth Records
                 </button>
                 {% if request.user.is_superuser %}
                 <button onclick="window.location.href='{% url 'registry:add_record' %}'" 

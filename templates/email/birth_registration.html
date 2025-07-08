@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,6 +50,10 @@
             font-weight: 600;
             color: #1a3e2f; /* green-900 */
             min-width: 150px;
+            text-align: left;
+        }
+        .info-value {
+            color: #333; /* Dark color for visibility */
         }
         .footer {
             margin-top: 30px;
@@ -75,89 +81,92 @@
             <h3>Child Information</h3>
             <div class="info-row">
                 <span class="info-label">Name:</span>
-                <span>{{ child_name }}</span>
+                <span class="info-value">{{ child_name }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Gender:</span>
-                <span>{{ gender }}</span>
+                <span class="info-value">{{ gender }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Date of Birth:</span>
-                <span>{{ date_of_birth }}</span>
+                <span class="info-value">{{ date_of_birth }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Time of Birth:</span>
-                <span>{{ time_of_birth }}</span>
+                <span class="info-value">{{ time_of_birth }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Place of Birth:</span>
-                <span>{{ place_of_birth }}</span>
+                <span class="info-value">{{ place_of_birth }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Hospital:</span>
-                <span>{{ hospital_name }}</span>
+                <span class="info-value">{{ hospital_name }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Parish of Birth:</span>
-                <span>{{ birth_parish }}</span>
+                <span class="info-value">{{ birth_parish }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Baptism Date:</span>
-                <span>{{ baptism_date }}</span>
+                <span class="info-value">{{ baptism_date }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Certificate No:</span>
-                <span>{{ baptism_certificate }}</span>
+                <span class="info-value">{{ baptism_certificate }}</span>
             </div>
         </div>
         
         <div class="info-block">
             <h3>Father's Information</h3>
+            
             <div class="info-row">
                 <span class="info-label">Name:</span>
-                <span>{{ father_name }}</span>
+                <span class="info-value">{{ father_name }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Religion:</span>
-                <span>{{ father_religion }}</span>
+                <span class="info-value">{{ father_religion }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Phone:</span>
-                <span>{{ father_phone }}</span>
+                <span class="info-value">{{ father_phone }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Parish:</span>
-                <span>{{ father_parish }}</span>
+                <span class="info-value">{{ father_parish }}</span>
             </div>
         </div>
         
         <div class="info-block">
             <h3>Mother's Information</h3>
+            
+            
             <div class="info-row">
                 <span class="info-label">Name:</span>
-                <span>{{ mother_name }}</span>
+                <span class="info-value">{{ mother_name }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Maiden Name:</span>
-                <span>{{ mother_maiden }}</span>
+                <span class="info-value">{{ mother_maiden }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Religion:</span>
-                <span>{{ mother_religion }}</span>
+                <span class="info-value">{{ mother_religion }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Phone:</span>
-                <span>{{ mother_phone }}</span>
+                <span class="info-value">{{ mother_phone }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Parish:</span>
-                <span>{{ mother_parish }}</span>
+                <span class="info-value">{{ mother_parish }}</span>
             </div>
         </div>
         
         <div class="info-block">
             <h3>Home Address</h3>
-            <p>{{ home_address }}</p>
+            <p class="info-value">{{ home_address }}</p>
         </div>
         
         <div class="footer">

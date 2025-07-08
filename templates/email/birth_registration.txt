@@ -12,12 +12,14 @@ Child Information:
 - Certificate No: {{ baptism_certificate }}
 
 Father's Information:
+
 - Name: {{ father_name }}
 - Religion: {{ father_religion }}
 - Phone: {{ father_phone }}
 - Parish: {{ father_parish }}
 
 Mother's Information:
+
 - Name: {{ mother_name }}
 - Maiden Name: {{ mother_maiden }}
 - Religion: {{ mother_religion }}

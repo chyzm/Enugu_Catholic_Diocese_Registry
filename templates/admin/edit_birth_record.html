@@ -4,11 +4,11 @@
 <div class="container mx-auto px-4">
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h2 class="text-2xl font-bold text-green-900">Edit Baptism Record</h2>
-            <p class="text-gray-600">Update baptism details for {{ baptism.child_name }}</p>
+            <h2 class="text-2xl font-bold text-green-900">Edit Birth Record</h2>
+            <p class="text-gray-600">Update birth details for {{ birth.child_name }}</p>
         </div>
         <div>
-            <button onclick="window.location.href='{% url 'registry:baptism_records' %}'" 
+            <button onclick="window.location.href='{% url 'registry:birth_records' %}'" 
                     class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition">
                 Back to Records
             </button>
@@ -42,7 +42,7 @@
                     Save Changes
                 </button>
                 <button type="button" 
-                        onclick="window.location.href='{% url 'registry:baptism_records' %}'"
+                        onclick="window.location.href='{% url 'registry:birth_records' %}'"
                         class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition">
                     Cancel
                 </button>

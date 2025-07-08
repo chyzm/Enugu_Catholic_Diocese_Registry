@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 ]
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'registry.middleware.InitialSetupMiddleware',
+   
 ]
 
 ROOT_URLCONF = 'diocese_census.urls'
@@ -242,14 +243,25 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR /'media'
 
 # Email Configuration
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = config('EMAIL_HOST')
+# EMAIL_PORT = config('EMAIL_PORT',)
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+# ADMIN_EMAIL = config('ADMIN_EMAIL')  # Add this line
+
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT',)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
-ADMIN_EMAIL = config('ADMIN_EMAIL')  # Add this line
+EMAIL_HOST_USER = 'suavedef@gmail.com'
+EMAIL_HOST_PASSWORD = 'fmgekozjcclhoiry'
+DEFAULT_FROM_EMAIL = "CDE REGISTRY <suavedef@gmail.com>"
+ADMIN_EMAIL = 'suavedef@gmail.com'
 
 
 # EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')

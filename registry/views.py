@@ -1,8 +1,8 @@
 import datetime
 from time import timezone
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Baptism, Deanery, Parish, Parishioner, Priest, ParishAdministrator
-from .forms import BaptismForm, CustomUserCreationForm, ParishAdminCompleteRegistrationForm, ParishAdminSelfRegistrationForm, ParishionerForm, PriestRegistrationForm
+from .models import BirthRecord, Deanery, Parish, Parishioner, Priest, ParishAdministrator
+from .forms import BirthRecordForm, CustomUserCreationForm, ParishAdminCompleteRegistrationForm, ParishAdminSelfRegistrationForm, ParishionerForm, PriestRegistrationForm
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
@@ -575,103 +575,123 @@ def registration_success(request, unique_id):
     })
     
     
-def submit_baptism(request):
+# views.py
+def submit_birth_record(request):
     if request.method == 'POST':
         try:
             # Parse date strings into date objects
             date_of_birth = parse_date(request.POST.get('date_of_birth'))
+            time_of_birth = request.POST.get('time_of_birth')
             baptism_date = parse_date(request.POST.get('baptism_date')) if request.POST.get('baptism_date') else None
             
-            # Create Baptism record with proper date objects
-            baptism = Baptism.objects.create(
+            # Create BirthRecord record with proper date objects
+            birth_record = BirthRecord.objects.create(
                 child_name=request.POST.get('child_name'),
                 gender=request.POST.get('gender'),
                 date_of_birth=date_of_birth,
-                time_of_birth=request.POST.get('time_of_birth'),
+                time_of_birth=time_of_birth,
                 place_of_birth=request.POST.get('place_of_birth'),
                 hospital_name=request.POST.get('hospital_name'),
-                birth_parish=request.POST.get('parish'),  # Using parish from form
+                birth_parish=request.POST.get('parish'),
                 baptism_date=baptism_date,
                 baptism_certificate=request.POST.get('baptism_certificate'),
+                father_unique_id=request.POST.get('father_unique_id'),  # Add this
                 father_name=request.POST.get('father_name'),
                 father_religion=request.POST.get('father_religion'),
                 father_phone=request.POST.get('father_phone'),
                 father_parish=request.POST.get('father_parish'),
+                mother_unique_id=request.POST.get('mother_unique_id'),  # Add this
                 mother_name=request.POST.get('mother_name'),
                 mother_maiden=request.POST.get('mother_maiden'),
                 mother_religion=request.POST.get('mother_religion'),
                 mother_phone=request.POST.get('mother_phone'),
                 mother_parish=request.POST.get('mother_parish'),
                 home_address=request.POST.get('home_address'),
+                father_state=request.POST.get('father_state'),
+                father_lga=request.POST.get('father_lga'),
+                father_town=request.POST.get('father_town'),
+                mother_state=request.POST.get('mother_state'),
+                mother_lga=request.POST.get('mother_lga'),
+                mother_town=request.POST.get('mother_town'),
             )
             
             # Prepare data for email
-            baptism_data = {
-                'child_name': baptism.child_name,
-                'gender': baptism.get_gender_display(),
-                'date_of_birth': baptism.date_of_birth.strftime('%Y-%m-%d') if baptism.date_of_birth else '',
-                'time_of_birth': str(baptism.time_of_birth) if baptism.time_of_birth else '',
-                'place_of_birth': baptism.place_of_birth,
-                'hospital_name': baptism.hospital_name,
-                'birth_parish': baptism.birth_parish,
-                'baptism_date': baptism.baptism_date.strftime('%Y-%m-%d') if baptism.baptism_date else '',
-                'baptism_certificate': baptism.baptism_certificate,
-                'father_name': baptism.father_name,
-                'father_religion': baptism.father_religion,
-                'father_phone': baptism.father_phone,
-                'father_parish': baptism.father_parish,
-                'mother_name': baptism.mother_name,
-                'mother_maiden': baptism.mother_maiden,
-                'mother_religion': baptism.mother_religion,
-                'mother_phone': baptism.mother_phone,
-                'mother_parish': baptism.mother_parish,
-                'home_address': baptism.home_address,
+            birth_data = {
+                'child_name': birth_record.child_name,
+                'gender': birth_record.gender,
+                'date_of_birth': birth_record.date_of_birth.strftime('%Y-%m-%d') if birth_record.date_of_birth else '',
+                'time_of_birth': birth_record.time_of_birth,
+                'place_of_birth': birth_record.place_of_birth,
+                'hospital_name': birth_record.hospital_name,
+                'birth_parish': birth_record.birth_parish,
+                'baptism_date': birth_record.baptism_date.strftime('%Y-%m-%d') if birth_record.baptism_date else '',
+                'baptism_certificate': birth_record.baptism_certificate,
+                'father_unique_id': birth_record.father_unique_id,  # Add this
+                'father_name': birth_record.father_name,
+                'father_religion': birth_record.father_religion,
+                'father_phone': birth_record.father_phone,
+                'father_parish': birth_record.father_parish,
+                'mother_unique_id': birth_record.mother_unique_id,  # Add this
+                'mother_name': birth_record.mother_name,
+                'mother_maiden': birth_record.mother_maiden,
+                'mother_religion': birth_record.mother_religion,
+                'mother_phone': birth_record.mother_phone,
+                'mother_parish': birth_record.mother_parish,
+                'home_address': birth_record.home_address,
             }
             
-            # Send email to EDC
-            subject = 'New Baptism Registration'
-            message = render_to_string('email/baptism_registration.txt', baptism_data)
-            html_message = render_to_string('email/baptism_registration.html', baptism_data)
+            # Send email
+            subject = 'New Birth Record Registration'
+            html_message = render_to_string('email/birth_registration.html', birth_data)
+            plain_message = render_to_string('email/birth_registration.txt', birth_data)
             
-            send_mail(
-                subject,
-                message,
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.ADMIN_EMAIL],
-                html_message=html_message,
-                fail_silently=False,
-            )
+            try:
+                send_mail(
+                    subject,
+                    plain_message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.ADMIN_EMAIL],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+                email_sent = True
+            except Exception as email_error:
+                print(f"Email sending failed: {str(email_error)}")
+                email_sent = False
             
             return JsonResponse({
                 'success': True,
-                'message': 'Baptism registration submitted successfully!',
-                'child_name': baptism.child_name,
-                'baptism_date': baptism.baptism_date.strftime('%Y-%m-%d') if baptism.baptism_date else ''
+                'message': 'Birth record registration submitted successfully!',
+                'email_sent': email_sent,
+                'child_name': birth_record.child_name,
+                'baptism_date': birth_record.baptism_date.strftime('%Y-%m-%d') if birth_record.baptism_date else ''
             })
             
         except Exception as e:
+            print(f"Error submitting birth record: {str(e)}")
             return JsonResponse({
                 'success': False,
                 'error': str(e)
-            })
+            }, status=400)
     
     return JsonResponse({
         'success': False,
         'error': 'Invalid request method'
-    })
-
+    }, status=405)
+    
+    
 
 @user_passes_test(admin_check, login_url='registry:login')
-def baptism_records(request):
+def birth_records(request):  # Changed from baptism_records
     # Get filter parameters
     search_query = request.GET.get('q', '')
     parish_filter = request.GET.get('parish', '')
     
     # Build query
-    baptisms = Baptism.objects.all().order_by('-baptism_date')
+    birth_records = BirthRecord.objects.all().order_by('-baptism_date')  # Changed from Baptism
     
     if search_query:
-        baptisms = baptisms.filter(
+        birth_records = birth_records.filter(
             Q(child_name__icontains=search_query) |
             Q(father_name__icontains=search_query) |
             Q(mother_name__icontains=search_query) |
@@ -679,10 +699,10 @@ def baptism_records(request):
         )
     
     if parish_filter:
-        baptisms = baptisms.filter(birth_parish=parish_filter)
+        birth_records = birth_records.filter(birth_parish=parish_filter)
     
     # Pagination
-    paginator = Paginator(baptisms, 25)
+    paginator = Paginator(birth_records, 25)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -692,95 +712,62 @@ def baptism_records(request):
         del query_params['page']
     query_params = query_params.urlencode()
     
-    return render(request, 'admin/baptism_records.html', {
-        'baptisms': page_obj,
+    return render(request, 'admin/birth_records.html', {  # Changed from baptism_records.html
+        'birth_records': page_obj,  # Changed from baptisms
         'page_obj': page_obj,
         'is_paginated': page_obj.has_other_pages(),
         'query_params': query_params,
         'deanery_choices': Parishioner.DEANERY_CHOICES,
     })
-    
-    
+
 @user_passes_test(admin_check, login_url='registry:login')
-def add_baptism(request):
+def add_birth_record(request):  # Changed from add_baptism
     if request.method == 'POST':
-        form = BaptismForm(request.POST)
+        form = BirthRecordForm(request.POST)  # Changed from BaptismForm
         if form.is_valid():
-            baptism = form.save(commit=False)
-            baptism.created_by = request.user
-            baptism.save()
-            messages.success(request, 'Baptism record added successfully!')
-            return redirect('registry:view_baptism', baptism_id=baptism.id)
+            birth_record = form.save(commit=False)
+            birth_record.created_by = request.user
+            birth_record.save()
+            messages.success(request, 'Birth record added successfully!')  # Changed from Baptism
+            return redirect('registry:view_birth_record', birth_record_id=birth_record.id)  # Changed from view_baptism
     else:
-        form = BaptismForm()
+        form = BirthRecordForm()  # Changed from BaptismForm
     
-    return render(request, 'admin/add_baptism.html', {'form': form})
+    return render(request, 'admin/add_birth_record.html', {'form': form})  # Changed from add_baptism.html
 
 @user_passes_test(admin_check, login_url='registry:login')
-def view_baptism(request, baptism_id):
-    baptism = get_object_or_404(Baptism, id=baptism_id)
-    return render(request, 'admin/view_baptism.html', {'baptism': baptism})
+def view_birth_record(request, birth_record_id):  # Changed from view_baptism
+    birth_record = get_object_or_404(BirthRecord, id=birth_record_id)  # Changed from Baptism
+    return render(request, 'admin/view_birth_record.html', {'birth_record': birth_record})  # Changed from baptism
 
 @user_passes_test(admin_check, login_url='registry:login')
-def edit_baptism(request, baptism_id):
-    baptism = get_object_or_404(Baptism, id=baptism_id)
+def edit_birth_record(request, birth_record_id):  # Changed from edit_baptism
+    birth_record = get_object_or_404(BirthRecord, id=birth_record_id)  # Changed from Baptism
     
     if request.method == 'POST':
-        form = BaptismForm(request.POST, instance=baptism)
+        form = BirthRecordForm(request.POST, instance=birth_record)  # Changed from BaptismForm
         if form.is_valid():
             form.save()
-            messages.success(request, 'Baptism record updated successfully!')
-            return redirect('registry:view_baptism', baptism_id=baptism.id)
+            messages.success(request, 'Birth record updated successfully!')  # Changed from Baptism
+            return redirect('registry:view_birth_record', birth_record_id=birth_record.id)  # Changed from view_baptism
     else:
-        form = BaptismForm(instance=baptism)
+        form = BirthRecordForm(instance=birth_record)  # Changed from BaptismForm
     
-    return render(request, 'admin/edit_baptism.html', {
+    return render(request, 'admin/edit_birth_record.html', {  # Changed from edit_baptism.html
         'form': form,
-        'baptism': baptism
+        'birth_record': birth_record  # Changed from baptism
     })
 
 @user_passes_test(lambda u: u.is_superuser, login_url='registry:login')
-def delete_baptism(request, baptism_id):
-    baptism = get_object_or_404(Baptism, id=baptism_id)
+def delete_birth_record(request, birth_record_id):  # Changed from delete_baptism
+    birth_record = get_object_or_404(BirthRecord, id=birth_record_id)  # Changed from Baptism
     
     if request.method == 'POST':
-        baptism.delete()
-        messages.success(request, 'Baptism record deleted successfully!')
-        return redirect('registry:baptism_records')
+        birth_record.delete()
+        messages.success(request, 'Birth record deleted successfully!')  # Changed from Baptism
+        return redirect('registry:birth_records')  # Changed from baptism_records
     
-    return render(request, 'admin/confirm_delete_baptism.html', {'baptism': baptism})
-
-
-@user_passes_test(admin_check, login_url='registry:login')
-def add_baptism(request):
-    if request.method == 'POST':
-        form = BaptismForm(request.POST)
-        if form.is_valid():
-            baptism = form.save(commit=False)
-            baptism.created_by = request.user
-            
-            # Try to link to parishioner if child name matches
-            try:
-                parishioner = Parishioner.objects.filter(
-                    Q(full_name__icontains=baptism.child_name.split()[0]) |
-                    Q(family_details__icontains=baptism.child_name)
-                ).first()
-                if parishioner:
-                    baptism.parishioner = parishioner
-                    parishioner.baptized = True
-                    parishioner.baptism_date = baptism.baptism_date
-                    parishioner.save()
-            except Exception as e:
-                print(f"Error linking baptism to parishioner: {e}")
-            
-            baptism.save()
-            messages.success(request, 'Baptism record added successfully!')
-            return redirect('registry:view_baptism', baptism_id=baptism.id)
-    else:
-        form = BaptismForm()
-    
-    return render(request, 'admin/add_baptism.html', {'form': form})
-
+    return render(request, 'admin/confirm_delete_birth_record.html', {'birth_record': birth_record})  # Changed from confirm_delete_baptism.html
 
 
 def parish_admin_register(request):
@@ -1210,7 +1197,54 @@ def priest_verify(request):
     
     return render(request, 'verify.html')
 
+
+
+
+
+
+from django.http import JsonResponse
+from .models import Parishioner
+
+def parishioner_detail(request, unique_id):
+    try:
+        parishioner = Parishioner.objects.get(unique_id=unique_id)
+        data = {
+            'full_name': parishioner.full_name,
+            'phone_number': parishioner.phone_number,
+            'parish': parishioner.parish,
+        }
+        return JsonResponse(data)
+    except Parishioner.DoesNotExist:
+        return JsonResponse({'error': 'Parishioner not found'}, status=404)
+
+
+
+# from django.views.decorators.http import require_GET
+
+# @require_GET
+# def get_parishioner_by_unique_id(request, unique_id):
+#     try:
+#         parishioner = Parishioner.objects.get(unique_id=unique_id)
+#         data = {
+#             "full_name": parishioner.full_name,
+#             "parish": parishioner.parish,
+#             "phone_number": parishioner.phone_number,
+#             "email": parishioner.email,
+#             "gender": parishioner.get_gender_display(),
+#         }
+#         return JsonResponse(data)
+#     except Parishioner.DoesNotExist:
+#         return JsonResponse({"error": "Parishioner not found"}, status=404)
+
+    
+
+    
+    
+
 def send_otp(phone_number, code):
     # In production, implement actual SMS sending here
     print(f"OTP for {phone_number}: {code}")
     return True
+
+
+

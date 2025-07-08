@@ -111,8 +111,8 @@
                 </div>
                 <h3 class="text-xl font-semibold mb-3 text-green-900">Birth Records</h3>
                 <p class="text-gray-600 mb-4">Register and access birth records for children in our diocese.</p>
-                <button onclick="openModal('birth')" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
-                    More Info
+                <button onclick="openBirthRecordModal()" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                     Open Form
                 </button>
             </div>
             
@@ -123,8 +123,8 @@
                 </div>
                 <h3 class="text-xl font-semibold mb-3 text-green-900">Baptism Registry</h3>
                 <p class="text-gray-600 mb-4">Register a baptism or access baptismal records.</p>
-                <button onclick="openBaptismModal()" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
-                    Open Form
+                <button onclick="openModal('baptism')" class="bg-green-900 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                    More Info 
                 </button>
             </div>
             
@@ -211,17 +211,18 @@
     </div>
 </div>
 
-<!-- Baptism Registry Modal -->
-<div id="baptismModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-8">
+<!-- birth record Registry Modal -->
+<div id="birthRecordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-8">
     <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 my-8">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold text-green-900">Baptism Registry</h3>
-            <button onclick="closeBaptismModal()" class="text-gray-500 hover:text-gray-700">
+            <h3 class="text-xl font-bold text-green-900">Birth Record</h3>
+            <button onclick="closeBirthRecordModal()" class="text-gray-500 hover:text-gray-700">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <form id="baptismForm" method="post" action="{% url 'registry:submit_baptism' %}">
+        <div class="max-h-[70vh] overflow-y-auto">
+        <form id="birthRecordForm" method="post" action="{% url 'registry:submit_birth_record' %}">
             {% csrf_token %}
             
             <!-- Step 1: Child Information -->
@@ -262,313 +263,313 @@
                         <input type="text" name="hospital_name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                   <!-- Replace the existing birth_parish select with these fields -->
-<div>
-    <label class="block text-sm font-medium text-gray-700 mb-1">Deanery</label>
-    <select name="deanery" required 
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            onchange="updateParishes(this)">
-        <option value="">Select Deanery</option>
-        <option value="Agbani Deanery">Agbani Deanery</option>
-        <option value="Aguobu Owa Deanery">Aguobu Owa Deanery</option>
-        <option value="Emene Deanery">Emene Deanery</option>
-        <option value="Enugu Deanery">Enugu Deanery</option>
-        <option value="Nkwo Nike Deanery">Nkwo Nike Deanery</option>
-        <option value="Udi Deanery">Udi Deanery</option>
-    </select>
-</div>
-<div>
-    <label class="block text-sm font-medium text-gray-700 mb-1">Parish</label>
-    <select name="parish" required 
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
-            id="parishSelect" disabled>
-        <option value="">Select Parish</option>
-        <!-- Parishes will be populated via JavaScript -->
-    </select>
-</div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Deanery</label>
+                        <select name="deanery" required 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                onchange="updateParishes(this)">
+                            <option value="">Select Deanery</option>
+                            <option value="Agbani Deanery">Agbani Deanery</option>
+                            <option value="Aguobu Owa Deanery">Aguobu Owa Deanery</option>
+                            <option value="Emene Deanery">Emene Deanery</option>
+                            <option value="Enugu Deanery">Enugu Deanery</option>
+                            <option value="Nkwo Nike Deanery">Nkwo Nike Deanery</option>
+                            <option value="Udi Deanery">Udi Deanery</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Parish</label>
+                        <select name="parish" required 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                                id="parishSelect" disabled>
+                            <option value="">Select Parish</option>
+                            <!-- Parishes will be populated via JavaScript -->
+                        </select>
+                    </div>
 
-<script>
-    // Parish data organized by deanery
-    const parishesByDeanery = {
-        "Agbani Deanery": [
-            "Agbani (St. John)",
-            "Akpawfu (St. Philip)",
-            "Akpugo (Holy Angels)",
-            "Akpugo (Holy Trinity)",
-            "Akpugo (Sacred Heart)",
-            "Akpugo (St. Brendan)",
-            "Akpugo-Ugwuafor (St. Bridget)",
-            "Amagu (St Patrick)",
-            "Amagunze (Holy Innocents)",
-            "Amankanu-Amurri (St. Anne)",
-            "Amigbo-Ozalla (St. Vincent)",
-            "Amodu (St. Peter)",
-            "Amurri (St. Mary)",
-            "Aniyi, Amagunze (St. James)",
-            "Attakwu (St. John)",
-            "Eziokwe-Amurri (St. Michael)",
-            "Ihuokpara (St. Mary)",
-            "Imeoha (St. Paul)",
-            "Ishienu Nkerefi (St. Augustine)",
-            "Mburubu (St. John)",
-            "Nara (St. Kevin)",
-            "Nara (St. Pius)",
-            "Nkerefi (St. Patrick)",
-            "Nomeh (St. Patrick)",
-            "Obe (St. Anthony)",
-            "Obeagu-Attakwu (St. Joseph)",
-            "Ogonogo-Eji Akpugo (St. Jude)",
-            "Onicha-Agu, Amagunze(St. Martin)",
-            "Ozalla (St. Paul)",
-            "Ugbawka (Holy Trinity)",
-            "Ugbawka (St. James)",
-            "Umuatugbuoma, Akagbe (St. Francis)",
-            "Chime John"
-        ],
-        "Aguobu Owa Deanery": [
-            "Agba-Umana (St. Anthony)",
-            "Aguoba (St. Patrick)",
-            "Aguobu Iwollo (St. Martin)",
-            "Aguobu Owa (Christ the King)",
-            "Aguobu Umumba (St. Mary)",
-            "Awha Imezi (St. Michael)",
-            "Awha Agbagbo (St. Paul)",
-            "Awha Ndiagu (St. John Cross)",
-            "Imama Iwollo (Holy Rosary)",
-            "Ihuonyia Amansiodo (St. Patrick)",
-            "Imezi-Owa (Our Lady of Lourdes)",
-            "Iwollo (Sacred Heart)",
-            "Mgbagbu-Owa (St. Paul)",
-            "Mgbagbu-Owa (St. Pius)",
-            "Obeleagu Umana (St. Augustine)",
-            "Obeleagu Umana (St. Peter)",
-            "Obinofia (St. Dominic)",
-            "Obinofia Ndiuno (St. Mark)",
-            "Oghe (St. Theresa)",
-            "Oghe, Akama (St. Mary)",
-            "Oghe, Amansiodo (St. John)",
-            "Ogulogu Olo (St. Theresa)",
-            "Ogwofia Imezi-Owa (St. Patrick)",
-            "Okpudo Obeleagu Umana (St. Michael)",
-            "Okpueze Umumba (Christ the King)",
-            "Olo (Christ the King)",
-            "Olo (St. Joseph)",
-            "Olo Ibite (St. Andrew)",
-            "Olo, Imezi (St. Paul)",
-            "Omughu (St. Joseph)",
-            "Ugwuetiti-Amansiodo Oghe (St. Joseph)",
-            "Umuaji-Mgbagbuowa (Holy Rosary)",
-            "Umana Ndiagu (St. Mark)",
-            "Umudim – Imezi Owa (St. Charles)",
-            "Umudim – Aguobu Owa (Immaculate Conception)",
-            "Umumba Ndiagu (St. Peter)",
-            "Umumba Ndiuno (St. Mary)",
-            "Upata Ezema (St. Theresa)"
-        ],
-        "Emene Deanery": [
-            "Akpuoga (St. Mary)",
-            "Emene (Emmanuel Parish)",
-            "Emene (Our Lady of the Rosary)",
-            "Emene (St. Joseph)",
-            "Emene (Holy Trinity)",
-            "Emene, Destiny/ Standard Layout, (Queen of Divine Love)",
-            "Ezza Akpuoga (Corpus Christi)",
-            "Ezza Nkomoro Onuogba Nike (Holy Child)",
-            "Ezza Nkwubo (Corpus Christi)",
-            "Idodo (St. Charles)",
-            "Nchatancha, Queen of the Apostles",
-            "Nwanne Di Na Mba-New Haven Extension (St. Dominic)",
-            "Obinagu (St. Hyacinth)",
-            "Onu Ogba-Nike (St. Paul)",
-            "Oruku, (St. Mary)",
-            "Owo (St. Mary)",
-            "Premier Estate (St. Michael)",
-            "Mbulu Owo (St. Anthony)",
-            "Nkpologwu/ PRODA (St. Peter)",
-            "Ubahu (St. John)",
-            "Ugwuomu Nike (St. Mary)",
-            "Umuode (St. Rita)"
-        ],
-        "Enugu Deanery": [
-            "Akwuke (St Evaristus)",
-            "Akwuke (St. Mary)",
-            "Amachala Ngwo (St. Michael)",
-            "Amechi (St. Jude)",
-            "Amechi, Amagugwu (Holy Trinity)",
-            "Amechi, Ihuorie (St. Michael)",
-            "Asata (St. Aloysius)",
-            "Asata (St. Brigid)",
-            "Asata (St. Michael)",
-            "Awkunanaw (Maria Assumpta)",
-            "Awkunanaw (St. Paul)",
-            "Awkunanaw (Virgo Potens)",
-            "Awkunanaw, Obeagu (St. Anthony)",
-            "Awkunanaw (St. Patrick)",
-            "Ekulu, G.R.A. (Christ the King)",
-            "Garriki (St. Peter)",
-            "Garriki (St. Raphael)",
-            "Golf Estate (Holy Spirit)",
-            "Hilltop Enugu (Holy Trinity)",
-            "Idaw-River (St. Gabriel)",
-            "Idaw-River (St. Gregory the Great)",
-            "Idaw-River (St. Theresa)",
-            "Ind. Layout (Blessed Sacrament)",
-            "Ind. Layout (Holy Trinity)",
-            "Ind. Layout (Rosa Mystica)",
-            "Iva Valley (Our Lady of Mercy)",
-            "Iva Valley, Pottery (St. Patrick)",
-            "Jamboree (St. Joseph the Worker)",
-            "Maryland (Our Lady of Lourdes)",
-            "Maryland (St. Anne)",
-            "Mount Awkunanaw (St. Andrew)",
-            "New Haven (St. Mulumba)",
-            "New Haven (Our Lady of Perpetual Help)",
-            "New Haven (St. Callistus)",
-            "Ngene Evu, Camp (St. Ambrose)",
-            "Ngwo (Christ the King)",
-            "Ngwo (St. Mary)",
-            "Ngwo, Akama (St. Peter)",
-            "Ngwo (St. Theresa)",
-            "Ngwo, Uborji (St. Joseph)",
-            "Nineth Mile (St. Jude)",
-            "Ogbete (St. Patrick)",
-            "Ogui (Holy Ghost)",
-            "Ogui New Layout (St. Anthony)",
-            "Ologo (Holy Family)",
-            "Ugwu Aaron (St. Peter)",
-            "Ugwuaji, (St. Michael)",
-            "Umuase-Ngwo (St. Anthony)",
-            "Uno Okpete (Immaculate Heart)",
-            "UNTH (St. Martin de Poress)",
-            "Uwani (Sacred Heart)",
-            "Uwani (St. Mary)"
-        ],
-        "Nkwo Nike Deanery": [
-            "Abakpa (St. Theresa)",
-            "Abakpa, Anioma Layout (St. Jude)",
-            "Abakpa, Edward Nnaji Estate (St. Joseph)",
-            "Ako Nike (St. Patrick)",
-            "Alulu & Nokpa Nike (Two Hearts of Jesus and Mary)",
-            "Federal Housing (St. Leo the Great)",
-            "Housing Estate (Seat of Wisdom)",
-            "Ibagwa-Nike (All Saints)",
-            "Ifo Layout, Abakpa Nike (St. Benedict)",
-            "Iji Nike (Holy Cross)",
-            "Ndorommiri (Queen of Peace)",
-            "Mbano Nike (St. Michael)",
-            "Mbulu-Owehe, Nike (St. Paul)",
-            "New G.R.A. (St. Anthony)",
-            "Nkwo Nike (Assumption)",
-            "Trans-Ekulu, Community Estate (Mater Dei – Mother of God)",
-            "Trans-Ekulu (St. Mary)",
-            "Trans-Ekulu Phase 6 (Blessed Tansi)",
-            "Trans-Ekulu, RCC Quarters (St. John the Beloved Apostle)",
-            "Ugbene (SS. Peter& Paul)",
-            "Ugbene II (St. Francis)",
-            "Ugbo-Odogwu (St. Theresa)",
-            "Ugbo Owa (Stella Maris)",
-            "Ugwogo Nike (St. Joseph)",
-            "Ugwuagor (Queen of the H/Rosary)",
-            "Ugwuegede (Immaculate Conception)",
-            "Umuchigbo, Iji Nike (St. Mary)"
-        ],
-        "Udi Deanery": [
-            "Agu-Abor (SS Simon & Jude)",
-            "Abia (St. Mark)",
-            "Abor (St. Peter)",
-            "Abor (St. Theresa)",
-            "Affa (St. John)",
-            "Affa Amofia-Agu (St. Mary)",
-            "Affa Amokwu (St. Michael)",
-            "Agbalaenyi Nachi (St. Maria Goretti)",
-            "Agbudu (St. Alfred)",
-            "Akpakwume/Nze (St. Augustine)",
-            "Amokwe (St. Anthony)",
-            "Amokwe (St. Patrick)",
-            "Amokwe (St. Paul)",
-            "Amokwe (St. Theresa)",
-            "Awhum (St. Luke)",
-            "Ebe (St. John)",
-            "Egede (St. Cyril)",
-            "Eke (St. Paul)",
-            "Nachi (St. Mary)",
-            "Nsude (St. Mark)",
-            "Obinagu (St. Dominic)",
-            "Obinagu (St. Paul)",
-            "Obioma (St. Theresa)",
-            "Ogui-Eke (St. Michael)",
-            "Okpatu (Holy Family)",
-            "Okpatu (St. Joseph)",
-            "Oma-Eke (St. Anthony)",
-            "Udi (St. Mary)",
-            "Ukana (St. Joseph)",
-            "Umabi (Holy Family)",
-            "Umuoka (St. Andrew)",
-            "Umuaga (St. Peter)",
-            "Umuaga (St. Anthony)",
-            "Umulumgbe (St. Anthony)",
-            "Umulumgbe (St. Michael)"
-        ]
-    };
+                                    <script>
+                                        // Parish data organized by deanery
+                                        const parishesByDeanery = {
+                                            "Agbani Deanery": [
+                                                "Agbani (St. John)",
+                                                "Akpawfu (St. Philip)",
+                                                "Akpugo (Holy Angels)",
+                                                "Akpugo (Holy Trinity)",
+                                                "Akpugo (Sacred Heart)",
+                                                "Akpugo (St. Brendan)",
+                                                "Akpugo-Ugwuafor (St. Bridget)",
+                                                "Amagu (St Patrick)",
+                                                "Amagunze (Holy Innocents)",
+                                                "Amankanu-Amurri (St. Anne)",
+                                                "Amigbo-Ozalla (St. Vincent)",
+                                                "Amodu (St. Peter)",
+                                                "Amurri (St. Mary)",
+                                                "Aniyi, Amagunze (St. James)",
+                                                "Attakwu (St. John)",
+                                                "Eziokwe-Amurri (St. Michael)",
+                                                "Ihuokpara (St. Mary)",
+                                                "Imeoha (St. Paul)",
+                                                "Ishienu Nkerefi (St. Augustine)",
+                                                "Mburubu (St. John)",
+                                                "Nara (St. Kevin)",
+                                                "Nara (St. Pius)",
+                                                "Nkerefi (St. Patrick)",
+                                                "Nomeh (St. Patrick)",
+                                                "Obe (St. Anthony)",
+                                                "Obeagu-Attakwu (St. Joseph)",
+                                                "Ogonogo-Eji Akpugo (St. Jude)",
+                                                "Onicha-Agu, Amagunze(St. Martin)",
+                                                "Ozalla (St. Paul)",
+                                                "Ugbawka (Holy Trinity)",
+                                                "Ugbawka (St. James)",
+                                                "Umuatugbuoma, Akagbe (St. Francis)",
+                                                "Chime John"
+                                            ],
+                                            "Aguobu Owa Deanery": [
+                                                "Agba-Umana (St. Anthony)",
+                                                "Aguoba (St. Patrick)",
+                                                "Aguobu Iwollo (St. Martin)",
+                                                "Aguobu Owa (Christ the King)",
+                                                "Aguobu Umumba (St. Mary)",
+                                                "Awha Imezi (St. Michael)",
+                                                "Awha Agbagbo (St. Paul)",
+                                                "Awha Ndiagu (St. John Cross)",
+                                                "Imama Iwollo (Holy Rosary)",
+                                                "Ihuonyia Amansiodo (St. Patrick)",
+                                                "Imezi-Owa (Our Lady of Lourdes)",
+                                                "Iwollo (Sacred Heart)",
+                                                "Mgbagbu-Owa (St. Paul)",
+                                                "Mgbagbu-Owa (St. Pius)",
+                                                "Obeleagu Umana (St. Augustine)",
+                                                "Obeleagu Umana (St. Peter)",
+                                                "Obinofia (St. Dominic)",
+                                                "Obinofia Ndiuno (St. Mark)",
+                                                "Oghe (St. Theresa)",
+                                                "Oghe, Akama (St. Mary)",
+                                                "Oghe, Amansiodo (St. John)",
+                                                "Ogulogu Olo (St. Theresa)",
+                                                "Ogwofia Imezi-Owa (St. Patrick)",
+                                                "Okpudo Obeleagu Umana (St. Michael)",
+                                                "Okpueze Umumba (Christ the King)",
+                                                "Olo (Christ the King)",
+                                                "Olo (St. Joseph)",
+                                                "Olo Ibite (St. Andrew)",
+                                                "Olo, Imezi (St. Paul)",
+                                                "Omughu (St. Joseph)",
+                                                "Ugwuetiti-Amansiodo Oghe (St. Joseph)",
+                                                "Umuaji-Mgbagbuowa (Holy Rosary)",
+                                                "Umana Ndiagu (St. Mark)",
+                                                "Umudim – Imezi Owa (St. Charles)",
+                                                "Umudim – Aguobu Owa (Immaculate Conception)",
+                                                "Umumba Ndiagu (St. Peter)",
+                                                "Umumba Ndiuno (St. Mary)",
+                                                "Upata Ezema (St. Theresa)"
+                                            ],
+                                            "Emene Deanery": [
+                                                "Akpuoga (St. Mary)",
+                                                "Emene (Emmanuel Parish)",
+                                                "Emene (Our Lady of the Rosary)",
+                                                "Emene (St. Joseph)",
+                                                "Emene (Holy Trinity)",
+                                                "Emene, Destiny/ Standard Layout, (Queen of Divine Love)",
+                                                "Ezza Akpuoga (Corpus Christi)",
+                                                "Ezza Nkomoro Onuogba Nike (Holy Child)",
+                                                "Ezza Nkwubo (Corpus Christi)",
+                                                "Idodo (St. Charles)",
+                                                "Nchatancha, Queen of the Apostles",
+                                                "Nwanne Di Na Mba-New Haven Extension (St. Dominic)",
+                                                "Obinagu (St. Hyacinth)",
+                                                "Onu Ogba-Nike (St. Paul)",
+                                                "Oruku, (St. Mary)",
+                                                "Owo (St. Mary)",
+                                                "Premier Estate (St. Michael)",
+                                                "Mbulu Owo (St. Anthony)",
+                                                "Nkpologwu/ PRODA (St. Peter)",
+                                                "Ubahu (St. John)",
+                                                "Ugwuomu Nike (St. Mary)",
+                                                "Umuode (St. Rita)"
+                                            ],
+                                            "Enugu Deanery": [
+                                                "Akwuke (St Evaristus)",
+                                                "Akwuke (St. Mary)",
+                                                "Amachala Ngwo (St. Michael)",
+                                                "Amechi (St. Jude)",
+                                                "Amechi, Amagugwu (Holy Trinity)",
+                                                "Amechi, Ihuorie (St. Michael)",
+                                                "Asata (St. Aloysius)",
+                                                "Asata (St. Brigid)",
+                                                "Asata (St. Michael)",
+                                                "Awkunanaw (Maria Assumpta)",
+                                                "Awkunanaw (St. Paul)",
+                                                "Awkunanaw (Virgo Potens)",
+                                                "Awkunanaw, Obeagu (St. Anthony)",
+                                                "Awkunanaw (St. Patrick)",
+                                                "Ekulu, G.R.A. (Christ the King)",
+                                                "Garriki (St. Peter)",
+                                                "Garriki (St. Raphael)",
+                                                "Golf Estate (Holy Spirit)",
+                                                "Hilltop Enugu (Holy Trinity)",
+                                                "Idaw-River (St. Gabriel)",
+                                                "Idaw-River (St. Gregory the Great)",
+                                                "Idaw-River (St. Theresa)",
+                                                "Ind. Layout (Blessed Sacrament)",
+                                                "Ind. Layout (Holy Trinity)",
+                                                "Ind. Layout (Rosa Mystica)",
+                                                "Iva Valley (Our Lady of Mercy)",
+                                                "Iva Valley, Pottery (St. Patrick)",
+                                                "Jamboree (St. Joseph the Worker)",
+                                                "Maryland (Our Lady of Lourdes)",
+                                                "Maryland (St. Anne)",
+                                                "Mount Awkunanaw (St. Andrew)",
+                                                "New Haven (St. Mulumba)",
+                                                "New Haven (Our Lady of Perpetual Help)",
+                                                "New Haven (St. Callistus)",
+                                                "Ngene Evu, Camp (St. Ambrose)",
+                                                "Ngwo (Christ the King)",
+                                                "Ngwo (St. Mary)",
+                                                "Ngwo, Akama (St. Peter)",
+                                                "Ngwo (St. Theresa)",
+                                                "Ngwo, Uborji (St. Joseph)",
+                                                "Nineth Mile (St. Jude)",
+                                                "Ogbete (St. Patrick)",
+                                                "Ogui (Holy Ghost)",
+                                                "Ogui New Layout (St. Anthony)",
+                                                "Ologo (Holy Family)",
+                                                "Ugwu Aaron (St. Peter)",
+                                                "Ugwuaji, (St. Michael)",
+                                                "Umuase-Ngwo (St. Anthony)",
+                                                "Uno Okpete (Immaculate Heart)",
+                                                "UNTH (St. Martin de Poress)",
+                                                "Uwani (Sacred Heart)",
+                                                "Uwani (St. Mary)"
+                                            ],
+                                            "Nkwo Nike Deanery": [
+                                                "Abakpa (St. Theresa)",
+                                                "Abakpa, Anioma Layout (St. Jude)",
+                                                "Abakpa, Edward Nnaji Estate (St. Joseph)",
+                                                "Ako Nike (St. Patrick)",
+                                                "Alulu & Nokpa Nike (Two Hearts of Jesus and Mary)",
+                                                "Federal Housing (St. Leo the Great)",
+                                                "Housing Estate (Seat of Wisdom)",
+                                                "Ibagwa-Nike (All Saints)",
+                                                "Ifo Layout, Abakpa Nike (St. Benedict)",
+                                                "Iji Nike (Holy Cross)",
+                                                "Ndorommiri (Queen of Peace)",
+                                                "Mbano Nike (St. Michael)",
+                                                "Mbulu-Owehe, Nike (St. Paul)",
+                                                "New G.R.A. (St. Anthony)",
+                                                "Nkwo Nike (Assumption)",
+                                                "Trans-Ekulu, Community Estate (Mater Dei – Mother of God)",
+                                                "Trans-Ekulu (St. Mary)",
+                                                "Trans-Ekulu Phase 6 (Blessed Tansi)",
+                                                "Trans-Ekulu, RCC Quarters (St. John the Beloved Apostle)",
+                                                "Ugbene (SS. Peter& Paul)",
+                                                "Ugbene II (St. Francis)",
+                                                "Ugbo-Odogwu (St. Theresa)",
+                                                "Ugbo Owa (Stella Maris)",
+                                                "Ugwogo Nike (St. Joseph)",
+                                                "Ugwuagor (Queen of the H/Rosary)",
+                                                "Ugwuegede (Immaculate Conception)",
+                                                "Umuchigbo, Iji Nike (St. Mary)"
+                                            ],
+                                            "Udi Deanery": [
+                                                "Agu-Abor (SS Simon & Jude)",
+                                                "Abia (St. Mark)",
+                                                "Abor (St. Peter)",
+                                                "Abor (St. Theresa)",
+                                                "Affa (St. John)",
+                                                "Affa Amofia-Agu (St. Mary)",
+                                                "Affa Amokwu (St. Michael)",
+                                                "Agbalaenyi Nachi (St. Maria Goretti)",
+                                                "Agbudu (St. Alfred)",
+                                                "Akpakwume/Nze (St. Augustine)",
+                                                "Amokwe (St. Anthony)",
+                                                "Amokwe (St. Patrick)",
+                                                "Amokwe (St. Paul)",
+                                                "Amokwe (St. Theresa)",
+                                                "Awhum (St. Luke)",
+                                                "Ebe (St. John)",
+                                                "Egede (St. Cyril)",
+                                                "Eke (St. Paul)",
+                                                "Nachi (St. Mary)",
+                                                "Nsude (St. Mark)",
+                                                "Obinagu (St. Dominic)",
+                                                "Obinagu (St. Paul)",
+                                                "Obioma (St. Theresa)",
+                                                "Ogui-Eke (St. Michael)",
+                                                "Okpatu (Holy Family)",
+                                                "Okpatu (St. Joseph)",
+                                                "Oma-Eke (St. Anthony)",
+                                                "Udi (St. Mary)",
+                                                "Ukana (St. Joseph)",
+                                                "Umabi (Holy Family)",
+                                                "Umuoka (St. Andrew)",
+                                                "Umuaga (St. Peter)",
+                                                "Umuaga (St. Anthony)",
+                                                "Umulumgbe (St. Anthony)",
+                                                "Umulumgbe (St. Michael)"
+                                            ]
+                                        };
 
-    function updateParishes(select) {
-        const deanery = select.value;
-        const parishSelect = document.getElementById('parishSelect');
-        
-        // Clear existing options
-        parishSelect.innerHTML = '<option value="">Select Parish</option>';
-        
-        if (deanery) {
-            // Enable and populate parish select
-            parishSelect.disabled = false;
-            const parishes = parishesByDeanery[deanery] || [];
-            
-            parishes.forEach(parish => {
-                const option = document.createElement('option');
-                option.value = parish;
-                option.textContent = parish;
-                parishSelect.appendChild(option);
-            });
-        } else {
-            // Disable if no deanery selected
-            parishSelect.disabled = true;
-        }
-    }
+                                        function updateParishes(select) {
+                                            const deanery = select.value;
+                                            const parishSelect = document.getElementById('parishSelect');
+                                            
+                                            // Clear existing options
+                                            parishSelect.innerHTML = '<option value="">Select Parish</option>';
+                                            
+                                            if (deanery) {
+                                                // Enable and populate parish select
+                                                parishSelect.disabled = false;
+                                                const parishes = parishesByDeanery[deanery] || [];
+                                                
+                                                parishes.forEach(parish => {
+                                                    const option = document.createElement('option');
+                                                    option.value = parish;
+                                                    option.textContent = parish;
+                                                    parishSelect.appendChild(option);
+                                                });
+                                            } else {
+                                                // Disable if no deanery selected
+                                                parishSelect.disabled = true;
+                                            }
+                                        }
 
-    // Update form validation to include both fields
-    function showStep2() {
-        // Validate step 1 before proceeding
-        const form = document.getElementById('baptismForm');
-        const inputs = form.querySelectorAll('#step1 [required]');
-        let isValid = true;
-        
-        inputs.forEach(input => {
-            if (!input.value) {
-                isValid = false;
-                input.classList.add('border-red-500');
-            } else {
-                input.classList.remove('border-red-500');
-            }
-        });
-        
-        // Additional check for parish if deanery is selected
-        const deanery = form.querySelector('[name="deanery"]').value;
-        const parish = form.querySelector('[name="parish"]').value;
-        
-        if (deanery && !parish) {
-            isValid = false;
-            document.getElementById('parishSelect').classList.add('border-red-500');
-        } else {
-            document.getElementById('parishSelect').classList.remove('border-red-500');
-        }
-        
-        if (isValid) {
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-        } else {
-            alert('Please fill in all required fields before proceeding.');
-        }
-    }
-</script>
+                                        // Update form validation to include both fields
+                                        function showStep2() {
+                                            // Validate step 1 before proceeding
+                                            const form = document.getElementById('birthRecordForm');
+                                            const inputs = form.querySelectorAll('#step1 [required]');
+                                            let isValid = true;
+                                            
+                                            inputs.forEach(input => {
+                                                if (!input.value) {
+                                                    isValid = false;
+                                                    input.classList.add('border-red-500');
+                                                } else {
+                                                    input.classList.remove('border-red-500');
+                                                }
+                                            });
+                                            
+                                            // Additional check for parish if deanery is selected
+                                            const deanery = form.querySelector('[name="deanery"]').value;
+                                            const parish = form.querySelector('[name="parish"]').value;
+                                            
+                                            if (deanery && !parish) {
+                                                isValid = false;
+                                                document.getElementById('parishSelect').classList.add('border-red-500');
+                                            } else {
+                                                document.getElementById('parishSelect').classList.remove('border-red-500');
+                                            }
+                                            
+                                            if (isValid) {
+                                                document.getElementById('step1').classList.add('hidden');
+                                                document.getElementById('step2').classList.remove('hidden');
+                                            } else {
+                                                alert('Please fill in all required fields before proceeding.');
+                                            }
+                                        }
+                                    </script>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Baptism Date (if already baptized)</label>
                         <input type="date" name="baptism_date" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
@@ -589,65 +590,226 @@
             <div id="step2" class="hidden">
                 <h4 class="text-lg font-semibold mb-4 text-primary">Parent Information</h4>
                 <div class="grid md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Full Name</label>
-                        <input type="text" name="father_name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Religion</label>
-                        <div class="flex space-x-4">
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="father_religion" value="Catholic" class="form-checkbox text-primary">
-                                <span class="ml-2">Catholic</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="father_religion" value="Other" class="form-checkbox text-primary">
-                                <span class="ml-2">Other</span>
-                            </label>
+                    <!-- Father's Section -->
+                    <div class="space-y-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <h5 class="font-medium text-blue-800">Father's Information</h5>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Father's Unique ID*</label>
+                            <input type="text" name="father_unique_id" id="fatherUniqueId" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                                   required
+                                   placeholder="Enter parishioner ID">
+                            <button type="button" onclick="verifyParishioner('father')" 
+                                    class="mt-1 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded hover:bg-blue-200 transition">
+                                <i class="fas fa-search"></i> Verify ID
+                            </button>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Father's Full Name*</label>
+                            <input type="text" name="father_name" required id="fatherName" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Father's State of Origin</label>
+                            <select name="father_state" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Select State</option>
+                                <option value="Abia">Abia</option>
+                                <option value="Adamawa">Adamawa</option>
+                                <option value="Akwa Ibom">Akwa Ibom</option>
+                                <option value="Anambra">Anambra</option>
+                                <option value="Bauchi">Bauchi</option>
+                                <option value="Bayelsa">Bayelsa</option>
+                                <option value="Benue">Benue</option>
+                                <option value="Borno">Borno</option>
+                                <option value="Cross River">Cross River</option>
+                                <option value="Delta">Delta</option>
+                                <option value="Ebonyi">Ebonyi</option>
+                                <option value="Edo">Edo</option>
+                                <option value="Ekiti">Ekiti</option>
+                                <option value="Enugu">Enugu</option>
+                                <option value="Gombe">Gombe</option>
+                                <option value="Imo">Imo</option>
+                                <option value="Jigawa">Jigawa</option>
+                                <option value="Kaduna">Kaduna</option>
+                                <option value="Kano">Kano</option>
+                                <option value="Katsina">Katsina</option>
+                                <option value="Kebbi">Kebbi</option>
+                                <option value="Kogi">Kogi</option>
+                                <option value="Kwara">Kwara</option>
+                                <option value="Lagos">Lagos</option>
+                                <option value="Nasarawa">Nasarawa</option>
+                                <option value="Niger">Niger</option>
+                                <option value="Ogun">Ogun</option>
+                                <option value="Ondo">Ondo</option>
+                                <option value="Osun">Osun</option>
+                                <option value="Oyo">Oyo</option>
+                                <option value="Plateau">Plateau</option>
+                                <option value="Rivers">Rivers</option>
+                                <option value="Sokoto">Sokoto</option>
+                                <option value="Taraba">Taraba</option>
+                                <option value="Yobe">Yobe</option>
+                                <option value="Zamfara">Zamfara</option>
+                                <option value="FCT">Federal Capital Territory</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Father's LGA of Origin</label>
+                            <select name="father_lga" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Select LGA</option>
+                                <!-- LGAs will be populated based on state selection -->
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Father's Town</label>
+                            <input type="text" name="father_town" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Father's Religion</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="father_religion" value="Catholic" class="form-radio text-primary">
+                                    <span class="ml-2">Catholic</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="father_religion" value="Other" class="form-radio text-primary">
+                                    <span class="ml-2">Other</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Father's Phone Number*</label>
+                            <input type="tel" name="father_phone" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Father's Parish</label>
+                            <input type="text" name="father_parish" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Phone Number</label>
-                        <input type="tel" name="father_phone" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Parish</label>
-                        <input type="text" name="father_parish" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Full Name</label>
-                        <input type="text" name="mother_name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Maiden Name</label>
-                        <input type="text" name="mother_maiden" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Religion</label>
-                        <div class="flex space-x-4">
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="mother_religion" value="Catholic" class="form-checkbox text-primary">
-                                <span class="ml-2">Catholic</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" name="mother_religion" value="Other" class="form-checkbox text-primary">
-                                <span class="ml-2">Other</span>
-                            </label>
+                    
+                    <!-- Mother's Section -->
+                    <div class="space-y-4 bg-pink-50 p-4 rounded-lg border border-pink-100">
+                        <h5 class="font-medium text-pink-800">Mother's Information</h5>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Unique ID*</label>
+                            <input type="text" name="mother_unique_id" id="motherUniqueId" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                                   required
+                                   placeholder="Enter parishioner ID">
+                            <button type="button" onclick="verifyParishioner('mother')" 
+                                    class="mt-1 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded hover:bg-blue-200 transition">
+                                <i class="fas fa-search"></i> Verify ID
+                            </button>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Full Name*</label>
+                            <input type="text" name="mother_name" required id="motherName" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Maiden Name</label>
+                            <input type="text" name="mother_maiden" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's State of Origin</label>
+                            <select name="mother_state" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Select State</option>
+                                <option value="Abia">Abia</option>
+                                <option value="Adamawa">Adamawa</option>
+                                <option value="Akwa Ibom">Akwa Ibom</option>
+                                <option value="Anambra">Anambra</option>
+                                <option value="Bauchi">Bauchi</option>
+                                <option value="Bayelsa">Bayelsa</option>
+                                <option value="Benue">Benue</option>
+                                <option value="Borno">Borno</option>
+                                <option value="Cross River">Cross River</option>
+                                <option value="Delta">Delta</option>
+                                <option value="Ebonyi">Ebonyi</option>
+                                <option value="Edo">Edo</option>
+                                <option value="Ekiti">Ekiti</option>
+                                <option value="Enugu">Enugu</option>
+                                <option value="Gombe">Gombe</option>
+                                <option value="Imo">Imo</option>
+                                <option value="Jigawa">Jigawa</option>
+                                <option value="Kaduna">Kaduna</option>
+                                <option value="Kano">Kano</option>
+                                <option value="Katsina">Katsina</option>
+                                <option value="Kebbi">Kebbi</option>
+                                <option value="Kogi">Kogi</option>
+                                <option value="Kwara">Kwara</option>
+                                <option value="Lagos">Lagos</option>
+                                <option value="Nasarawa">Nasarawa</option>
+                                <option value="Niger">Niger</option>
+                                <option value="Ogun">Ogun</option>
+                                <option value="Ondo">Ondo</option>
+                                <option value="Osun">Osun</option>
+                                <option value="Oyo">Oyo</option>
+                                <option value="Plateau">Plateau</option>
+                                <option value="Rivers">Rivers</option>
+                                <option value="Sokoto">Sokoto</option>
+                                <option value="Taraba">Taraba</option>
+                                <option value="Yobe">Yobe</option>
+                                <option value="Zamfara">Zamfara</option>
+                                <option value="FCT">Federal Capital Territory</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's LGA of Origin</label>
+                            <select name="mother_lga" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Select LGA</option>
+                                <!-- LGAs will be populated based on state selection -->
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Town</label>
+                            <input type="text" name="mother_town" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Religion</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="mother_religion" value="Catholic" class="form-radio text-primary">
+                                    <span class="ml-2">Catholic</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="mother_religion" value="Other" class="form-radio text-primary">
+                                    <span class="ml-2">Other</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Phone Number*</label>
+                            <input type="tel" name="mother_phone" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Parish</label>
+                            <input type="text" name="mother_parish" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Phone Number</label>
-                        <input type="tel" name="mother_phone" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Parish</label>
-                        <input type="text" name="mother_parish" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
+                    
+                    <!-- Home Address -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Home Address</label>
                         <textarea name="home_address" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                     </div>
                 </div>
+                
                 <div class="flex justify-between">
                     <button type="button" onclick="showStep1()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition">
                         Back
@@ -658,6 +820,7 @@
                 </div>
             </div>
         </form>
+    </div>
     </div>
 </div>
 
@@ -674,9 +837,9 @@
                 title.textContent = 'Diocesan Census';
                 content.textContent = 'Participate in our diocesan census to help us better serve our community. This service is coming soon.';
                 break;
-            case 'birth':
-                title.textContent = 'Birth Records';
-                content.textContent = 'Register and access birth records for children in our diocese. This service is coming soon.';
+            case 'baptism':
+                title.textContent = 'Baptism Records';
+                content.textContent = 'Register and access baptism records for children in our diocese. This service is coming soon.';
                 break;
             case 'confirmation':
                 title.textContent = 'Confirmation Registry';
@@ -707,15 +870,17 @@
     }
 
     // Baptism modal functions
-    function openBaptismModal() {
-        document.getElementById('baptismModal').classList.remove('hidden');
+    function openBirthRecordModal() {  
+        document.getElementById('birthRecordModal').classList.remove('hidden');  
     }
 
-    function closeBaptismModal() {
-        document.getElementById('baptismModal').classList.add('hidden');
+    function closeBirthRecordModal() {  
+        document.getElementById('birthRecordModal').classList.add('hidden'); 
     }
 
-    // Baptism form step navigation
+    
+
+    // Birth form step navigation
     function showStep1() {
         document.getElementById('step1').classList.remove('hidden');
         document.getElementById('step2').classList.add('hidden');
@@ -723,7 +888,7 @@
 
     function showStep2() {
         // Validate step 1 before proceeding
-        const form = document.getElementById('baptismForm');
+        const form = document.getElementById('birthRecordForm');
         const inputs = form.querySelectorAll('#step1 [required]');
         let isValid = true;
         
@@ -747,14 +912,14 @@
     // Close modals when clicking outside
     window.onclick = function(event) {
         const comingSoonModal = document.getElementById('comingSoonModal');
-        const baptismModal = document.getElementById('baptismModal');
+        const birthRecordModal = document.getElementById('birthRecordModal');
         
         if (event.target === comingSoonModal) {
             closeModal();
         }
         
-        if (event.target === baptismModal) {
-            closeBaptismModal();
+        if (event.target === birthRecordModal) {
+            closebirthRecordModal();
         }
     }
 </script>
@@ -1038,42 +1203,65 @@
         closeBaptismModal(); // Also close the baptism form
     }
 
-    // Update the form submission handler
-    document.getElementById('baptismForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const form = e.target;
-        const formData = new FormData(form);
-        
-        fetch(form.action, {
+// Update the form submission handler
+document.getElementById('birthRecordForm').addEventListener('submit', async function(e) {  
+    e.preventDefault();
+    const form = e.target;
+    
+    // Check if both IDs are verified (if they exist)
+    const fatherId = document.getElementById('fatherUniqueId').value.trim();
+    const motherId = document.getElementById('motherUniqueId').value.trim();
+    
+    if ((fatherId && !verifiedFatherId) || (motherId && !verifiedMotherId)) {
+        alert('Please verify all Unique IDs before submitting. Click the "Verify ID" button for each parent.');
+        return;
+    }
+
+    const formData = new FormData(form);
+    
+    try {
+        const response = await fetch(form.action, {
             method: 'POST',
             body: formData,
             headers: {
-                'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRFToken': formData.get('csrfmiddlewaretoken')
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Show success modal with details
-                const details = `Child: ${data.child_name}` + 
-                    (data.baptism_date ? ` | Baptism Date: ${data.baptism_date}` : '');
-                showSuccessModal(data.message, details);
-                
-                // Reset form
-                form.reset();
-                document.getElementById('parishSelect').disabled = true;
-                document.getElementById('parishSelect').innerHTML = '<option value="">Select Parish</option>';
-            } else {
-                alert('Error: ' + (data.error || 'Unknown error occurred'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while submitting the form');
         });
-    });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Server error');
+        }
+        
+        if (data.success) {
+            // Show success modal with details
+            const details = `Child: ${data.child_name}` + 
+                (data.baptism_date ? ` | Baptism Date: ${data.baptism_date}` : '');
+            showSuccessModal(data.message, details);
+            
+            // Reset form and verification states
+            form.reset();
+            verifiedFatherId = false;
+            verifiedMotherId = false;
+            document.getElementById('parishSelect').disabled = true;
+            document.getElementById('parishSelect').innerHTML = '<option value="">Select Parish</option>';
+            
+            // Reset verification UI
+            ['father', 'mother'].forEach(role => {
+                const field = document.getElementById(`${role}UniqueId`);
+                field.classList.remove('border-green-500', 'border-red-500');
+                const verifyBtn = field.nextElementSibling;
+                verifyBtn.innerHTML = '<i class="fas fa-search"></i> Verify ID';
+            });
+        } else {
+            throw new Error(data.error || 'Submission failed');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error submitting form: ' + error.message);
+    }
+});
 
     // Close success modal when clicking outside
     window.onclick = function(event) {
@@ -1125,5 +1313,256 @@
     
     window.addEventListener('scroll', animateOnScroll);
     document.addEventListener('DOMContentLoaded', animateOnScroll);
+</script>
+
+<!--Populate Parishioner-->
+<script>
+    function fetchParishioner(role) {
+        const uniqueId = document.getElementById(`${role}UniqueId`).value.trim();
+        if (!uniqueId) {
+            alert('Please enter a parishioner ID');
+            return;
+        }
+    
+        fetch(`/registry/api/parishioner/${encodeURIComponent(uniqueId)}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Parishioner not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                // Populate the fields
+                document.getElementById(`${role}Name`).value = data.full_name || '';
+                document.querySelector(`input[name="${role}_phone"]`).value = data.phone_number || '';
+                document.querySelector(`input[name="${role}_parish"]`).value = data.parish || '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            });
+    }
+
+
+
+ 
+    // State-LGA mapping
+    const stateLgaMap = {
+        "Abia": ["Aba North", "Aba South", "Arochukwu", "Bende", "Ikwuano", "Isiala Ngwa North", "Isiala Ngwa South", 
+                "Isuikwuato", "Obi Ngwa", "Ohafia", "Osisioma", "Ugwunagbo", "Ukwa East", "Ukwa West", "Umuahia North", 
+                "Umuahia South", "Umu Nneochi"],
+        "Adamawa": ["Demsa", "Fufure", "Ganye", "Gayuk", "Gombi", "Grie", "Hong", "Jada", "Larmurde", "Madagali", 
+                   "Maiha", "Mayo Belwa", "Michika", "Mubi North", "Mubi South", "Numan", "Shelleng", "Song", 
+                   "Toungo", "Yola North", "Yola South"],
+        "Akwa Ibom": ["Abak", "Eastern Obolo", "Eket", "Esit Eket", "Essien Udim", "Etim Ekpo", "Etinan", "Ibeno", 
+                     "Ibesikpo Asutan", "Ibiono-Ibom", "Ika", "Ikono", "Ikot Abasi", "Ikot Ekpene", "Ini", "Itu", 
+                     "Mbo", "Mkpat-Enin", "Nsit-Atai", "Nsit-Ibom", "Nsit-Ubium", "Obot Akara", "Okobo", "Onna", 
+                     "Oron", "Oruk Anam", "Udung-Uko", "Ukanafun", "Uruan", "Urue-Offong/Oruko", "Uyo"],
+        "Anambra": ["Aguata", "Anambra East", "Anambra West", "Anaocha", "Awka North", "Awka South", "Ayamelum", 
+                   "Dunukofia", "Ekwusigo", "Idemili North", "Idemili South", "Ihiala", "Njikoka", "Nnewi North", 
+                   "Nnewi South", "Ogbaru", "Onitsha North", "Onitsha South", "Orumba North", "Orumba South", "Oyi"],
+        "Bauchi": ["Alkaleri", "Bauchi", "Bogoro", "Damban", "Darazo", "Dass", "Gamawa", "Ganjuwa", "Giade", "Itas/Gadau", 
+                  "Jama'are", "Katagum", "Kirfi", "Misau", "Ningi", "Shira", "Tafawa Balewa", "Toro", "Warji", "Zaki"],
+        "Bayelsa": ["Brass", "Ekeremor", "Kolokuma/Opokuma", "Nembe", "Ogbia", "Sagbama", "Southern Ijaw", "Yenagoa"],
+        "Benue": ["Ado", "Agatu", "Apa", "Buruku", "Gboko", "Guma", "Gwer East", "Gwer West", "Katsina-Ala", "Konshisha", 
+                "Kwande", "Logo", "Makurdi", "Obi", "Ogbadibo", "Ohimini", "Oju", "Okpokwu", "Oturkpo", "Tarka", "Ukum", 
+                "Ushongo", "Vandeikya"],
+        "Borno": ["Abadam", "Askira/Uba", "Bama", "Bayo", "Biu", "Chibok", "Damboa", "Dikwa", "Gubio", "Guzamala", "Gwoza", 
+                 "Hawul", "Jere", "Kaga", "Kala/Balge", "Konduga", "Kukawa", "Kwaya Kusar", "Mafa", "Magumeri", "Maiduguri", 
+                 "Marte", "Mobbar", "Monguno", "Ngala", "Nganzai", "Shani"],
+        "Cross River": ["Abi", "Akamkpa", "Akpabuyo", "Bakassi", "Bekwarra", "Biase", "Boki", "Calabar Municipal", 
+                       "Calabar South", "Etung", "Ikom", "Obanliku", "Obubra", "Obudu", "Odukpani", "Ogoja", "Yakuur", "Yala"],
+        "Delta": ["Aniocha North", "Aniocha South", "Bomadi", "Burutu", "Ethiope East", "Ethiope West", "Ika North East", 
+                 "Ika South", "Isoko North", "Isoko South", "Ndokwa East", "Ndokwa West", "Okpe", "Oshimili North", 
+                 "Oshimili South", "Patani", "Sapele", "Udu", "Ughelli North", "Ughelli South", "Ukwuani", "Uvwie", 
+                 "Warri North", "Warri South", "Warri South West"],
+        "Ebonyi": ["Abakaliki", "Afikpo North", "Afikpo South", "Ebonyi", "Ezza North", "Ezza South", "Ikwo", "Ishielu", 
+                  "Ivo", "Izzi", "Ohaozara", "Ohaukwu", "Onicha"],
+        "Edo": ["Akoko-Edo", "Egor", "Esan Central", "Esan North-East", "Esan South-East", "Esan West", "Etsako Central", 
+               "Etsako East", "Etsako West", "Igueben", "Ikpoba Okha", "Orhionmwon", "Oredo", "Ovia North-East", 
+               "Ovia South-West", "Owan East", "Owan West", "Uhunmwonde"],
+        "Ekiti": ["Ado Ekiti", "Efon", "Ekiti East", "Ekiti South-West", "Ekiti West", "Emure", "Gbonyin", "Ido Osi", 
+                 "Ijero", "Ikere", "Ikole", "Ilejemeje", "Irepodun/Ifelodun", "Ise/Orun", "Moba", "Oye"],
+        "Enugu": ["Aninri", "Awgu", "Enugu East", "Enugu North", "Enugu South", "Ezeagu", "Igbo Etiti", "Igbo Eze North", 
+                 "Igbo Eze South", "Isi Uzo", "Nkanu East", "Nkanu West", "Nsukka", "Oji River", "Udenu", "Udi", "Uzo Uwani"],
+        "Gombe": ["Akko", "Balanga", "Billiri", "Dukku", "Funakaye", "Gombe", "Kaltungo", "Kwami", "Nafada", "Shongom", "Yamaltu/Deba"],
+        "Imo": ["Aboh Mbaise", "Ahiazu Mbaise", "Ehime Mbano", "Ezinihitte", "Ideato North", "Ideato South", "Ihitte/Uboma", 
+               "Ikeduru", "Isiala Mbano", "Isu", "Mbaitoli", "Ngor Okpala", "Njaba", "Nkwerre", "Nwangele", "Obowo", 
+               "Oguta", "Ohaji/Egbema", "Okigwe", "Orlu", "Orsu", "Oru East", "Oru West", "Owerri Municipal", "Owerri North", 
+               "Owerri West", "Unuimo"],
+        "Jigawa": ["Auyo", "Babura", "Biriniwa", "Birnin Kudu", "Buji", "Dutse", "Gagarawa", "Garki", "Gumel", "Guri", 
+                  "Gwaram", "Gwiwa", "Hadejia", "Jahun", "Kafin Hausa", "Kazaure", "Kiri Kasama", "Kiyawa", "Kaugama", 
+                  "Maigatari", "Malam Madori", "Miga", "Ringim", "Roni", "Sule Tankarkar", "Taura", "Yankwashi"],
+        "Kaduna": ["Birnin Gwari", "Chikun", "Giwa", "Igabi", "Ikara", "Jaba", "Jema'a", "Kachia", "Kaduna North", 
+                  "Kaduna South", "Kagarko", "Kajuru", "Kaura", "Kauru", "Kubau", "Kudan", "Lere", "Makarfi", "Sabon Gari", 
+                  "Sanga", "Soba", "Zangon Kataf", "Zaria"],
+        "Kano": ["Ajingi", "Albasu", "Bagwai", "Bebeji", "Bichi", "Bunkure", "Dala", "Dambatta", "Dawakin Kudu", 
+                "Dawakin Tofa", "Doguwa", "Fagge", "Gabasawa", "Garko", "Garun Mallam", "Gaya", "Gezawa", "Gwale", 
+                "Gwarzo", "Kabo", "Kano Municipal", "Karaye", "Kibiya", "Kiru", "Kumbotso", "Kunchi", "Kura", "Madobi", 
+                "Makoda", "Minjibir", "Nasarawa", "Rano", "Rimin Gado", "Rogo", "Shanono", "Sumaila", "Takai", "Tarauni", 
+                "Tofa", "Tsanyawa", "Tudun Wada", "Ungogo", "Warawa", "Wudil"],
+        "Katsina": ["Bakori", "Batagarawa", "Batsari", "Baure", "Bindawa", "Charanchi", "Dandume", "Danja", "Dan Musa", 
+                   "Daura", "Dutsi", "Dutsin Ma", "Faskari", "Funtua", "Ingawa", "Jibia", "Kafur", "Kaita", "Kankara", 
+                   "Kankia", "Katsina", "Kurfi", "Kusada", "Mai'Adua", "Malumfashi", "Mani", "Mashi", "Matazu", "Musawa", 
+                   "Rimi", "Sabuwa", "Safana", "Sandamu", "Zango"],
+        "Kebbi": ["Aleiro", "Arewa Dandi", "Argungu", "Augie", "Bagudo", "Birnin Kebbi", "Bunza", "Dandi", "Fakai", 
+                 "Gwandu", "Jega", "Kalgo", "Koko/Besse", "Maiyama", "Ngaski", "Sakaba", "Shanga", "Suru", "Wasagu/Danko", 
+                 "Yauri", "Zuru"],
+        "Kogi": ["Adavi", "Ajaokuta", "Ankpa", "Bassa", "Dekina", "Ibaji", "Idah", "Igalamela Odolu", "Ijumu", "Kabba/Bunu", 
+                "Kogi", "Lokoja", "Mopa Muro", "Ofu", "Ogori/Magongo", "Okehi", "Okene", "Olamaboro", "Omala", "Yagba East", 
+                "Yagba West"],
+        "Kwara": ["Asa", "Baruten", "Edu", "Ekiti", "Ifelodun", "Ilorin East", "Ilorin South", "Ilorin West", "Irepodun", 
+                 "Isin", "Kaiama", "Moro", "Offa", "Oke Ero", "Oyun", "Pategi"],
+        "Lagos": ["Agege", "Ajeromi-Ifelodun", "Alimosho", "Amuwo-Odofin", "Apapa", "Badagry", "Epe", "Eti Osa", "Ibeju-Lekki", 
+                 "Ifako-Ijaiye", "Ikeja", "Ikorodu", "Kosofe", "Lagos Island", "Lagos Mainland", "Mushin", "Ojo", "Oshodi-Isolo", 
+                 "Shomolu", "Surulere"],
+        "Nasarawa": ["Akwanga", "Awe", "Doma", "Karu", "Keana", "Keffi", "Kokona", "Lafia", "Nasarawa", "Nasarawa Egon", 
+                    "Obi", "Toto", "Wamba"],
+        "Niger": ["Agaie", "Agwara", "Bida", "Borgu", "Bosso", "Chanchaga", "Edati", "Gbako", "Gurara", "Katcha", "Kontagora", 
+                 "Lapai", "Lavun", "Magama", "Mariga", "Mashegu", "Mokwa", "Moya", "Paikoro", "Rafi", "Rijau", "Shiroro", 
+                 "Suleja", "Tafa", "Wushishi"],
+        "Ogun": ["Abeokuta North", "Abeokuta South", "Ado-Odo/Ota", "Egbado North", "Egbado South", "Ewekoro", "Ifo", 
+                "Ijebu East", "Ijebu North", "Ijebu North East", "Ijebu Ode", "Ikenne", "Imeko Afon", "Ipokia", "Obafemi Owode", 
+                "Odeda", "Odogbolu", "Ogun Waterside", "Remo North", "Shagamu"],
+        "Ondo": ["Akoko North-East", "Akoko North-West", "Akoko South-East", "Akoko South-West", "Akure North", "Akure South", 
+                "Ese Odo", "Idanre", "Ifedore", "Ilaje", "Ile Oluji/Okeigbo", "Irele", "Odigbo", "Okitipupa", "Ondo East", 
+                "Ondo West", "Ose", "Owo"],
+        "Osun": ["Aiyedade", "Aiyedire", "Atakunmosa East", "Atakunmosa West", "Boluwaduro", "Boripe", "Ede North", "Ede South", 
+                "Egbedore", "Ejigbo", "Ife Central", "Ife East", "Ife North", "Ife South", "Ifedayo", "Ifelodun", "Ila", 
+                "Ilesa East", "Ilesa West", "Irepodun", "Irewole", "Isokan", "Iwo", "Obokun", "Odo Otin", "Ola Oluwa", 
+                "Olorunda", "Oriade", "Orolu", "Osogbo"],
+        "Oyo": ["Afijio", "Akinyele", "Atiba", "Atisbo", "Egbeda", "Ibadan North", "Ibadan North-East", "Ibadan North-West", 
+               "Ibadan South-East", "Ibadan South-West", "Ibarapa Central", "Ibarapa East", "Ibarapa North", "Ido", 
+               "Irepo", "Iseyin", "Itesiwaju", "Iwajowa", "Kajola", "Lagelu", "Ogbomosho North", "Ogbomosho South", 
+               "Ogo Oluwa", "Olorunsogo", "Oluyole", "Ona Ara", "Orelope", "Ori Ire", "Oyo East", "Oyo West", "Saki East", 
+               "Saki West", "Surulere"],
+        "Plateau": ["Barkin Ladi", "Bassa", "Bokkos", "Jos East", "Jos North", "Jos South", "Kanam", "Kanke", "Langtang North", 
+                   "Langtang South", "Mangu", "Mikang", "Pankshin", "Qua'an Pan", "Riyom", "Shendam", "Wase"],
+        "Rivers": ["Abua/Odual", "Ahoada East", "Ahoada West", "Akuku-Toru", "Andoni", "Asari-Toru", "Bonny", "Degema", 
+                  "Eleme", "Emuoha", "Etche", "Gokana", "Ikwerre", "Khana", "Obio/Akpor", "Ogba/Egbema/Ndoni", "Ogu/Bolo", 
+                  "Okrika", "Omuma", "Opobo/Nkoro", "Oyigbo", "Port Harcourt", "Tai"],
+        "Sokoto": ["Binji", "Bodinga", "Dange Shuni", "Gada", "Goronyo", "Gudu", "Gwadabawa", "Illela", "Isa", "Kebbe", 
+                  "Kware", "Rabah", "Sabon Birni", "Shagari", "Silame", "Sokoto North", "Sokoto South", "Tambuwal", 
+                  "Tangaza", "Tureta", "Wamako", "Wurno", "Yabo"],
+        "Taraba": ["Ardo Kola", "Bali", "Donga", "Gashaka", "Gassol", "Ibi", "Jalingo", "Karim Lamido", "Kumi", "Lau", 
+                  "Sardauna", "Takum", "Ussa", "Wukari", "Yorro", "Zing"],
+        "Yobe": ["Bade", "Bursari", "Damaturu", "Fika", "Fune", "Geidam", "Gujba", "Gulani", "Jakusko", "Karasuwa", 
+                "Machina", "Nangere", "Nguru", "Potiskum", "Tarmuwa", "Yunusari", "Yusufari"],
+        "Zamfara": ["Anka", "Bakura", "Birnin Magaji/Kiyaw", "Bukkuyum", "Bungudu", "Gummi", "Gusau", "Kaura Namoda", 
+                   "Maradun", "Maru", "Shinkafi", "Talata Mafara", "Chafe", "Zurmi"],
+        "FCT": ["Abaji", "Bwari", "Gwagwalada", "Kuje", "Kwali", "Municipal Area Council"]
+    };
+
+// Function to populate LGAs based on selected state
+function populateLgas(stateSelect, lgaSelect) {
+    const selectedState = stateSelect.value;
+    lgaSelect.innerHTML = '<option value="">Select LGA</option>';
+    
+    if (selectedState && stateLgaMap[selectedState]) {
+        stateLgaMap[selectedState].forEach(lga => {
+            const option = document.createElement('option');
+            option.value = lga;
+            option.textContent = lga;
+            lgaSelect.appendChild(option);
+        });
+    }
+}
+
+// Initialize the state-LGA relationships when DOM loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Set up for both father and mother sections
+    ['father', 'mother'].forEach(parentType => {
+        const stateSelect = document.querySelector(`select[name="${parentType}_state"]`);
+        const lgaSelect = document.querySelector(`select[name="${parentType}_lga"]`);
+        
+        if (stateSelect && lgaSelect) {
+            // Populate LGAs when state changes
+            stateSelect.addEventListener('change', () => {
+                populateLgas(stateSelect, lgaSelect);
+            });
+            
+            // Initialize LGAs if state is already selected
+            if (stateSelect.value) {
+                populateLgas(stateSelect, lgaSelect);
+            }
+        }
+    });
+});
+
+
+// Track verified IDs
+let verifiedFatherId = false;
+let verifiedMotherId = false;
+
+async function verifyParishioner(role) {
+    const uniqueId = document.getElementById(`${role}UniqueId`).value.trim();
+    const field = document.getElementById(`${role}UniqueId`);
+    const verifyBtn = field.nextElementSibling;
+    
+    if (!uniqueId) {
+        alert(`${role.charAt(0).toUpperCase() + role.slice(1)}'s Unique ID is required`);
+        field.classList.add('border-red-500');
+        return false;
+    }
+
+    verifyBtn.disabled = true;
+    verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+    try {
+        const response = await fetch(`/registry/api/parishioner/${encodeURIComponent(uniqueId)}/`);
+        if (!response.ok) throw new Error('Parishioner not found');
+        
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+
+        // If we get here, ID is valid
+        field.classList.remove('border-red-500');
+        field.classList.add('border-green-500');
+        verifyBtn.innerHTML = '<i class="fas fa-check"></i> Verified';
+        
+        // Populate fields
+        document.getElementById(`${role}Name`).value = data.full_name || '';
+        document.querySelector(`input[name="${role}_phone"]`).value = data.phone_number || '';
+        document.querySelector(`input[name="${role}_parish"]`).value = data.parish || '';
+        
+        // Mark as verified
+        if (role === 'father') verifiedFatherId = true;
+        if (role === 'mother') verifiedMotherId = true;
+        
+        return true;
+    } catch (error) {
+        console.error('Error:', error);
+        field.classList.add('border-red-500');
+        verifyBtn.innerHTML = 'Verify Again';
+        alert(`Error: ${error.message}`);
+        return false;
+    } finally {
+        verifyBtn.disabled = false;
+    }
+}
+
+{% comment %} // Form submission handler
+document.getElementById('birthRecordForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Verify both IDs before submission
+    const fatherVerified = document.getElementById('fatherUniqueId').value.trim() ? 
+        verifiedFatherId : false;
+    const motherVerified = document.getElementById('motherUniqueId').value.trim() ? 
+        verifiedMotherId : false;
+
+    if (!fatherVerified || !motherVerified) {
+        alert('Please verify both Unique IDs before submitting');
+        return;
+    }
+
+    // If we get here, all IDs are verified - submit the form
+    this.submit();
+}); {% endcomment %}
 </script>
 {% endblock %}

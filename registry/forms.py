@@ -1,6 +1,6 @@
 # registry/forms.py
 from django import forms
-from .models import Baptism, Parish, Parishioner, Priest
+from .models import BirthRecord, Parish, Parishioner, Priest
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import ParishAdministrator
@@ -75,9 +75,13 @@ class CustomUserCreationForm(UserCreationForm):
         return cleaned_data
     
     
-class BaptismForm(forms.ModelForm):
+# forms.py
+class BirthRecordForm(forms.ModelForm):
+    father_unique_id = forms.CharField(required=False, label="Father's Unique ID")
+    mother_unique_id = forms.CharField(required=False, label="Mother's Unique ID")
+
     class Meta:
-        model = Baptism
+        model = BirthRecord
         fields = '__all__'
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
@@ -85,6 +89,65 @@ class BaptismForm(forms.ModelForm):
             'time_of_birth': forms.TimeInput(attrs={'type': 'time'}),
             'home_address': forms.Textarea(attrs={'rows': 3}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make these fields not required since they'll be populated from parishioner data
+        self.fields['father_name'].required = False
+        self.fields['mother_name'].required = False
+        self.fields['father_phone'].required = False
+        self.fields['mother_phone'].required = False
+
+    def clean_father_unique_id(self):
+        unique_id = self.cleaned_data.get('father_unique_id')
+        if unique_id:
+            try:
+                parishioner = Parishioner.objects.get(unique_id__iexact=unique_id)
+                if parishioner.gender != 'M':
+                    raise forms.ValidationError("This ID belongs to a female parishioner")
+                return unique_id
+            except Parishioner.DoesNotExist:
+                raise forms.ValidationError("No parishioner found with this ID")
+        return unique_id
+
+    def clean_mother_unique_id(self):
+        unique_id = self.cleaned_data.get('mother_unique_id')
+        if unique_id:
+            try:
+                parishioner = Parishioner.objects.get(unique_id__iexact=unique_id)
+                if parishioner.gender != 'F':
+                    raise forms.ValidationError("This ID belongs to a male parishioner")
+                return unique_id
+            except Parishioner.DoesNotExist:
+                raise forms.ValidationError("No parishioner found with this ID")
+        return unique_id
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Populate father's information if ID is provided
+        father_id = cleaned_data.get('father_unique_id')
+        if father_id:
+            try:
+                father = Parishioner.objects.get(unique_id__iexact=father_id)
+                cleaned_data['father_name'] = father.full_name
+                cleaned_data['father_phone'] = father.phone_number
+                cleaned_data['father_parish'] = father.parish
+            except Parishioner.DoesNotExist:
+                pass
+        
+        # Populate mother's information if ID is provided
+        mother_id = cleaned_data.get('mother_unique_id')
+        if mother_id:
+            try:
+                mother = Parishioner.objects.get(unique_id__iexact=mother_id)
+                cleaned_data['mother_name'] = mother.full_name
+                cleaned_data['mother_phone'] = mother.phone_number
+                cleaned_data['mother_parish'] = mother.parish
+            except Parishioner.DoesNotExist:
+                pass
+        
+        return cleaned_data
         
 
 

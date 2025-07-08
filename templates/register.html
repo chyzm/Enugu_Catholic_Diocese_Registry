@@ -51,6 +51,18 @@
                             <option value="FR">Fr.</option>
                             <option value="SR">Sr.</option>
                             <option value="BR">Br.</option>
+                            <option value="Bishop">Bishop</option>
+                            <option value="⁠chief">⁠chief</option>
+                            <option value="⁠HRH">⁠HRH</option>
+                            <option value="⁠Monsignor">⁠Monsignor</option>
+                            <option value="⁠Engr">⁠Engr.</option>
+                            <option value="⁠Pharm">⁠Pharm</option>
+                            <option value="⁠Arch">⁠Arch.</option>
+                            <option value="⁠Nurse">⁠Nurse</option>
+                            <option value="⁠Hon">⁠Hon</option>
+                            <option value="⁠Survyior">⁠Survyior</option>
+
+
                         </select>
                     </div>
                     
@@ -120,14 +132,14 @@
             </div>
             
             <!-- Death Registry -->
-            <div class="mt-6 pt-4 border-t border-gray-200">
+            {% comment %} <div class="mt-6 pt-4 border-t border-gray-200">
                 <div class="flex items-center">
                     <input type="checkbox" name="deceased" id="deceased" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                     <label for="deceased" class="ml-2 block text-sm font-medium text-gray-700">Mark as deceased</label>
-                </div>
+                </div> {% endcomment %}
                 
                 <!-- Death Details (hidden by default) -->
-                <div id="deathDetails" class="hidden space-y-4 mt-4 bg-gray-50 p-4 rounded-md border border-gray-200">
+                {% comment %} <div id="deathDetails" class="hidden space-y-4 mt-4 bg-gray-50 p-4 rounded-md border border-gray-200">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Date of Death</label>
                         <input type="date" name="date_of_death" 
@@ -139,7 +151,7 @@
                         <textarea name="death_details" rows="2"
                             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
         

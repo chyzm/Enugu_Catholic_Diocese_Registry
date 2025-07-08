@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="text-2xl font-bold text-primary">Birth Record Details</h2>
+            <p class="text-gray-600">View complete details for {{ birth.child_name }}</p>
+        </div>
+        <div class="space-x-4">
+            <button onclick="window.location.href='{% url 'registry:birth_records' %}'" 
+                    class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition">
+                Back to Records
+            </button>
+            {% if request.user.is_superuser %}
+            <button onclick="window.location.href='{% url 'registry:edit_birth_record' birth_record.id %}'" 
+                    class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                Edit Record
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Child Information</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Full Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.child_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Gender</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.get_gender_display }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Date of Birth</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.date_of_birth|date:"Y-m-d" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Time of Birth</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.time_of_birth|time:"H:i" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Place of Birth</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.place_of_birth }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Hospital Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.hospital_name|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Baptism Details</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Baptism Date</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.baptism_date|date:"Y-m-d" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Birth Parish</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.birth_parish }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Baptism Certificate</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.baptism_certificate|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Home Address</p>
+                            <p class="mt-1 text-sm text-gray-900 whitespace-pre-line">{{ birth_record.home_address }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Father's Information</h3>
+                    <div class="space-y-4"> 
+
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Unique ID</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.father_unique_id }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.father_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Religion</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.father_religion }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Phone</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.father_phone }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Parish</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.father_parish|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">State of Origin</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.father_state|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">LGA of Origin</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.father_lga|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Town</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.father_town|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Mother's Information</h3>
+                    <div class="space-y-4">
+
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Unique ID</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_unique_id }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_name }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Maiden Name</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_maiden|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Religion</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_religion }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Phone</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_phone }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Parish</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_parish|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">State of Origin</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_state|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">LGA of Origin</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_lga|default:"-" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Town</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ birth_record.mother_town|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

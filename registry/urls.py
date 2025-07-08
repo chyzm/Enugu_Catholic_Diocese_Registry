@@ -72,6 +72,8 @@
 from django.urls import path, reverse_lazy
 from . import views
 from django.contrib.auth import views as auth_views
+# from .views import get_parishioner_by_id
+# from .views import get_parishioner_by_unique_id
 
 app_name = 'registry'
 
@@ -133,13 +135,13 @@ urlpatterns = [
          ),
          name='password_reset_complete'),
     
-    # Baptism
-    path('submit-baptism/', views.submit_baptism, name='submit_baptism'),
-    path('baptism-records/', views.baptism_records, name='baptism_records'),
-    path('baptism/add/', views.add_baptism, name='add_baptism'),
-    path('baptism/<int:baptism_id>/', views.view_baptism, name='view_baptism'),
-    path('baptism/<int:baptism_id>/edit/', views.edit_baptism, name='edit_baptism'),
-    path('baptism/<int:baptism_id>/delete/', views.delete_baptism, name='delete_baptism'),
+    # Birth record
+    path('submit-birth-record/', views.submit_birth_record, name='submit_birth_record'),  # Changed from submit_baptism
+    path('birth-records/', views.birth_records, name='birth_records'),  # Changed from baptism_records
+    path('birth/add/', views.add_birth_record, name='add_birth_record'),  # Changed from add_baptism
+    path('birth/<int:birth_record_id>/', views.view_birth_record, name='view_birth_record'),  # Changed from view_baptism
+    path('birth/<int:birth_record_id>/edit/', views.edit_birth_record, name='edit_birth_record'),  # Changed from edit_baptism
+    path('birth/<int:birth_record_id>/delete/', views.delete_birth_record, name='delete_birth_record'),  # Changed from delete_baptism
     
     # Priest
     path('priest/register/', views.priest_register, name='priest_register'),
@@ -157,5 +159,10 @@ urlpatterns = [
     
     
     path('api/get-parishes/', views.get_parishes_by_deanery, name='get_parishes'),
+    
+    
+    
+    
+    path('api/parishioner/<str:unique_id>/', views.parishioner_detail, name='parishioner_detail'),
 ]
 

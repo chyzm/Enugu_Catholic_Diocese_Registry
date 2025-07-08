@@ -107,8 +107,9 @@ class Parishioner(models.Model):
     
     
 
-class Baptism(models.Model):
-    parishioner = models.ForeignKey(Parishioner, on_delete=models.SET_NULL, null=True, blank=True, related_name='baptisms')
+# models.py
+class BirthRecord(models.Model):  # Changed from Baptism
+    parishioner = models.ForeignKey(Parishioner, on_delete=models.SET_NULL, null=True, blank=True, related_name='birth_records')  # Changed from baptisms
     child_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
@@ -127,6 +128,14 @@ class Baptism(models.Model):
     mother_religion = models.CharField(max_length=50)
     mother_phone = models.CharField(max_length=20)
     mother_parish = models.CharField(max_length=100, blank=True, null=True)
+    father_unique_id = models.CharField(max_length=50, blank=True, null=True)
+    mother_unique_id = models.CharField(max_length=50, blank=True, null=True)
+    father_state = models.CharField(max_length=100, blank=True, null=True)
+    father_lga = models.CharField(max_length=100, blank=True, null=True)
+    father_town = models.CharField(max_length=100, blank=True, null=True)
+    mother_state = models.CharField(max_length=100, blank=True, null=True)
+    mother_lga = models.CharField(max_length=100, blank=True, null=True)
+    mother_town = models.CharField(max_length=100, blank=True, null=True)
     home_address = models.TextField()
     submitted_at = models.DateTimeField(auto_now_add=True)
     

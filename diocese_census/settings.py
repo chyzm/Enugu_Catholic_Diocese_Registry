@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
-from decouple import config
+from dotenv import load_dotenv
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +29,7 @@ SECRET_KEY = 'django-insecure-+8f#mp8^rv#q*o_o1z46$l=y^=%gu0gr3_np9szm6o)d@cqvmc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]  # Allow all hosts for development; restrict in production
 
 
 # Application definition
@@ -44,13 +45,15 @@ INSTALLED_APPS = [
     'widget_tweaks',  # For better form rendering
 ]
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -75,6 +78,7 @@ SESSION_SAVE_EVERY_REQUEST = True  # Helps keep session alive
 LOGIN_URL = '/registry/login/'  # Explicit login URL
 LOGIN_REDIRECT_URL = '/registry/user_dashboard/'  # After successful login
 LOGOUT_REDIRECT_URL = '/'  # After logout
+
 
 
 
@@ -119,71 +123,42 @@ WSGI_APPLICATION = 'diocese_census.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': config('DB_NAME'),
-#         'USER': config('DB_USER'),
-#         'PASSWORD': config('DB_PASSWORD'),
-#         'HOST': config('DB_HOST', default='127.0.0.1'),
-#         'PORT': config('DB_PORT', default='3306'),
-#         'OPTIONS': {
-#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#         },
-#     }
-# }
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.getenv('DB_NAME', 'census'),
-#         'USER': os.getenv('DB_USER', 'root'),
-#         'PASSWORD': os.getenv('DB_PASSWORD', ''),
-#         'HOST': os.getenv('DB_HOST', 'localhost'),
-#         'PORT': os.getenv('DB_PORT', '3306'),
-#     }
-# }
-
-
-import os
-from pathlib import Path
-
-# Try this configuration first
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'census',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'use_unicode': True,
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'autocommit': True,
-        },
+        'NAME': os.getenv('DB_NAME', ''),
+        'USER': os.getenv('DB_USER', ''),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', ''),
     }
 }
-
-
 
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.getenv('DB_NAME', 'census'),
-#         'USER': os.getenv('DB_USER', 'root'),
-#         'PASSWORD': os.getenv('DB_PASSWORD', ''),
-#         'HOST': os.getenv('DB_HOST', 'localhost'),
-#         'PORT': os.getenv('DB_PORT', '3306'),
+#         'NAME': 'census',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
 #         'OPTIONS': {
-#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
 #             'charset': 'utf8mb4',
-#             'auth_plugin': 'mysql_native_password',  # Force native password authentication
+#             'use_unicode': True,
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#             'autocommit': True,
 #         },
 #     }
 # }
+
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://cde.com.ng",
+    "https://cderegistry.org.ng",
+]
 
 
 #AUTH_USER_MODEL = 'registry.User'
@@ -224,12 +199,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR /'static'
-STATICFILES_DIRS = [
-    'diocese_census/static'
-]
+import os
 
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+# Collects static files here when running `collectstatic`
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Additional static file directories (optional for dev only)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'diocese_census', 'static'),
+]
 
 
 # Default primary key field type
@@ -254,14 +235,16 @@ MEDIA_ROOT = BASE_DIR /'media'
 
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'suavedef@gmail.com'
-EMAIL_HOST_PASSWORD = 'fmgekozjcclhoiry'
-DEFAULT_FROM_EMAIL = "CDE REGISTRY <suavedef@gmail.com>"
-ADMIN_EMAIL = 'suavedef@gmail.com'
+
+# Email Configuration
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'suavedef@gmail.com'  # Your Gmail address
+# EMAIL_HOST_PASSWORD = 'fmgekozjcclhoiry'  # Your app password
+# DEFAULT_FROM_EMAIL = "CDE REGISTRY <suavedef@gmail.com>"
+# ADMIN_EMAIL = 'suavedef@gmail.com'
 
 
 # EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')

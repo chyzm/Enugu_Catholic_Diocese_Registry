@@ -39,11 +39,15 @@ class Parishioner(models.Model):
         ('Enugu Deanery', 'Enugu Deanery'),
         ('Nkwo Nike Deanery', 'Nkwo Nike Deanery'),
         ('Udi Deanery', 'Udi Deanery'),
+        ('Chaplaincy', 'Chaplaincy'),
     ]
     
     # Personal Information
     unique_id = models.CharField(max_length=20, unique=True, blank=True)
     full_name = models.CharField(max_length=255)
+    state_of_origin = models.CharField(max_length=100, blank=True, null=True)
+    lga_of_origin = models.CharField(max_length=100, blank=True, null=True)
+    hometown = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True, unique=True)
     title = models.CharField(max_length=50, blank=True)
     date_of_birth = models.DateField()
@@ -70,8 +74,6 @@ class Parishioner(models.Model):
     # Family Details
     family_details = models.TextField(blank=True)
     
-  
-
     
     # Marital verification
     marriage_verified = models.BooleanField(default=False)
@@ -87,7 +89,11 @@ class Parishioner(models.Model):
     deceased = models.BooleanField(default=False)
     date_of_death = models.DateField(null=True, blank=True)
     death_details = models.TextField(blank=True)
-    
+
+    # Additional fields
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+
     
     # System
     created_at = models.DateTimeField(auto_now_add=True)

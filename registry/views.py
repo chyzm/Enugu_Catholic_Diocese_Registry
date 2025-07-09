@@ -78,6 +78,12 @@ def index(request):
 
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
+def parse_float(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
 
 def register(request):
     if request.method == 'POST':
@@ -105,7 +111,11 @@ def register(request):
                     'form_data': request.POST
                 })
             
-            
+            latitude = parse_float(request.POST.get('latitude'))
+            longitude = parse_float(request.POST.get('longitude'))
+
+            print(f"Latitude: {latitude}, Longitude: {longitude}")  # Debugging output
+
             
             parishioner = Parishioner(
                 # title=request.POST.get('title', ''),
@@ -114,7 +124,7 @@ def register(request):
                 
                 title=request.POST.get('title', ''),
                 full_name=request.POST.get('full_name'),
-                email=email,
+                email=request.POST.get('email'),
                 date_of_birth=dob,
                 gender=request.POST.get('gender'),
                 phone_number=request.POST.get('phone_number'),
@@ -133,7 +143,18 @@ def register(request):
                 education_level=request.POST.get('education_level', ''),
                 occupation=request.POST.get('occupation', ''),
                 employment_status=request.POST.get('employment_status', ''),
+                state_of_origin=request.POST.get('state_of_origin'),
+                lga_of_origin=request.POST.get('lga_of_origin'),
+                hometown=request.POST.get('hometown'),
+
+                latitude=latitude,
+                longitude=longitude,
+
+
             )
+       
+
+
             parishioner.save()
             
             # Send email if email is provided
@@ -162,18 +183,50 @@ def register(request):
 
 
 
+# def send_registration_email(parishioner):
+#     if not parishioner.email:
+#         return False
+        
+#     subject = 'Catholic Diocese of Enugu - Registration Confirmation'
+#     html_message = render_to_string('email/registration_confirmation.html', {  # Remove 'email/' if not in subfolder
+#         'parishioner': parishioner,
+#         'unique_id': parishioner.unique_id
+#     })
+#     plain_message = strip_tags(html_message)
+    
+#     try:
+#         send_mail(
+#             subject,
+#             plain_message,
+#             settings.DEFAULT_FROM_EMAIL,
+#             [parishioner.email],
+#             html_message=html_message,
+#             fail_silently=False,
+#         )
+#         return True
+#     except Exception as e:
+#         print(f"Failed to send email: {e}")
+#         return False
+
+
 def send_registration_email(parishioner):
     if not parishioner.email:
+        print("No email provided for parishioner, skipping email send")
         return False
         
     subject = 'Catholic Diocese of Enugu - Registration Confirmation'
-    html_message = render_to_string('email/registration_confirmation.html', {  # Remove 'email/' if not in subfolder
-        'parishioner': parishioner,
-        'unique_id': parishioner.unique_id
-    })
-    plain_message = strip_tags(html_message)
     
     try:
+        # Make sure the template path is correct
+        html_message = render_to_string('email/registration_confirmation.html', {
+            'parishioner': parishioner,
+            'unique_id': parishioner.unique_id
+        })
+        plain_message = strip_tags(html_message)
+        
+        print(f"Attempting to send email to {parishioner.email}")  # Debug
+        
+        # Test if email can be sent
         send_mail(
             subject,
             plain_message,
@@ -182,15 +235,16 @@ def send_registration_email(parishioner):
             html_message=html_message,
             fail_silently=False,
         )
+        print("Email sent successfully")  # Debug
         return True
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print(f"Failed to send email: {str(e)}")  # More detailed error
         return False
     
     
     
 
-
+import json
 
 def admin_check(user):
     return user.is_authenticated and (user.is_superuser or user.is_staff)
@@ -232,6 +286,26 @@ def admin_dashboard(request):
     paginator = Paginator(parishioners, 25)  # Show 25 records per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+    features = [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [p.longitude, p.latitude]
+            },
+            "properties": {
+                "unique_id": p.unique_id,
+                "parish": p.parish,
+            }
+        }
+        for p in parishioners if p.latitude and p.longitude
+    ]
+
+    geojson = {
+        "type": "FeatureCollection",
+        "features": features
+    }
     
     # Calculate stats
     total_parishioners = Parishioner.objects.count()
@@ -260,6 +334,7 @@ def admin_dashboard(request):
         'is_paginated': page_obj.has_other_pages(),
         'query_params': query_params,
         'stats': stats,
+        'geojson_data': json.dumps(geojson),
         'deanery_choices': Parishioner.DEANERY_CHOICES,
     })
 

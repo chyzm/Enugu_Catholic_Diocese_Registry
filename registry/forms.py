@@ -80,7 +80,13 @@ class BirthRecordForm(forms.ModelForm):
     father_unique_id = forms.CharField(required=False, label="Father's Unique ID")
     mother_unique_id = forms.CharField(required=False, label="Mother's Unique ID")
 
+# forms.py
+class BirthRecordForm(forms.ModelForm):
+    father_unique_id = forms.CharField(required=False, label="Father's Unique ID")
+    mother_unique_id = forms.CharField(required=False, label="Mother's Unique ID")
+
     class Meta:
+        model = BirthRecord
         model = BirthRecord
         fields = '__all__'
         widgets = {

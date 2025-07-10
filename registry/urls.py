@@ -2,6 +2,8 @@
 from django.urls import path, reverse_lazy
 from . import views
 from django.contrib.auth import views as auth_views
+# from .views import get_parishioner_by_id
+# from .views import get_parishioner_by_unique_id
 
 
 app_name = 'registry'

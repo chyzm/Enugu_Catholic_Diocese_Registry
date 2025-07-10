@@ -209,7 +209,7 @@ def send_registration_email(parishioner):
         print("Email sent successfully.")
         return True
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print(f"Failed to send email: {str(e)}")  # More detailed error
         return False
     
     
@@ -788,29 +788,38 @@ def registration_success(request, unique_id):
     
 # views.py
 def submit_birth_record(request):
+# views.py
+def submit_birth_record(request):
     if request.method == 'POST':
         try:
             # Parse date strings into date objects
             date_of_birth = parse_date(request.POST.get('date_of_birth'))
             time_of_birth = request.POST.get('time_of_birth')
+            time_of_birth = request.POST.get('time_of_birth')
             baptism_date = parse_date(request.POST.get('baptism_date')) if request.POST.get('baptism_date') else None
             
+            # Create BirthRecord record with proper date objects
+            birth_record = BirthRecord.objects.create(
             # Create BirthRecord record with proper date objects
             birth_record = BirthRecord.objects.create(
                 child_name=request.POST.get('child_name'),
                 gender=request.POST.get('gender'),
                 date_of_birth=date_of_birth,
                 time_of_birth=time_of_birth,
+                time_of_birth=time_of_birth,
                 place_of_birth=request.POST.get('place_of_birth'),
                 hospital_name=request.POST.get('hospital_name'),
                 birth_parish=request.POST.get('parish'),
+                birth_parish=request.POST.get('parish'),
                 baptism_date=baptism_date,
                 baptism_certificate=request.POST.get('baptism_certificate'),
+                father_unique_id=request.POST.get('father_unique_id'),  # Add this
                 father_unique_id=request.POST.get('father_unique_id'),  # Add this
                 father_name=request.POST.get('father_name'),
                 father_religion=request.POST.get('father_religion'),
                 father_phone=request.POST.get('father_phone'),
                 father_parish=request.POST.get('father_parish'),
+                mother_unique_id=request.POST.get('mother_unique_id'),  # Add this
                 mother_unique_id=request.POST.get('mother_unique_id'),  # Add this
                 mother_name=request.POST.get('mother_name'),
                 mother_maiden=request.POST.get('mother_maiden'),
@@ -818,6 +827,12 @@ def submit_birth_record(request):
                 mother_phone=request.POST.get('mother_phone'),
                 mother_parish=request.POST.get('mother_parish'),
                 home_address=request.POST.get('home_address'),
+                father_state=request.POST.get('father_state'),
+                father_lga=request.POST.get('father_lga'),
+                father_town=request.POST.get('father_town'),
+                mother_state=request.POST.get('mother_state'),
+                mother_lga=request.POST.get('mother_lga'),
+                mother_town=request.POST.get('mother_town'),
                 father_state=request.POST.get('father_state'),
                 father_lga=request.POST.get('father_lga'),
                 father_town=request.POST.get('father_town'),
@@ -849,8 +864,34 @@ def submit_birth_record(request):
                 'mother_phone': birth_record.mother_phone,
                 'mother_parish': birth_record.mother_parish,
                 'home_address': birth_record.home_address,
+            birth_data = {
+                'child_name': birth_record.child_name,
+                'gender': birth_record.gender,
+                'date_of_birth': birth_record.date_of_birth.strftime('%Y-%m-%d') if birth_record.date_of_birth else '',
+                'time_of_birth': birth_record.time_of_birth,
+                'place_of_birth': birth_record.place_of_birth,
+                'hospital_name': birth_record.hospital_name,
+                'birth_parish': birth_record.birth_parish,
+                'baptism_date': birth_record.baptism_date.strftime('%Y-%m-%d') if birth_record.baptism_date else '',
+                'baptism_certificate': birth_record.baptism_certificate,
+                'father_unique_id': birth_record.father_unique_id,  # Add this
+                'father_name': birth_record.father_name,
+                'father_religion': birth_record.father_religion,
+                'father_phone': birth_record.father_phone,
+                'father_parish': birth_record.father_parish,
+                'mother_unique_id': birth_record.mother_unique_id,  # Add this
+                'mother_name': birth_record.mother_name,
+                'mother_maiden': birth_record.mother_maiden,
+                'mother_religion': birth_record.mother_religion,
+                'mother_phone': birth_record.mother_phone,
+                'mother_parish': birth_record.mother_parish,
+                'home_address': birth_record.home_address,
             }
             
+            # Send email
+            subject = 'New Birth Record Registration'
+            html_message = render_to_string('email/birth_registration.html', birth_data)
+            plain_message = render_to_string('email/birth_registration.txt', birth_data)
             # Send email
             subject = 'New Birth Record Registration'
             html_message = render_to_string('email/birth_registration.html', birth_data)
@@ -876,13 +917,19 @@ def submit_birth_record(request):
                 'email_sent': email_sent,
                 'child_name': birth_record.child_name,
                 'baptism_date': birth_record.baptism_date.strftime('%Y-%m-%d') if birth_record.baptism_date else ''
+                'message': 'Birth record registration submitted successfully!',
+                'email_sent': email_sent,
+                'child_name': birth_record.child_name,
+                'baptism_date': birth_record.baptism_date.strftime('%Y-%m-%d') if birth_record.baptism_date else ''
             })
             
         except Exception as e:
             print(f"Error submitting birth record: {str(e)}")
+            print(f"Error submitting birth record: {str(e)}")
             return JsonResponse({
                 'success': False,
                 'error': str(e)
+            }, status=400)
             }, status=400)
     
     return JsonResponse({
@@ -922,6 +969,7 @@ def birth_records(request):
     # Apply search filter
     if search_query:
         birth_records = birth_records.filter(
+        birth_records = birth_records.filter(
             Q(child_name__icontains=search_query) |
             Q(father_name__icontains=search_query) |
             Q(mother_name__icontains=search_query) |
@@ -940,6 +988,7 @@ def birth_records(request):
     birth_records = birth_records.order_by('-baptism_date')
     
     # Pagination
+    paginator = Paginator(birth_records, 25)
     paginator = Paginator(birth_records, 25)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

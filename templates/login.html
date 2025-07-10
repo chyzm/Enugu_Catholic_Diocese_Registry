@@ -6,11 +6,12 @@
     <h2 class="text-2xl font-bold mb-6 text-green-900">ECD Registry Login</h2>
     
     {# Handle login errors from session #}
-    {% if request.session.error %}
+    {% if 'error' in request.session %}
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         {{ request.session.error }}
     </div>
-    {% endif %}
+   {% endif %}
+
 
     {% if not user.is_authenticated %}
     <form method="post" class="space-y-4">
@@ -43,7 +44,8 @@
 
     {# Verification Section - Shows only when needed #}
     {% comment %} {% if user.is_authenticated and request.session.show_verification %} {% endcomment %}
-    {% if user.is_authenticated and request.session.show_verification and not request.user.parishadministrator %}
+    {% comment %} {% if user.is_authenticated and request.session.show_verification and not request.user.parishadministrator %} {% endcomment %}
+    {% if user.is_authenticated and request.session.show_verification and not user.is_superuser and not user.is_staff and not request.user.priestprofile and not request.user.parishadminprofile %}
     <div class="mt-8 p-4 border border-primary rounded-lg">
         <h3 class="text-lg font-semibold mb-2 text-primary">Verify Your Identity</h3>
         <p class="text-gray-600 mb-4">To access your dashboard, please verify your parishioner ID.</p>

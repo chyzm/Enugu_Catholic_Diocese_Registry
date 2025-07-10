@@ -9,28 +9,125 @@
             <p class="text-gray-600">Welcome, {{ request.user.get_full_name|default:request.user.username }}</p>
             {% if request.user.is_superuser %}
                 <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Super Admin</span>
-            {% elif request.user.is_staff %}
-                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Staff</span>
+            {% comment %} {% elif request.user.is_staff %} {% endcomment %}
+            {% elif request.user.priestprofile %}
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Priest</span>
+            {% elif request.user.parishadminprofile %}
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Parish Admin</span>
             {% endif %}
         </div>
-        <!-- In the header section where other buttons are -->
-            <div class="space-x-4">
-                <button onclick="window.location.href='{% url 'registry:export_data' %}'" 
-                        class="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
-                    Export Data
-                </button>
-                <button onclick="window.location.href='{% url 'registry:baptism_records' %}'" 
-                        class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
-                    Baptism Records
-                </button>
-                {% if request.user.is_superuser %}
-                <button onclick="window.location.href='{% url 'registry:add_record' %}'" 
-                        class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
-                    Add New Record
-                </button>
-                {% endif %}
-            </div>
+
+        <div class="space-x-4">
+            <button onclick="window.location.href='{% url 'registry:export_data' %}'" 
+                    class="bg-primary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                Export Data
+            </button>
+            <button onclick="window.location.href='{% url 'registry:birth_records' %}'" 
+                    class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                Birth Records
+            </button>
+            {% if request.user.is_superuser %}
+            <button onclick="window.location.href='{% url 'registry:add_record' %}'" 
+                    class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition">
+                Add New Record
+            </button>
+            {% endif %}
+        </div>
     </div>
+
+
+    <!-- admin_dashboard.html -->
+
+    {% comment %} {% if request.user.is_superuser or request.user.is_staff %} {% endcomment %}
+    {% if request.user.is_superuser or request.user.priestprofile %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        
+        {% if request.user.is_superuser %}
+        <!-- Assign Priest Role (Only for Super Admin) -->
+        <div class="border rounded-lg p-4">
+            <h4 class="text-lg font-semibold text-blue-700 mb-4">Assign Priest</h4>
+            <form method="post" action="{% url 'registry:assign_priest' %}">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Priest</label>
+                        <select name="parishioner_id" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- Select Priest --</option>
+                            {% for parishioner in available_parishioners %}
+                                <option value="{{ parishioner.id }}">{{ parishioner.full_name }} ({{ parishioner.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Parish</label>
+                        <select name="parish_id" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- Select Parish --</option>
+                            {% if request.user.is_superuser %}
+                                {% for parish in parishes %}
+                                    <option value="{{ parish.id }}">{{ parish.name }}</option>
+                                {% endfor %}
+                            {% else %}
+                                {% with user_parish=request.user.priestprofile.parish|default:request.user.parishadminprofile.parish %}
+                                    <option value="{{ user_parish.id }}">{{ user_parish.name }}</option>
+                                {% endwith %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
+                            Assign Priest
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    
+        <!-- Assign Parish Admin (Both Super Admin & Staff) -->
+        {% if request.user.is_superuser or request.user.priestprofile %}
+        <div class="border rounded-lg p-4">
+            <h4 class="text-lg font-semibold text-green-700 mb-4">Assign Parish Admin</h4>
+            <form method="post" action="{% url 'registry:assign_admin' %}">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Parishioner</label>
+                        <select name="parishioner_id" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                            <option value="">-- Select Parishioner --</option>
+                            {% for parishioner in available_parishioners %}
+                                <option value="{{ parishioner.id }}">{{ parishioner.full_name }} ({{ parishioner.email }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Parish</label>
+                        <select name="parish_id"  required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                            <option value="">-- Select Parish --</option>
+                            {% if request.user.is_superuser %}
+                                {% for parish in parishes %}
+                                    <option value="{{ parish.id }}">{{ parish.name }}</option>
+                                {% endfor %}
+                            {% else %}
+                                {% with user_parish=request.user.priestprofile.parish|default:request.user.parishadminprofile.parish %}
+                                    <option value="{{ user_parish.id }}">{{ user_parish.name }}</option>
+                                {% endwith %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">
+                            Assign Admin
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+{% endif %} 
+
+
+        
     
     <!-- Search and Filter Section -->
     <div class="bg-white rounded-lg shadow-md p-4 mb-6">
@@ -41,7 +138,7 @@
                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                        placeholder="Name, ID, Parish...">
             </div>
-            <div>
+            {% comment %} <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Deanery</label>
                 <select name="deanery" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">All Deaneries</option>
@@ -49,7 +146,25 @@
                         <option value="{{ value }}" {% if request.GET.deanery == value %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
-            </div>
+            </div> {% endcomment %}
+
+            <!-- admin_dashboard.html -->
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deanery</label>
+                    <select name="deanery" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">All Deaneries</option>
+                        {% if request.user.is_superuser %}
+                            {% for value, label in deanery_choices %}
+                                <option value="{{ value }}" {% if request.GET.deanery == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        {% else %}
+                            {% with user_parish=request.user.priestprofile.parish|default:request.user.parishadminprofile.parish %}
+                                <option value="{{ user_parish.deanery.name }}" selected>{{ user_parish.deanery.name }}</option>
+                            {% endwith %}
+                        {% endif %}
+                    </select>
+                </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
@@ -68,10 +183,10 @@
     </div>
 
     <!-- Map Display -->
-<div class="bg-white rounded-lg shadow-md p-4 mb-6">
-    <h3 class="text-lg font-semibold mb-2 text-gray-800">Parishioner Locations</h3>
-    <div id="parishionerMap" style="height: 400px;" class="rounded"></div>
-</div>
+    <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+        <h3 class="text-lg font-semibold mb-2 text-gray-800">Parishioner Locations</h3>
+        <div id="parishionerMap" style="height: 400px;" class="rounded"></div>
+    </div>
 
     
     <!-- Stats Cards -->
@@ -220,6 +335,10 @@
         {% endif %}
     </div>
 </div>
+
+
+
+
 <!-- Leaflet CSS & JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

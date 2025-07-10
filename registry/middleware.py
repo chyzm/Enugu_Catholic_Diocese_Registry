@@ -5,23 +5,9 @@ from .models import Parish
 from django.shortcuts import redirect
 from django.urls import reverse
 
-
-from django.http import HttpResponsePermanentRedirect
-
 class InitialSetupMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
-
-    def __init__(self, get_response):
-        self.get_response = get_response
-        self.allowed_domain = 'cderegistry.org.ng'
-
-    def __call__(self, request):
-        host = request.get_host().split(':')[0]
-        if host not in [self.allowed_domain, f'www.{self.allowed_domain}']:
-            new_url = f'https://{self.allowed_domain}{request.get_full_path()}'
-            return HttpResponsePermanentRedirect(new_url)
-        return self.get_response(request)
     
     def __call__(self, request):
         # Skip middleware for static files, admin pages, and API endpoints

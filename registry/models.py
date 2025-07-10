@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
 from django.utils import timezone
+from django.contrib.auth.models import Group
+
 
 # Create your models here.
 
@@ -39,14 +41,13 @@ class Parishioner(models.Model):
         ('Enugu Deanery', 'Enugu Deanery'),
         ('Nkwo Nike Deanery', 'Nkwo Nike Deanery'),
         ('Udi Deanery', 'Udi Deanery'),
+        ('Chaplaincy', 'Chaplaincy'),
+        
     ]
     
     # Personal Information
     unique_id = models.CharField(max_length=20, unique=True, blank=True)
     full_name = models.CharField(max_length=255)
-    state_of_origin = models.CharField(max_length=100, blank=True, null=True)
-    lga_of_origin = models.CharField(max_length=100, blank=True, null=True)
-    hometown = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(blank=True, null=True, unique=True)
     title = models.CharField(max_length=50, blank=True)
     date_of_birth = models.DateField()
@@ -74,6 +75,14 @@ class Parishioner(models.Model):
     family_details = models.TextField(blank=True)
     
     
+    # Location
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+
+    
+  
+
+    
     # Marital verification
     marriage_verified = models.BooleanField(default=False)
     marriage_verification_date = models.DateField(null=True, blank=True)
@@ -88,11 +97,7 @@ class Parishioner(models.Model):
     deceased = models.BooleanField(default=False)
     date_of_death = models.DateField(null=True, blank=True)
     death_details = models.TextField(blank=True)
-
-    # Additional fields
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
-
+    
     
     # System
     created_at = models.DateTimeField(auto_now_add=True)
@@ -112,8 +117,9 @@ class Parishioner(models.Model):
     
     
 
-class Baptism(models.Model):
-    parishioner = models.ForeignKey(Parishioner, on_delete=models.SET_NULL, null=True, blank=True, related_name='baptisms')
+# models.py
+class BirthRecord(models.Model):  # Changed from Baptism
+    parishioner = models.ForeignKey(Parishioner, on_delete=models.SET_NULL, null=True, blank=True, related_name='birth_records')  # Changed from baptisms
     child_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
@@ -132,6 +138,14 @@ class Baptism(models.Model):
     mother_religion = models.CharField(max_length=50)
     mother_phone = models.CharField(max_length=20)
     mother_parish = models.CharField(max_length=100, blank=True, null=True)
+    father_unique_id = models.CharField(max_length=50, blank=True, null=True)
+    mother_unique_id = models.CharField(max_length=50, blank=True, null=True)
+    father_state = models.CharField(max_length=100, blank=True, null=True)
+    father_lga = models.CharField(max_length=100, blank=True, null=True)
+    father_town = models.CharField(max_length=100, blank=True, null=True)
+    mother_state = models.CharField(max_length=100, blank=True, null=True)
+    mother_lga = models.CharField(max_length=100, blank=True, null=True)
+    mother_town = models.CharField(max_length=100, blank=True, null=True)
     home_address = models.TextField()
     submitted_at = models.DateTimeField(auto_now_add=True)
     
@@ -167,6 +181,45 @@ class Parish(models.Model):
     
     
     
+    
+# models.py
+from django.contrib.auth.models import User, Group
+
+class PriestProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_priests')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Priest: {self.user.get_full_name()} ({self.parish.name})"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        group, _ = Group.objects.get_or_create(name='Priest')
+        self.user.groups.add(group)
+        self.user.is_staff = True
+        self.user.save()
+
+class ParishAdminProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_admins')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Admin: {self.user.username} ({self.parish.name})"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        group, _ = Group.objects.get_or_create(name='Parish Admin')
+        self.user.groups.add(group)
+        self.user.is_staff = True
+        self.user.save()
+
+    
+    
+    
 
 # class Priest(models.Model):
 #     first_name = models.CharField(max_length=100)
@@ -184,33 +237,33 @@ class Parish(models.Model):
 #         return f"{self.full_name} ({self.parish.name})"
 
 
-class Priest(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=20)
-    parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(default=timezone.now)  # Only use default
+# class Priest(models.Model):
+#     first_name = models.CharField(max_length=100)
+#     last_name = models.CharField(max_length=100)
+#     email = models.EmailField(unique=True)
+#     phone_number = models.CharField(max_length=20)
+#     parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
+#     is_active = models.BooleanField(default=True)
+#     created_at = models.DateTimeField(default=timezone.now)  # Only use default
     
-    @property
-    def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+#     @property
+#     def full_name(self):
+#         return f"{self.first_name} {self.last_name}"
     
-    def __str__(self):
-        return f"{self.full_name} ({self.parish.name})"
+#     def __str__(self):
+#         return f"{self.full_name} ({self.parish.name})"
     
     
 
 
 
-class ParishAdministrator(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
-    priest = models.ForeignKey(Priest, on_delete=models.PROTECT)  # Changed from OneToOne
-    phone_verified = models.BooleanField(default=False)
-    verification_code = models.CharField(max_length=6, blank=True, null=True)
-    verification_code_expiry = models.DateTimeField(blank=True, null=True)
-    created_at = models.DateTimeField(default=timezone.now)  # Only use default
-    def __str__(self):
-        return f"{self.user.username} - {self.parish.name}"
+# class ParishAdministrator(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     parish = models.ForeignKey(Parish, on_delete=models.PROTECT)
+#     priest = models.ForeignKey(Priest, on_delete=models.PROTECT)  # Changed from OneToOne
+#     phone_verified = models.BooleanField(default=False)
+#     verification_code = models.CharField(max_length=6, blank=True, null=True)
+#     verification_code_expiry = models.DateTimeField(blank=True, null=True)
+#     created_at = models.DateTimeField(default=timezone.now)  # Only use default
+#     def __str__(self):
+#         return f"{self.user.username} - {self.parish.name}"

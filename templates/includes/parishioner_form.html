@@ -63,14 +63,14 @@
         </div>
         
         <!-- Death Registry -->
-        <div class="mt-6 pt-4 border-t border-gray-200">
+        {% comment %} <div class="mt-6 pt-4 border-t border-gray-200">
             <div class="flex items-center">
                 {{ form.deceased }}
                 <label for="id_deceased" class="ml-2 block text-sm font-medium text-gray-700">Mark as deceased</label>
-            </div>
+            </div> {% endcomment %}
             
             <!-- Death Details -->
-            <div id="deathDetails" class="hidden space-y-4 mt-4 bg-gray-50 p-4 rounded-md border border-gray-200">
+            {% comment %} <div id="deathDetails" class="hidden space-y-4 mt-4 bg-gray-50 p-4 rounded-md border border-gray-200">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Date of Death</label>
                     {{ form.date_of_death }}
@@ -79,7 +79,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Death Details</label>
                     {{ form.death_details }}
                 </div>
-            </div>
+            </div> {% endcomment %}
         </div>
     </div>
     

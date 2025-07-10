@@ -20,6 +20,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -186,7 +187,7 @@ import os
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
-# Collects static files here when running `collectstatic`
+# Collects static files here when running collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Additional static file directories (optional for dev only)
@@ -205,20 +206,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR /'media'
 
-# Email Configuration
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_PORT = config('EMAIL_PORT', cast=int)
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
-# ADMIN_EMAIL = config('ADMIN_EMAIL')  # Add this line
 
 
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
-ADMIN_EMAIL = os.getenv('ADMIN_EMAIL')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+EMAIL_HOST = os.getenv('ZOHO_SMTP_HOST')
+EMAIL_HOST_USER = os.getenv('ZOHO_SMTP_USERNAME')
+EMAIL_HOST_PASSWORD = os.getenv('ZOHO_SMTP_PASSWORD')
+EMAIL_PORT = int(os.getenv('ZOHO_SMTP_PORT', 465))  # default to 465
+

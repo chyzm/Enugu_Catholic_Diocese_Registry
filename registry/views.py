@@ -182,7 +182,7 @@ def send_registration_email(parishioner):
         print("No email address found for parishioner.")
         return False
 
-    subject = 'Catholic Diocese of Enugu - Registration Confirmation'
+    subject = 'Catholic Diocese of Enugu Registry - Registration Confirmation'
 
     # Render the email content
     html_message = render_to_string('email/registration_confirmation.html', {

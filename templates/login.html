@@ -43,7 +43,6 @@
     {% endif %}
 
     {# Verification Section - Shows only when needed #}
-    {% comment %} {% if user.is_authenticated and request.session.show_verification %} {% endcomment %}
     {% comment %} {% if user.is_authenticated and request.session.show_verification and not request.user.parishadministrator %} {% endcomment %}
     {% if user.is_authenticated and request.session.show_verification and not user.is_superuser  %}
     <div class="mt-8 p-4 border border-primary rounded-lg">

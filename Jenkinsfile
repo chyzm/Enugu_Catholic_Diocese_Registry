@@ -154,44 +154,48 @@ pipeline {
     post {
         success {
             script {
-                def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                def environment = env.BRANCH_NAME == 'main' ? 'Production' : 'Staging'
-                slackSend(
-                    color: 'good',
-                    message: """
-                        :white_check_mark: *CDE Registry Deployment Successful!*
-                        *Job:* `${env.JOB_NAME}`
-                        *Build Number:* `${env.BUILD_NUMBER}`
-                        *Environment:* `${environment}`
-                        *Branch:* `${env.BRANCH_NAME}`
-                        *Image Tag:* `${IMAGE_TAG}`
-                        *Commit Hash:* `${commitHash}`
-                        *Commit Message:* `${commitMessage}`
-                        *Duration:* ${currentBuild.durationString}
-                    """.stripIndent()
-                )
+                try {
+                    def commitHash = env.GIT_COMMIT?.take(7) ?: 'unknown'
+                    def commitMessage = 'Deployment successful'
+                    def environment = env.BRANCH_NAME == 'main' ? 'Production' : 'Staging'
+                    slackSend(
+                        color: 'good',
+                        message: """
+                            :white_check_mark: *CDE Registry Deployment Successful!*
+                            *Job:* `${env.JOB_NAME}`
+                            *Build Number:* `${env.BUILD_NUMBER}`
+                            *Environment:* `${environment}`
+                            *Branch:* `${env.BRANCH_NAME}`
+                            *Image Tag:* `${IMAGE_TAG}`
+                            *Commit Hash:* `${commitHash}`
+                            *Duration:* ${currentBuild.durationString}
+                        """.stripIndent()
+                    )
+                } catch (Exception e) {
+                    echo "Error sending success notification: ${e.getMessage()}"
+                }
             }
         }
         failure {
             script {
-                def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                def environment = env.BRANCH_NAME == 'main' ? 'Production' : 'Staging'
-                slackSend(
-                    color: 'danger',
-                    message: """
-                        :x: *CDE Registry Deployment Failed!*
-                        *Job:* `${env.JOB_NAME}`
-                        *Build Number:* `${env.BUILD_NUMBER}`
-                        *Environment:* `${environment}`
-                        *Branch:* `${env.BRANCH_NAME}`
-                        *Commit Hash:* `${commitHash}`
-                        *Commit Message:* `${commitMessage}`
-                        *Duration:* ${currentBuild.durationString}
-                        *Console Output:* ${env.BUILD_URL}console
-                    """.stripIndent()
-                )
+                try {
+                    def commitHash = env.GIT_COMMIT?.take(7) ?: 'unknown'
+                    def environment = env.BRANCH_NAME == 'main' ? 'Production' : 'Staging'
+                    slackSend(
+                        color: 'danger',
+                        message: """
+                            :x: *CDE Registry Deployment Failed!*
+                            *Job:* `${env.JOB_NAME}`
+                            *Build Number:* `${env.BUILD_NUMBER}`
+                            *Environment:* `${environment}`
+                            *Branch:* `${env.BRANCH_NAME}`
+                            *Duration:* ${currentBuild.durationString}
+                            *Console Output:* ${env.BUILD_URL}console
+                        """.stripIndent()
+                    )
+                } catch (Exception e) {
+                    echo "Error sending failure notification: ${e.getMessage()}"
+                }
             }
         }
         always {
@@ -199,3 +203,4 @@ pipeline {
         }
     }
 }
+

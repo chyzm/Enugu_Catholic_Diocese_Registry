@@ -8,7 +8,14 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y build-essential libpq-dev libmariadb-dev curl
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    pkg-config \
+    libpq-dev \
+    libmariadb-dev \
+    libmariadb-dev-compat \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 COPY requirements.txt .

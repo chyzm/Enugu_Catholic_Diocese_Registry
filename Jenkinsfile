@@ -95,10 +95,13 @@ pipeline {
                             def environment = env.BRANCH_NAME == 'main' ? 'Production' : 'Staging'
                             slackSend(color: '#0099FF', message: "🚀 Updating App Runner service for ${environment} environment")
                             sh """
+                                echo "Disabling auto-deployment and updating image..."
+                                
                                 aws apprunner update-service \\
                                     --service-arn ${APPRUNNER_SERVICE_ARN} \\
-                                    --source-configuration '{"ImageRepository":{"ImageIdentifier":"${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}","ImageConfiguration":{"Port":"8000"},"ImageRepositoryType":"ECR"}}' \\
-                                    --region ${CDE_AWS_REGION}
+                                    --source-configuration '{"ImageRepository":{"ImageIdentifier":"${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}","ImageConfiguration":{"Port":"8000"},"ImageRepositoryType":"ECR"},"AutoDeploymentsEnabled":false}' \\
+                                    --region ${CDE_AWS_REGION} \\
+                                    --no-cli-pager
                             """
                             slackSend(color: 'good', message: "✅ App Runner service updated for ${environment}")
                         } catch (Exception e) {

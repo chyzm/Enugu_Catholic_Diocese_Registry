@@ -116,11 +116,6 @@ class Parishioner(models.Model):
         return f"{self.full_name} ({self.unique_id})"
     
     
-
-# models.py
-class BirthRecord(models.Model):  # Changed from Baptism
-    parishioner = models.ForeignKey(Parishioner, on_delete=models.SET_NULL, null=True, blank=True, related_name='birth_records')  # Changed from baptisms
-# models.py
 class BirthRecord(models.Model):  # Changed from Baptism
     parishioner = models.ForeignKey(Parishioner, on_delete=models.SET_NULL, null=True, blank=True, related_name='birth_records')  # Changed from baptisms
     child_name = models.CharField(max_length=255)

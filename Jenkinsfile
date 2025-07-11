@@ -126,23 +126,39 @@ pipeline {
                         try {
                             def environment = env.BRANCH_NAME == 'main' ? 'Production' : 'Staging'
                             slackSend(color: '#0099FF', message: "⏳ Waiting for ${environment} deployment to complete (4 minutes)...")
-                            sh """
-                                echo "Waiting 4 minutes for deployment to complete..."
-                                sleep 240
+                            script {
+                                def maxAttempts = 24
+                                def attempt = 0
+                                def serviceStatus = ''
                                 
-                                SERVICE_STATUS=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.Status' --output text --region ${CDE_AWS_REGION})
-                                IMAGE_URI=\$(aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.SourceConfiguration.ImageRepository.ImageIdentifier' --output text --region ${CDE_AWS_REGION})
-                                
-                                echo "Service Status: \$SERVICE_STATUS"
-                                echo "Current Image: \$IMAGE_URI"
-                                
-                                if [ "\$SERVICE_STATUS" = "RUNNING" ]; then
-                                    echo "✅ Deployment successful!"
-                                else
-                                    echo "❌ Deployment failed with status: \$SERVICE_STATUS"
-                                    exit 1
-                                fi
-                            """
+                                while (attempt < maxAttempts) {
+                                    attempt++
+                                    serviceStatus = sh(
+                                        script: "aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.Status' --output text --region ${CDE_AWS_REGION}",
+                                        returnStdout: true
+                                    ).trim()
+                                    
+                                    echo "Attempt ${attempt}/${maxAttempts}: Service Status: ${serviceStatus}"
+                                    
+                                    if (serviceStatus == 'RUNNING') {
+                                        def imageUri = sh(
+                                            script: "aws apprunner describe-service --service-arn ${APPRUNNER_SERVICE_ARN} --query 'Service.SourceConfiguration.ImageRepository.ImageIdentifier' --output text --region ${CDE_AWS_REGION}",
+                                            returnStdout: true
+                                        ).trim()
+                                        echo "✅ Deployment successful!"
+                                        echo "Current Image: ${imageUri}"
+                                        break
+                                    } else if (serviceStatus in ['CREATE_FAILED', 'UPDATE_FAILED_ROLLBACK_COMPLETE']) {
+                                        error("❌ Deployment failed with status: ${serviceStatus}")
+                                    }
+                                    
+                                    if (attempt == maxAttempts) {
+                                        error("❌ Deployment timeout after 4 minutes")
+                                    }
+                                    
+                                    sleep(10)
+                                }
+                            }
                             slackSend(color: 'good', message: "🎉 ${environment} deployment completed successfully!")
                         } catch (Exception e) {
                             slackSend(color: '#FF0000', message: "Stage 'Check Deployment Status' FAILED: ${e.getMessage()}")

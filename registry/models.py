@@ -78,9 +78,12 @@ class Parishioner(models.Model):
     # Location
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
-
     
-  
+    
+    # State of origin
+    state_of_origin = models.CharField(max_length=100, blank=True, null=True)
+    lga_of_origin = models.CharField(max_length=100, blank=True, null=True)
+    town = models.CharField(max_length=100, blank=True, null=True)
 
     
     # Marital verification

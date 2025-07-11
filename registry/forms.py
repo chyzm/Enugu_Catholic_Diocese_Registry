@@ -14,7 +14,9 @@ class ParishionerForm(forms.ModelForm):
             'first_communion', 'education_level', 'occupation', 'employment_status',
             'deceased', 'date_of_death', 'death_details',
             'marriage_verified', 'marriage_verification_date', 'marriage_verification_notes',
-            'death_verified', 'death_verification_date', 'death_verification_notes'
+            'death_verified', 'death_verification_date', 'death_verification_notes',
+            'state_of_origin', 'lga_of_origin', 'town', 'marriage_date','marriage_details',
+
         ]
         
 
@@ -28,6 +30,8 @@ class ParishionerForm(forms.ModelForm):
             'education_level': forms.RadioSelect(choices=Parishioner.EDUCATION_CHOICES),
             'employment_status': forms.RadioSelect(choices=Parishioner.EMPLOYMENT_CHOICES),
             'deanery': forms.Select(choices=Parishioner.DEANERY_CHOICES),
+            'education_level': forms.Select(attrs={'class': 'form-select'}),
+            'employment_status': forms.Select(attrs={'class': 'form-select'}),
         }
 
 

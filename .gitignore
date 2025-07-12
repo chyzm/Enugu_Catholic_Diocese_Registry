@@ -1,2 +1,4 @@
 .env
 env/
+priest.csv
+created_priests.csv

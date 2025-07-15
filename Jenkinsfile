@@ -7,6 +7,8 @@ pipeline {
         CDE_ECR_REPO_NAME = credentials('cde-ecr-repo-name')
         PROD_APPRUNNER_SERVICE_ARN = credentials('prod-apprunner-service-arn')
         STAGING_APPRUNNER_SERVICE_ARN = credentials('staging-apprunner-service-arn')
+        CDE_APP_PORT = credentials('cde-app-port')
+        TRIVY_SEVERITY = credentials('trivy-severity-threshold')
     }
     
     stages {
@@ -61,6 +63,39 @@ pipeline {
             }
         }
         
+        stage('Security Scan') {
+            steps {
+                script {
+                    try {
+                        slackSend(color: '#0099FF', message: "🔍 Running security scan with Trivy...")
+                        sh """
+                            # Create reports directory
+                            mkdir -p reports
+                            
+                            # Run Trivy scan and save results
+                            trivy image --format json --output reports/trivy-report.json ${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}
+                            
+                            # Run Trivy scan with severity threshold (will fail build if critical/high vulnerabilities found)
+                            echo "Scanning image: ${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}"
+                            trivy image --severity ${TRIVY_SEVERITY} --exit-code 1 ${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}
+                        """
+                        slackSend(color: 'good', message: "✅ Security scan passed - no critical vulnerabilities found")
+                    } catch (Exception e) {
+                        slackSend(color: '#FF0000', message: "🚨 Security scan FAILED: Critical vulnerabilities detected! ${e.getMessage()}")
+                        // Archive the scan report for review
+                        archiveArtifacts artifacts: 'reports/trivy-report.json', allowEmptyArchive: true
+                        throw e
+                    }
+                }
+            }
+            post {
+                always {
+                    // Always archive scan results for review
+                    archiveArtifacts artifacts: 'reports/trivy-report.json', allowEmptyArchive: true
+                }
+            }
+        }
+        
         stage('Push to ECR') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'cde-aws-credentials']]) {
@@ -99,7 +134,7 @@ pipeline {
                                 
                                 aws apprunner update-service \\
                                     --service-arn ${APPRUNNER_SERVICE_ARN} \\
-                                    --source-configuration '{"ImageRepository":{"ImageIdentifier":"${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}","ImageConfiguration":{"Port":"8000"},"ImageRepositoryType":"ECR"},"AutoDeploymentsEnabled":false}' \\
+                                    --source-configuration '{"ImageRepository":{"ImageIdentifier":"${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}","ImageConfiguration":{"Port":"'${CDE_APP_PORT}'"},"ImageRepositoryType":"ECR"},"AutoDeploymentsEnabled":false}' \\
                                     --region ${CDE_AWS_REGION} \\
                                     --no-cli-pager
                             """
@@ -218,8 +253,28 @@ pipeline {
             }
         }
         always {
+            script {
+                try {
+                    // Clean up Docker images to free disk space
+                    sh """
+                        echo "Cleaning up Docker resources..."
+                        
+                        # Remove the built image
+                        docker rmi ${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG} || true
+                        
+                        # Remove dangling images
+                        docker image prune -f || true
+                        
+                        # Remove unused containers
+                        docker container prune -f || true
+                        
+                        echo "Docker cleanup completed"
+                    """
+                } catch (Exception e) {
+                    echo "Warning: Docker cleanup failed: ${e.getMessage()}"
+                }
+            }
             cleanWs()
         }
     }
 }
-

@@ -1,0 +1,7 @@
+# Trivy ignore file
+# Add CVE IDs that you want to ignore (after proper risk assessment)
+# Example:
+# CVE-2021-12345
+
+# Ignore vulnerabilities in specific paths
+# /usr/local/lib/python3.9/site-packages/package-name

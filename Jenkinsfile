@@ -68,17 +68,22 @@ pipeline {
                 script {
                     try {
                         slackSend(color: '#0099FF', message: "🔍 Running security scan with Trivy...")
-                        sh """
-                            # Create reports directory
-                            mkdir -p reports
+                        script {
+                            def imageRef = "${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}"
+                            def severity = "${TRIVY_SEVERITY}"
                             
-                            # Run Trivy scan and save results
-                            trivy image --format json --output reports/trivy-report.json ${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}
-                            
-                            # Run Trivy scan with severity threshold (will fail build if critical/high vulnerabilities found)
-                            echo "Scanning image: ${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}"
-                            trivy image --severity ${TRIVY_SEVERITY} --exit-code 1 ${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}
-                        """
+                            sh """
+                                # Create reports directory
+                                mkdir -p reports
+                                
+                                # Run Trivy scan and save results
+                                trivy image --format json --output reports/trivy-report.json ${imageRef}
+                                
+                                # Run Trivy scan with severity threshold (will fail build if critical/high vulnerabilities found)
+                                echo "Scanning image: ${imageRef}"
+                                trivy image --severity ${severity} --exit-code 1 ${imageRef}
+                            """
+                        }
                         slackSend(color: 'good', message: "✅ Security scan passed - no critical vulnerabilities found")
                     } catch (Exception e) {
                         slackSend(color: '#FF0000', message: "🚨 Security scan FAILED: Critical vulnerabilities detected! ${e.getMessage()}")
@@ -256,11 +261,12 @@ pipeline {
             script {
                 try {
                     // Clean up Docker images to free disk space
+                    def imageRef = "${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG}"
                     sh """
                         echo "Cleaning up Docker resources..."
                         
                         # Remove the built image
-                        docker rmi ${CDE_ECR_REGISTRY}/${CDE_ECR_REPO_NAME}:${IMAGE_TAG} || true
+                        docker rmi ${imageRef} || true
                         
                         # Remove dangling images
                         docker image prune -f || true

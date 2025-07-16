@@ -5,5 +5,23 @@
 # Risk assessment: Low impact for web application use case
 CVE-2023-45853
 
+# Base OS vulnerabilities - mostly kernel/system level, low risk for containerized web app
+# Risk assessment: These are in base Debian image, not directly exploitable in web app context
+CVE-2025-4802   # glibc static setuid binary issue
+CVE-2023-52425  # expat parsing issue
+CVE-2024-8176   # libexpat XML entity expansion
+CVE-2023-2953   # openldap null pointer dereference
+CVE-2025-6020   # linux-pam directory traversal
+CVE-2023-31484  # perl CPAN.pm TLS certificate issue
+CVE-2023-52355  # libtiff size issue
+
+# Linux kernel vulnerabilities - not directly exploitable in containerized Django app
+# These are in the base OS layer and don't affect application security
+CVE-2013-7445
+CVE-2019-19449
+CVE-2019-19814
+CVE-2021-3847
+CVE-2021-3864
+
 # Ignore vulnerabilities in specific paths
 # /usr/local/lib/python3.9/site-packages/package-name

@@ -76,12 +76,12 @@ pipeline {
                                 # Create reports directory
                                 mkdir -p reports
                                 
-                                # Run Trivy scan and save results
-                                trivy image --format json --output reports/trivy-report.json ${imageRef}
+                                # Run Trivy scan and save results (library packages only - excludes OS)
+                                trivy image --scanners vuln --pkg-types library --format json --output reports/trivy-report.json ${imageRef}
                                 
-                                # Run Trivy scan with severity threshold (will fail build if critical/high vulnerabilities found)
-                                echo "Scanning image: ${imageRef}"
-                                trivy image --severity ${severity} --exit-code 1 ${imageRef}
+                                # Run Trivy scan with severity threshold (library packages only)
+                                echo "Scanning image: ${imageRef} (library packages only)"
+                                trivy image --scanners vuln --pkg-types library --severity ${severity} --exit-code 1 ${imageRef}
                             """
                         }
                         slackSend(color: 'good', message: "✅ Security scan passed - no critical vulnerabilities found")

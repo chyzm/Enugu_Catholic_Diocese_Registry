@@ -48,7 +48,7 @@ class Parishioner(models.Model):
     # Personal Information
     unique_id = models.CharField(max_length=20, unique=True, blank=True)
     full_name = models.CharField(max_length=255)
-    email = models.EmailField(blank=True, null=True, unique=True)
+    email = models.EmailField(blank=True, null=True)
     title = models.CharField(max_length=50, blank=True)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)

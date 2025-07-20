@@ -48,12 +48,12 @@ class Parishioner(models.Model):
     # Personal Information
     unique_id = models.CharField(max_length=20, unique=True, blank=True)
     full_name = models.CharField(max_length=255)
-    email = models.EmailField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True, unique=True)
     title = models.CharField(max_length=50, blank=True)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     marital_status = models.CharField(max_length=1, choices=MARITAL_STATUS, blank=True)
-    phone_number = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=20, unique=True)
     
     # Church Details
     parish = models.CharField(max_length=100)

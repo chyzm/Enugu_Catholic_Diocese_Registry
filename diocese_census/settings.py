@@ -157,8 +157,10 @@ DATABASES = {
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://www.cde.com.ng",
-    "https://www.cderegistry.org.ng",
+    "https://cde.com.ng",
+    "https://cderegistry.org.ng",
+    "www.cde.com.ng"
+    "www.cderegistry.org.ng"
 ]
 
 

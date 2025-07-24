@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+8f#mp8^rv#q*o_o1z46$l=y^=%gu0gr3_np9szm6o)d@cqvmc'
+SECRET_KEY = os.getenv('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -157,8 +157,8 @@ DATABASES = {
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://cde.com.ng",
-    "https://cderegistry.org.ng",
+    "https://www.cde.com.ng",
+    "https://www.cderegistry.org.ng",
 ]
 
 

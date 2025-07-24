@@ -45,50 +45,19 @@ def generate_verification_code(length=6):
 def index(request):
     return render(request, 'index.html')
 
-# def register(request):
-#     if request.method == 'POST':
-#         parishioner = Parishioner(
-#             title=request.POST.get('title', ''),
-#             full_name=request.POST.get('full_name'),
-#             email=request.POST.get('email'),
-#             date_of_birth=request.POST.get('date_of_birth'),
-#             gender=request.POST.get('gender'),
-#             phone_number=request.POST.get('phone_number'),
-#             marital_status=request.POST.get('marital_status', ''),
-#             marriage_date=request.POST.get('marriage_date'),
-#             marriage_details=request.POST.get('marriage_details', ''),
-#             deceased=request.POST.get('deceased') == 'on',
-#             date_of_death=request.POST.get('date_of_death'),
-#             death_details=request.POST.get('death_details', ''),
-#             parish=request.POST.get('parish'),
-#             deanery=request.POST.get('deanery'),
-#             station=request.POST.get('station'),
-#             baptized=request.POST.get('baptized') == 'on',
-#             confirmed=request.POST.get('confirmed') == 'on',
-#             first_communion=request.POST.get('first_communion') == 'on',
-#             education_level=request.POST.get('education_level', ''),
-#             occupation=request.POST.get('occupation', ''),
-#             employment_status=request.POST.get('employment_status', ''),
-#         )
-#         parishioner.save()
-        
-#         # Send email if email is provided
-#         email_sent = False
-#         if parishioner.email:
-#             email_sent = send_registration_email(parishioner)
-        
-#         return render(request, 'registration-success-page.html', {
-#             'unique_id': parishioner.unique_id,
-#             'parishioner': parishioner,  # Pass the parishioner object
-#             'email_sent': email_sent  # Pass whether email was sent
-#         })
-#     return render(request, 'register.html')
+
+
+
+
+
 
 
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 
 
+from django.core.exceptions import ValidationError
+from django.utils.dateparse import parse_date
 
 def register(request):
     if request.method == 'POST':
@@ -101,42 +70,48 @@ def register(request):
             dob = parse_date(date_of_birth)
             if dob is None:
                 raise ValidationError("Invalid date format for date of birth. Use YYYY-MM-DD")
-            
-            # Handle optional dates
+
+            # Optional dates
             marriage_date = request.POST.get('marriage_date')
             md = parse_date(marriage_date) if marriage_date else None
             
             date_of_death = request.POST.get('date_of_death')
             dod = parse_date(date_of_death) if date_of_death else None
-            
-            email = request.POST.get('email')
+
+            # Clean and validate email
+            email = request.POST.get('email', '').strip() or None
             if email and Parishioner.objects.filter(email__iexact=email).exists():
+                form_data = request.POST.dict()
+                form_data.setdefault('marriage_date', '')
+                form_data.setdefault('marriage_details', '')
+                form_data.setdefault('date_of_death', '')
+                form_data.setdefault('death_details', '')
                 return render(request, 'register.html', {
                     'error': 'This email is already registered',
-                    'form_data': request.POST
+                    'form_data': form_data
                 })
-            
-            phone_number = request.POST.get('phone_number')
-            # Check for existing phone number
-            if Parishioner.objects.filter(phone_number=phone_number).exists():
+
+            # Clean and validate phone number
+            phone_number = request.POST.get('phone_number', '').strip() or None
+            if phone_number and Parishioner.objects.filter(phone_number=phone_number).exists():
+                form_data = request.POST.dict()
+                form_data.setdefault('marriage_date', '')
+                form_data.setdefault('marriage_details', '')
+                form_data.setdefault('date_of_death', '')
+                form_data.setdefault('death_details', '')
                 return render(request, 'register.html', {
                     'error': 'This phone number is already registered',
-                    'form_data': request.POST
+                    'form_data': form_data
                 })
-            
-            
-            
+
+            # Create Parishioner instance
             parishioner = Parishioner(
-                # title=request.POST.get('title', ''),
-                # full_name=request.POST.get('full_name'),
-                # email=request.POST.get('email'),
-                
                 title=request.POST.get('title', ''),
                 full_name=request.POST.get('full_name'),
                 email=email,
                 date_of_birth=dob,
                 gender=request.POST.get('gender'),
-                phone_number=request.POST.get('phone_number'),
+                phone_number=phone_number,
                 marital_status=request.POST.get('marital_status', ''),
                 marriage_date=md,
                 marriage_details=request.POST.get('marriage_details', ''),
@@ -152,67 +127,125 @@ def register(request):
                 education_level=request.POST.get('education_level', ''),
                 occupation=request.POST.get('occupation', ''),
                 employment_status=request.POST.get('employment_status', ''),
+                state_of_origin=request.POST.get('state_of_origin', ''),
+                lga_of_origin=request.POST.get('lga_of_origin', ''),
+                town=request.POST.get('town', ''),
             )
             parishioner.save()
-            
-            # Send email if email is provided
+
+            # Send confirmation email if email is provided
             email_sent = False
             if parishioner.email:
                 email_sent = send_registration_email(parishioner)
-            
+
             return render(request, 'registration-success-page.html', {
                 'unique_id': parishioner.unique_id,
                 'parishioner': parishioner,
                 'email_sent': email_sent
             })
-            
+
         except ValidationError as e:
+            form_data = request.POST.dict()
+            form_data.setdefault('marriage_date', '')
+            form_data.setdefault('marriage_details', '')
+            form_data.setdefault('date_of_death', '')
+            form_data.setdefault('death_details', '')
             return render(request, 'register.html', {
                 'error': str(e),
-                'form_data': request.POST  # Pass back form data to repopulate form
+                'form_data': form_data
             })
+
         except Exception as e:
+            form_data = request.POST.dict()
+            form_data.setdefault('marriage_date', '')
+            form_data.setdefault('marriage_details', '')
+            form_data.setdefault('date_of_death', '')
+            form_data.setdefault('death_details', '')
             return render(request, 'register.html', {
                 'error': f"An error occurred: {str(e)}",
-                'form_data': request.POST
+                'form_data': form_data
             })
-    
-    return render(request, 'register.html')
+
+    # For GET requests, send empty form data
+    return render(request, 'register.html', {
+    'form_data': {
+        'title': '',
+        'full_name': '',
+        'email': '',
+        'date_of_birth': '',
+        'gender': '',
+        'phone_number': '',
+        'marital_status': '',
+        'marriage_date': '',
+        'marriage_details': '',
+        'deceased': '',
+        'date_of_death': '',
+        'death_details': '',
+        'parish': '',
+        'deanery': '',
+        'station': '',
+        'baptized': '',
+        'confirmed': '',
+        'first_communion': '',
+        'education_level': '',
+        'occupation': '',
+        'employment_status': '',
+        'state_of_origin': '',
+        'lga_of_origin': '',
+        'town': '',
+    },
+    'error': ''
+})
+
+
+
 
 
 # def register(request):
 #     if request.method == 'POST':
 #         try:
+#             # Parse and validate date fields
 #             date_of_birth = request.POST.get('date_of_birth')
 #             if not date_of_birth:
 #                 raise ValidationError("Date of birth is required")
-
+            
 #             dob = parse_date(date_of_birth)
 #             if dob is None:
 #                 raise ValidationError("Invalid date format for date of birth. Use YYYY-MM-DD")
 
+#             # Optional dates
 #             marriage_date = request.POST.get('marriage_date')
 #             md = parse_date(marriage_date) if marriage_date else None
-
+            
 #             date_of_death = request.POST.get('date_of_death')
 #             dod = parse_date(date_of_death) if date_of_death else None
 
-#             email = request.POST.get('email')
-
-#             # Check if email is already used (but do NOT stop registration)
-#             email_warning = None
+#             # Clean and validate email
+#             email = request.POST.get('email', '').strip()
+#             email = email if email else None
 #             if email and Parishioner.objects.filter(email__iexact=email).exists():
-#              email_warning = "Note: This email has already been used before."
+#                 return render(request, 'register.html', {
+#                     'error': 'This email is already registered',
+#                     'form_data': request.POST  # Pass all POST data back to form
+#                 })
 
+#             # Clean and validate phone number
+#             phone_number = request.POST.get('phone_number', '').strip()
+#             phone_number = phone_number if phone_number else None
+#             if phone_number and Parishioner.objects.filter(phone_number=phone_number).exists():
+#                 return render(request, 'register.html', {
+#                     'error': 'This phone number is already registered',
+#                     'form_data': request.POST  # Pass all POST data back to form
+#                 })
 
-#             # Create parishioner
+#             # Create Parishioner instance
 #             parishioner = Parishioner(
 #                 title=request.POST.get('title', ''),
 #                 full_name=request.POST.get('full_name'),
 #                 email=email,
 #                 date_of_birth=dob,
 #                 gender=request.POST.get('gender'),
-#                 phone_number=request.POST.get('phone_number'),
+#                 phone_number=phone_number,
 #                 marital_status=request.POST.get('marital_status', ''),
 #                 marriage_date=md,
 #                 marriage_details=request.POST.get('marriage_details', ''),
@@ -228,10 +261,13 @@ def register(request):
 #                 education_level=request.POST.get('education_level', ''),
 #                 occupation=request.POST.get('occupation', ''),
 #                 employment_status=request.POST.get('employment_status', ''),
+#                 state_of_origin=request.POST.get('state_of_origin', ''),
+#                 lga_of_origin=request.POST.get('lga_of_origin', ''),
+#                 town=request.POST.get('town', ''),
 #             )
 #             parishioner.save()
 
-#             # Send email if email provided
+#             # Send confirmation email if email is provided
 #             email_sent = False
 #             if parishioner.email:
 #                 email_sent = send_registration_email(parishioner)
@@ -239,23 +275,26 @@ def register(request):
 #             return render(request, 'registration-success-page.html', {
 #                 'unique_id': parishioner.unique_id,
 #                 'parishioner': parishioner,
-#                 'email_sent': email_sent,
-#                 'email_warning': email_warning,
+#                 'email_sent': email_sent
 #             })
 
 #         except ValidationError as e:
 #             return render(request, 'register.html', {
 #                 'error': str(e),
-#                 'form_data': request.POST
+#                 'form_data': request.POST  # Pass all POST data back to form
 #             })
-
 #         except Exception as e:
 #             return render(request, 'register.html', {
 #                 'error': f"An error occurred: {str(e)}",
-#                 'form_data': request.POST
+#                 'form_data': request.POST  # Pass all POST data back to form
 #             })
 
-#     return render(request, 'register.html')
+#     # For GET requests, initialize with empty form data
+#     return render(request, 'register.html', {'form_data': {}})
+
+
+
+
 
 
 

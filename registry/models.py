@@ -53,7 +53,7 @@ class Parishioner(models.Model):
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     marital_status = models.CharField(max_length=1, choices=MARITAL_STATUS, blank=True)
-    phone_number = models.CharField(max_length=20, unique=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True)
     
     # Church Details
     parish = models.CharField(max_length=100)
@@ -108,6 +108,13 @@ class Parishioner(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     
     def save(self, *args, **kwargs):
+        
+         # Convert blank strings to None to avoid unique constraint violation
+        if self.email == '':
+            self.email = None
+        if self.phone_number == '':
+            self.phone_number = None
+
         if not self.unique_id:
             # Generate unique ID: first 3 letters of surname + dash + 6 digits
             surname = self.full_name.split()[-1][:3].upper()

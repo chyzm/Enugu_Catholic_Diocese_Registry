@@ -399,70 +399,97 @@
 </script> {% endcomment %}
 
 
-
 <script>
-    let mapInstance;
-  
-    function initMap() {
-      const geojsonData = {{ geojson_data|safe }};
-      mapInstance = L.map('parishionerMap').setView([6.5, 7.5], 7);
-  
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(mapInstance);
-  
-      const markerCluster = L.markerClusterGroup();
-      geojsonData.features.forEach(feature => {
-        const coords = feature.geometry.coordinates;
-        const props = feature.properties;
-        const marker = L.marker([coords[1], coords[0]]);
-        marker.bindPopup(`<strong>${props.unique_id}</strong><br>${props.parish}`);
-        markerCluster.addLayer(marker);
-      });
-      mapInstance.addLayer(markerCluster);
-    }
-  
-    function requestUserLocation() {
-      if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser.");
-        return;
-      }
-  
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-  
-          mapInstance.setView([lat, lon], 13);
-  
-          const userMarker = L.marker([lat, lon], {
-            icon: L.icon({
-              iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-              iconSize: [25, 41],
-              iconAnchor: [12, 41],
-              popupAnchor: [0, -41],
-            })
-          }).addTo(mapInstance);
-  
-          userMarker.bindPopup("📍 You are here").openPopup();
-        },
-        function (error) {
-          console.warn("Geolocation error:", error.message);
-        }
-      );
-    }
-  
-    document.addEventListener('DOMContentLoaded', function () {
-      initMap();
-  
-      // 🔥 Ask for location only *after* page is fully loaded and map is ready
-      setTimeout(() => {
-        requestUserLocation();
-      }, 800); // small delay ensures map is ready
+  let mapInstance;
+
+  function initMap() {
+    const geojsonData = {{ geojson_data|safe }};
+
+    // --- Base layers ---
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
     });
-  </script>
-  
+
+    const googleHybridLayer = L.tileLayer('http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      maxZoom: 20,
+      subdomains: ['mt0','mt1','mt2','mt3'],
+      attribution: '© Google'
+    });
+
+    // --- Map init with OSM default ---
+    mapInstance = L.map('parishionerMap', {
+      center: [6.5, 7.5],
+      zoom: 7,
+      layers: [osmLayer]
+    });
+
+    // --- Marker cluster overlay ---
+    const markerCluster = L.markerClusterGroup({
+      disableClusteringAtZoom: 12
+    });
+
+    geojsonData.features.forEach(feature => {
+      const [lng, lat] = feature.geometry.coordinates;
+      const { unique_id, parish } = feature.properties;
+
+      const circle = L.circleMarker([lat, lng], {
+        radius: 6,
+        color: 'blue',
+        fillColor: 'blue',
+        fillOpacity: 0.6,
+        weight: 1
+      }).bindPopup(`<strong>${unique_id}</strong><br>${parish}`);
+
+      markerCluster.addLayer(circle);
+    });
+
+    markerCluster.addTo(mapInstance);
+
+    // --- Layer control ---
+    const baseMaps = {
+      "OpenStreetMap": osmLayer,
+      "Google Hybrid": googleHybridLayer
+    };
+    const overlayMaps = {
+      "Parishioners": markerCluster
+    };
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false })
+      .addTo(mapInstance);
+  }
+
+  function requestUserLocation() {
+    if (!navigator.geolocation) {
+      console.warn("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const { latitude: lat, longitude: lon } = coords;
+        mapInstance.setView([lat, lon], 13);
+
+        L.circleMarker([lat, lon], {
+          radius: 8,
+          color: 'red',
+          fillColor: 'red',
+          fillOpacity: 0.8,
+          weight: 2
+        })
+        .addTo(mapInstance)
+        .bindPopup("📍 You are here")
+        .openPopup();
+      },
+      err => console.warn("Geolocation error:", err.message),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initMap();
+    setTimeout(requestUserLocation, 800);
+  });
+</script>
 
 
 

@@ -54,10 +54,12 @@ def index(request):
 
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
+def parse_float(val):
+    try:
+        return float(val)
+    except (TypeError, ValueError):
+        return None
 
-
-from django.core.exceptions import ValidationError
-from django.utils.dateparse import parse_date
 
 def register(request):
     if request.method == 'POST':
@@ -77,6 +79,11 @@ def register(request):
             
             date_of_death = request.POST.get('date_of_death')
             dod = parse_date(date_of_death) if date_of_death else None
+
+            # right after you extract doa, dod etc:
+            lat = parse_float(request.POST.get('latitude'))
+            lng = parse_float(request.POST.get('longitude'))
+
 
             # Clean and validate email
             email = request.POST.get('email', '').strip() or None
@@ -130,6 +137,8 @@ def register(request):
                 state_of_origin=request.POST.get('state_of_origin', ''),
                 lga_of_origin=request.POST.get('lga_of_origin', ''),
                 town=request.POST.get('town', ''),
+                latitude=lat,
+                longitude= lng,
             )
             parishioner.save()
 
@@ -193,6 +202,8 @@ def register(request):
         'state_of_origin': '',
         'lga_of_origin': '',
         'town': '',
+        'latitude': '',    
+        'longitude': '',  
     },
     'error': ''
 })

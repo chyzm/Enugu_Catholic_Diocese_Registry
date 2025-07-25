@@ -13,12 +13,13 @@ class DomainRedirectMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.get_host() == 'cderegistry.org.ng':
-            return HttpResponsePermanentRedirect(f'https://cde.com.ng{request.get_full_path()}')
+        host = request.get_host()
+        if host in ['cde.com.ng', 'ecdregistry.org.ng']:
+            return HttpResponsePermanentRedirect(f'https://cderegistry.org.ng{request.get_full_path()}')
         
         return self.get_response(request)
- 
-         
+
+          
 class InitialSetupMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

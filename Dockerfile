@@ -28,5 +28,9 @@ RUN python manage.py collectstatic --noinput
 # Expose port 8000
 EXPOSE 8000
 
-# Start with gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "diocese_census.wsgi:application"]
+# Health check endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health/ || exit 1
+
+# Start with gunicorn - optimized for 4vCPU/8GB
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--threads", "2", "--worker-class", "gthread", "--timeout", "300", "--keep-alive", "5", "--max-requests", "500", "--max-requests-jitter", "50", "--worker-tmp-dir", "/dev/shm", "--preload", "diocese_census.wsgi:application"]

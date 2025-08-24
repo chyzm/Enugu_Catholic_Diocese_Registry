@@ -43,7 +43,11 @@ def generate_verification_code(length=6):
 
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, "index.html", {
+        "is_priest": hasattr(request.user, "priestprofile") if request.user.is_authenticated else False,
+        "is_parish_admin": hasattr(request.user, "parishadminprofile") if request.user.is_authenticated else False,
+    })
+
 
 
 
@@ -207,101 +211,6 @@ def register(request):
     },
     'error': ''
 })
-
-
-
-
-
-# def register(request):
-#     if request.method == 'POST':
-#         try:
-#             # Parse and validate date fields
-#             date_of_birth = request.POST.get('date_of_birth')
-#             if not date_of_birth:
-#                 raise ValidationError("Date of birth is required")
-            
-#             dob = parse_date(date_of_birth)
-#             if dob is None:
-#                 raise ValidationError("Invalid date format for date of birth. Use YYYY-MM-DD")
-
-#             # Optional dates
-#             marriage_date = request.POST.get('marriage_date')
-#             md = parse_date(marriage_date) if marriage_date else None
-            
-#             date_of_death = request.POST.get('date_of_death')
-#             dod = parse_date(date_of_death) if date_of_death else None
-
-#             # Clean and validate email
-#             email = request.POST.get('email', '').strip()
-#             email = email if email else None
-#             if email and Parishioner.objects.filter(email__iexact=email).exists():
-#                 return render(request, 'register.html', {
-#                     'error': 'This email is already registered',
-#                     'form_data': request.POST  # Pass all POST data back to form
-#                 })
-
-#             # Clean and validate phone number
-#             phone_number = request.POST.get('phone_number', '').strip()
-#             phone_number = phone_number if phone_number else None
-#             if phone_number and Parishioner.objects.filter(phone_number=phone_number).exists():
-#                 return render(request, 'register.html', {
-#                     'error': 'This phone number is already registered',
-#                     'form_data': request.POST  # Pass all POST data back to form
-#                 })
-
-#             # Create Parishioner instance
-#             parishioner = Parishioner(
-#                 title=request.POST.get('title', ''),
-#                 full_name=request.POST.get('full_name'),
-#                 email=email,
-#                 date_of_birth=dob,
-#                 gender=request.POST.get('gender'),
-#                 phone_number=phone_number,
-#                 marital_status=request.POST.get('marital_status', ''),
-#                 marriage_date=md,
-#                 marriage_details=request.POST.get('marriage_details', ''),
-#                 deceased=request.POST.get('deceased') == 'on',
-#                 date_of_death=dod,
-#                 death_details=request.POST.get('death_details', ''),
-#                 parish=request.POST.get('parish'),
-#                 deanery=request.POST.get('deanery'),
-#                 station=request.POST.get('station'),
-#                 baptized=request.POST.get('baptized') == 'on',
-#                 confirmed=request.POST.get('confirmed') == 'on',
-#                 first_communion=request.POST.get('first_communion') == 'on',
-#                 education_level=request.POST.get('education_level', ''),
-#                 occupation=request.POST.get('occupation', ''),
-#                 employment_status=request.POST.get('employment_status', ''),
-#                 state_of_origin=request.POST.get('state_of_origin', ''),
-#                 lga_of_origin=request.POST.get('lga_of_origin', ''),
-#                 town=request.POST.get('town', ''),
-#             )
-#             parishioner.save()
-
-#             # Send confirmation email if email is provided
-#             email_sent = False
-#             if parishioner.email:
-#                 email_sent = send_registration_email(parishioner)
-
-#             return render(request, 'registration-success-page.html', {
-#                 'unique_id': parishioner.unique_id,
-#                 'parishioner': parishioner,
-#                 'email_sent': email_sent
-#             })
-
-#         except ValidationError as e:
-#             return render(request, 'register.html', {
-#                 'error': str(e),
-#                 'form_data': request.POST  # Pass all POST data back to form
-#             })
-#         except Exception as e:
-#             return render(request, 'register.html', {
-#                 'error': f"An error occurred: {str(e)}",
-#                 'form_data': request.POST  # Pass all POST data back to form
-#             })
-
-#     # For GET requests, initialize with empty form data
-#     return render(request, 'register.html', {'form_data': {}})
 
 
 
@@ -484,6 +393,9 @@ def admin_dashboard(request):
         'stats': stats,
         'deanery_choices': Parishioner.DEANERY_CHOICES,
         'geojson_data': json.dumps(geojson),
+        'status': status_filter,   
+        'search_query': search_query,
+        'deanery_filter': deanery_filter,
     })
     
     
@@ -757,47 +669,106 @@ def signup(request):
 
 
 # Login view
+# def user_login(request):
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         password = request.POST['password']
+#         user = authenticate(request, username=username, password=password)
+        
+#         if user is not None:
+#             auth_login(request, user)
+            
+#             # Clear any previous error messages
+#             if 'error' in request.session:
+#                 del request.session['error']
+            
+#             # Check if already verified
+#             if 'verified_parishioner_id' in request.session:
+#                 return redirect('registry:user_dashboard')
+            
+#             if user.is_superuser:
+#                 return redirect('registry:admin_dashboard')
+                
+#             # Set flag to show verification form
+#             request.session['show_verification'] = True
+#             request.session.modified = True
+            
+#             return render(request, 'login.html', {
+#                 'user': user,
+#                 'show_verification': True
+#             })
+#         else:
+#             # Store error in session for persistence across redirects
+#             request.session['error'] = 'Invalid username or password'
+#             request.session.modified = True
+#             return redirect('registry:login')
+    
+#     # Clear any existing error messages
+#     error = None
+#     if 'error' in request.session:
+#         error = request.session.pop('error')
+#         request.session.modified = True
+    
+#     return render(request, 'login.html', {
+#         'error': error,
+#         'show_verification': request.session.get('show_verification', False)
+#     })
+
+
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
             auth_login(request, user)
-            
+
             # Clear any previous error messages
-            if 'error' in request.session:
-                del request.session['error']
-            
-            # Check if already verified
+            request.session.pop('error', None)
+
+            # Superuser → Admin Dashboard
+            if user.is_superuser:
+                return redirect('registry:admin_dashboard')
+
+            # Priests & Parish Admins → Admin Dashboard
+            if getattr(user, 'priestprofile', None) or getattr(user, 'parishadminprofile', None):
+                return redirect('registry:admin_dashboard')
+
+            # Normal Parishioner (already verified) → User Dashboard
             if 'verified_parishioner_id' in request.session:
                 return redirect('registry:user_dashboard')
-                
-            # Set flag to show verification form
+
+            # Normal Parishioner (not verified yet) → Show verification form
             request.session['show_verification'] = True
             request.session.modified = True
-            
+
             return render(request, 'login.html', {
                 'user': user,
-                'show_verification': True
+                'show_verification': True,
+                'is_priest': bool(getattr(user, 'priestprofile', None)),
+                'is_parish_admin': bool(getattr(user, 'parishadminprofile', None)),
+                'error': None,
             })
-        else:
-            # Store error in session for persistence across redirects
-            request.session['error'] = 'Invalid username or password'
-            request.session.modified = True
-            return redirect('registry:login')
-    
-    # Clear any existing error messages
-    error = None
-    if 'error' in request.session:
-        error = request.session.pop('error')
+
+        # ❌ Invalid login → show error
+        request.session['error'] = 'Invalid username or password'
         request.session.modified = True
+        return redirect('registry:login')
+    
+    # Handle GET requests
+    error = request.session.pop('error', None)
     
     return render(request, 'login.html', {
         'error': error,
-        'show_verification': request.session.get('show_verification', False)
+        'show_verification': request.session.get('show_verification', False),
+        # 'is_priest': bool(getattr(request.user, 'priestprofile', None)) if request.user.is_authenticated else False,
+        # 'is_parish_admin': bool(getattr(request.user, 'parishadminprofile', None)) if request.user.is_authenticated else False,
+        "is_priest": hasattr(request.user, "priestprofile") if request.user.is_authenticated else False,
+        "is_parish_admin": hasattr(request.user, "parishadminprofile") if request.user.is_authenticated else False,
     })
+
+
 
 
 from django.contrib.auth import logout as auth_logout
@@ -859,13 +830,41 @@ def verify_id(request):
     return redirect('registry:login')
 
 
+# @login_required
+# def user_dashboard(request):
+#     print(f"Dashboard access attempt - Session: {request.session.items()}")  # Debug
+    
+#     # Check verification
+#     if 'verified_parishioner_id' not in request.session:
+#         print("No verification in session - redirecting")  # Debug
+#         return redirect('registry:verify_id')
+    
+#     try:
+#         parishioner = Parishioner.objects.get(
+#             id=request.session['verified_parishioner_id'],
+#             email__iexact=request.user.email
+#         )
+#         print(f"Showing dashboard for {parishioner.full_name}")  # Debug
+#         return render(request, 'user_dashboard.html', {
+#             'parishioner': parishioner
+#         })
+        
+#     except Parishioner.DoesNotExist:
+#         print("Parishioner not found - clearing session")  # Debug
+#         if 'verified_parishioner_id' in request.session:
+#             del request.session['verified_parishioner_id']
+#         return redirect('registry:verify_id')
+#     except Exception as e:
+#         print(f"Dashboard error: {str(e)}")  # Debug
+#         return redirect('registry:verify_id')
+
 @login_required
 def user_dashboard(request):
-    print(f"Dashboard access attempt - Session: {request.session.items()}")  # Debug
+    # print(f"Dashboard access attempt - Session: {request.session.items()}")  # Debug
     
-    # Check verification
+    # Ensure verification exists
     if 'verified_parishioner_id' not in request.session:
-        print("No verification in session - redirecting")  # Debug
+        # print("No verification in session - redirecting")  # Debug
         return redirect('registry:verify_id')
     
     try:
@@ -873,19 +872,22 @@ def user_dashboard(request):
             id=request.session['verified_parishioner_id'],
             email__iexact=request.user.email
         )
-        print(f"Showing dashboard for {parishioner.full_name}")  # Debug
+        # print(f"Showing dashboard for {parishioner.full_name}")  # Debug
+        
         return render(request, 'user_dashboard.html', {
-            'parishioner': parishioner
+            'parishioner': parishioner,
+            'is_priest': hasattr(request.user, 'priestprofile'),
+            'is_parish_admin': hasattr(request.user, 'parishadminprofile'),
         })
         
     except Parishioner.DoesNotExist:
-        print("Parishioner not found - clearing session")  # Debug
-        if 'verified_parishioner_id' in request.session:
-            del request.session['verified_parishioner_id']
+        # print("Parishioner not found - clearing session")  # Debug
+        request.session.pop('verified_parishioner_id', None)
         return redirect('registry:verify_id')
     except Exception as e:
-        print(f"Dashboard error: {str(e)}")  # Debug
+        # print(f"Dashboard error: {str(e)}")  # Debug
         return redirect('registry:verify_id')
+
 
 
     
@@ -893,13 +895,12 @@ from django.contrib import messages  # Add this import at the top
 
 @login_required
 def edit_profile(request, parishioner_id):
-    # Get the parishioner or return 404
     parishioner = get_object_or_404(Parishioner, id=parishioner_id)
     
-    # Ensure the user can only edit their own profile
+    # Ensure only owner or staff can edit
     if not (request.user.is_staff or parishioner.email == request.user.email):
         return redirect('registry:user_dashboard')
-    
+
     if request.method == 'POST':
         form = ParishionerForm(request.POST, instance=parishioner)
         if form.is_valid():
@@ -908,11 +909,14 @@ def edit_profile(request, parishioner_id):
             return redirect('registry:user_dashboard')
     else:
         form = ParishionerForm(instance=parishioner)
-    
+
     return render(request, 'edit_profile.html', {
         'form': form,
-        'parishioner': parishioner
+        'parishioner': parishioner,
+        'is_priest': getattr(request.user, 'is_priest', False),  # ✅ add
+        'is_parish_admin': getattr(request.user, 'is_parish_admin', False),  # ✅ add
     })
+
     
     
     

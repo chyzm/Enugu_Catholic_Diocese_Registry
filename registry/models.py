@@ -107,6 +107,12 @@ class Parishioner(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     
+    
+    @property
+    def has_priestprofile(self):
+        return hasattr(self, 'priestprofile')
+
+    
     def save(self, *args, **kwargs):
         
          # Convert blank strings to None to avoid unique constraint violation

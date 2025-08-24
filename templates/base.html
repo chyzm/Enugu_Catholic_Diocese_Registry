@@ -283,11 +283,14 @@
                 <a href="{% url 'registry:user_dashboard' %}" class="mobile-nav-link block py-2 hover:text-secondary border-b border-white border-opacity-20">Dashboard</a>
                 <a href="{% url 'registry:logout' %}" class="mobile-nav-link block py-2 hover:text-secondary">Logout</a>
             {% endif %}
+
             {% if request.user.is_authenticated %}
-            {% if  request.user.is_staff or request.user.is_superuser or request.user.priestprofile %}
-                <a href="{% url 'registry:admin_dashboard' %}" class="mobile-nav-link block py-2 hover:text-secondary text-red-300">Admin</a>
+                {% if request.user.is_staff or request.user.is_superuser or is_priest or is_parish_admin %}
+                    <a href="{% url 'registry:admin_dashboard' %}" class="mobile-nav-link block py-2 hover:text-secondary text-red-300">Admin</a>
+                {% endif %}
             {% endif %}
-            {% endif %}
+
+
         </div>
     </header>
 
@@ -363,6 +366,7 @@
             </div>
             <div class="border-t border-white border-opacity-20 mt-8 pt-8 text-center text-gray-300">
                 <p>&copy; 2025 CDE REGISTRY. All rights reserved. | <a href="{% url 'registry:privacy_policy' %}" class="hover:text-secondary">Privacy Policy</a> | <a href="{% url 'registry:terms_and_conditions' %}" class="hover:text-secondary">Terms of Use</a></p>
+                <p> Powered by Diocesan Chancery</p>
             </div>
         </div>
     </footer>

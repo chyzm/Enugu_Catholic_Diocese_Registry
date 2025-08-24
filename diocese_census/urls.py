@@ -19,6 +19,8 @@ from django.urls import include, path
 from registry import views
 from django.contrib.auth.views import LoginView
 from django.http import JsonResponse
+from django.views.generic import TemplateView
+
 
 def health_check(request):
     return JsonResponse({"status": "healthy"})
@@ -28,7 +30,7 @@ def robots_txt(request):
     return HttpResponse("User-agent: *\nDisallow:", content_type="text/plain")
 
 urlpatterns = [
-    path('robots.txt', robots_txt, name='robots_txt'),
+    # path('robots.txt', robots_txt, name='robots_txt'),
     path('health/', health_check, name='health_check'),
     path('admin/', admin.site.urls),
     path('', views.index, name='home'),
@@ -36,4 +38,6 @@ urlpatterns = [
     path('registry/', include('registry.urls')),  # Includes all registry app URLs
     path('accounts/login/', LoginView.as_view(template_name='login.html'), name='login'),
     #path('accounts/', include('django.contrib.auth.urls')),  # This includes login/logout
+    
+    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
 ]
